@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import server.Messages.Message;
 import server.Messages.MessageStates;
 import server.Model.User;
+import server.Model.UserRegister;
 import server.Services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -46,10 +47,30 @@ public class AuthorizationController {
 
         if(userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);
-            //return ResponseEntity.status(HttpStatus.ACCEPTED).body(Message.AUTHORIZED);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(MessageStates.BAD_AUTHORIZE));
+    }
+
+    @PostMapping(value = "/register", produces = "application/json")
+    public ResponseEntity<Message> register(@RequestBody UserRegister user, HttpSession httpSession) {
+
+        if (userService.isEmailRegistered(user.getEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
+        }
+
+        if (userService.isLoginRegistered(user.getLogin())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
+        }
+
+
+        if (!user.getPassword().equals(user.getPassword_repeat())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.PASSWORDS_DO_NOT_MATCH));
+        }
+
+        userService.addUser(user);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED));
     }
 }

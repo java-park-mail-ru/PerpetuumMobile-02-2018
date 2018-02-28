@@ -21,28 +21,30 @@ public class UserService implements UserInterface {
 
     @Override
     public void addUser(User newUser) {
+
         allUsers.put(ID_GENERATOR.getAndIncrement(), newUser);
     }
 
     @Override
     public User getUserById(Integer id) {
+
         return new User();
     }
 
     @Override
     public Boolean isEmailRegistered(String email) {
+
         return false;
     }
 
     @Override
     public Boolean isLoginRegistered(String login) {
+
         return false;
     }
 
     @Override
     public Integer authorizeUserByEmail(User tryAuth) {
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("her", "her@mail.ru", "her"));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("warprobot", "warprobot@mail.ru", "her"));
         for(Map.Entry<Integer, User> u: allUsers.entrySet()){
             User uValue = u.getValue();
             if(tryAuth.getPassword().equals(uValue.getPassword()) && tryAuth.getEmail().equals(uValue.getEmail()))
