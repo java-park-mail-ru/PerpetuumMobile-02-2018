@@ -1,12 +1,14 @@
 package server.Services;
 
 
+import org.springframework.stereotype.Service;
 import server.Model.User;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Service
 public class UserService implements UserInterface {
 
     private Map<Integer, User> allUsers = new HashMap<>();
