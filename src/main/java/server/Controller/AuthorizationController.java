@@ -26,7 +26,7 @@ public class AuthorizationController {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
-        if (userIdInSession != null) {
+        if ( userIdInSession != null ) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.ALREADY_AUTHORIZED));
         }
 
@@ -35,17 +35,17 @@ public class AuthorizationController {
 
         String loginOrEmail = user.getLogin();
 
-        if (loginOrEmail == null) {
+        if ( loginOrEmail == null ) {
             loginOrEmail = user.getEmail();
         }
 
-        if (loginOrEmail == null || user.getPassword() == null) {
+        if ( loginOrEmail == null || user.getPassword() == null ) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA));
         }
 
         Integer userIdInDB = userService.authorizeUserByEmail(user);
 
-        if(userIdInDB != null) {
+        if( userIdInDB != null ) {
             httpSession.setAttribute("blendocu", userIdInDB);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED));
         }
@@ -56,15 +56,15 @@ public class AuthorizationController {
     @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<Message> register(@RequestBody UserRegister user, HttpSession httpSession) {
 
-        if (userService.isEmailRegistered(user.getEmail())) {
+        if ( userService.isEmailRegistered(user.getEmail()) ) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
         }
 
-        if (userService.isLoginRegistered(user.getLogin())) {
+        if ( userService.isLoginRegistered(user.getLogin()) ) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
         }
 
-        if (!user.getPassword().equals(user.getPassword_repeat())) {
+        if ( !user.getPassword().equals(user.getPassword_repeat()) ) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.PASSWORDS_DO_NOT_MATCH));
         }
 
