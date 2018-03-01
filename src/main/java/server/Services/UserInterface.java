@@ -1,7 +1,9 @@
 package server.Services;
 
+import org.springframework.stereotype.Service;
 import server.Model.User;
 
+@Service
 public interface UserInterface {
     void addUser(User newUser);
 
