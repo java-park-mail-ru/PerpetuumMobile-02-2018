@@ -1,4 +1,4 @@
-package server.Messages;
+package server.messages;
 
 public class MessageStates {
     public static final String ALREADY_AUTHORIZED = "user is already authorized";
