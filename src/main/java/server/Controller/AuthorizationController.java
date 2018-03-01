@@ -64,7 +64,6 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
         }
 
-
         if (!user.getPassword().equals(user.getPassword_repeat())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.PASSWORDS_DO_NOT_MATCH));
         }
