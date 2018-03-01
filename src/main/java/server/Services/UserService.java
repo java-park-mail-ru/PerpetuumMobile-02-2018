@@ -31,11 +31,23 @@ public class UserService implements UserInterface {
 
     @Override
     public Boolean isEmailRegistered(String email) {
+        for(Map.Entry<Integer, User> u: allUsers.entrySet()){
+            User uValue = u.getValue();
+            if(email.equals(uValue.getEmail())) {
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public Boolean isLoginRegistered(String login) {
+        for(Map.Entry<Integer, User> u: allUsers.entrySet()){
+            User uValue = u.getValue();
+            if(login.equals(uValue.getEmail())) {
+                return true;
+            }
+        }
         return false;
     }
 
