@@ -69,8 +69,31 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.PASSWORDS_DO_NOT_MATCH));
         }
 
-        userService.addUser(user);
+
+        Integer userIdInDB = userService.addUser(user);
+        httpSession.setAttribute("blendocu", userIdInDB);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED));
     }
+
+    @GetMapping(value = "/me", produces = "application/json")
+    public ResponseEntity<?> me(HttpSession httpSession) {
+        Integer userId = (Integer) httpSession.getAttribute("blendocu");
+        System.out.println(userId);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+        }
+
+        String userLogin = userService.checkUserById(userId);
+        if (userLogin == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+        }
+
+        User user = new User();
+        user.setLogin(userLogin);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
+
+    }
 }
+

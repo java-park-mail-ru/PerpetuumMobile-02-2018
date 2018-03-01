@@ -4,7 +4,7 @@ import server.model.User;
 
 
 public interface UserInterface {
-    void addUser(User newUser);
+    Integer addUser(User newUser);
 
     User getUserById(Integer id);
 
@@ -14,4 +14,5 @@ public interface UserInterface {
 
     Integer authorizeUserByEmail(User tryAuth);
 
+    String checkUserById(Integer userIdInDB);
 }

@@ -20,8 +20,10 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public void addUser(User newUser) {
-        allUsers.put(ID_GENERATOR.getAndIncrement(), newUser);
+    public Integer addUser(User newUser) {
+        Integer userId = ID_GENERATOR.getAndIncrement();
+        allUsers.put(userId, newUser);
+        return userId;
     }
 
     @Override
@@ -58,6 +60,16 @@ public class UserService implements UserInterface {
             User userValue = user.getValue();
             if (tryAuth.getPassword().equals(userValue.getPassword()) && tryAuth.getEmail().equals(userValue.getEmail())) {
                 return user.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String checkUserById(Integer userIdInDB) {
+        for(Integer userId: allUsers.keySet()) {
+            if (userId.equals(userIdInDB)) {
+                return allUsers.get(userId).getLogin();
             }
         }
         return null;
