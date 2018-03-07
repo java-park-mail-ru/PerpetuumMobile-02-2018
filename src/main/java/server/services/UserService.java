@@ -1,20 +1,20 @@
-package server.Services;
+package server.services;
 
 
 import org.springframework.stereotype.Service;
-import server.Model.User;
-
+import server.model.User;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
+@SuppressWarnings("unused")
 public class UserService implements UserInterface {
 
     private Map<Integer, User> allUsers = new HashMap<>();
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 
-    UserService(){
+    UserService() {
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("her", "her@mail.ru", "her"));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("warprobot", "warprobot@mail.ru", "her"));
     }
@@ -31,24 +31,35 @@ public class UserService implements UserInterface {
 
     @Override
     public Boolean isEmailRegistered(String email) {
+        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
+            User userValue = user.getValue();
+
+            if (email.equals(userValue.getEmail())) {
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public Boolean isLoginRegistered(String login) {
+        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
+            User userValue = user.getValue();
+            if (login.equals(userValue.getEmail())) {
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public Integer authorizeUserByEmail(User tryAuth) {
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("her", "her@mail.ru", "her"));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("warprobot", "warprobot@mail.ru", "her"));
-        for(Map.Entry<Integer, User> u: allUsers.entrySet()){
-            User uValue = u.getValue();
-            if(tryAuth.getPassword().equals(uValue.getPassword()) && tryAuth.getEmail().equals(uValue.getEmail()))
-                return u.getKey();
+        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
+            User userValue = user.getValue();
+            if (tryAuth.getPassword().equals(userValue.getPassword()) && tryAuth.getEmail().equals(userValue.getEmail())) {
+                return user.getKey();
+            }
         }
         return null;
     }
-
 }

@@ -1,0 +1,118 @@
+swagger: '2.0'
+info:
+  title: Blendocu
+  description: |
+    цветовая головоломка
+  version: "0.0.1"
+schemes:
+- http
+- https
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /regisrer:
+    post:
+      summary: Регистрация пользователя
+      description: |
+        Регистрация нового пользователя
+      operationId: register
+      parameters:
+      - name: user
+        in: body
+        description: |
+          Данные для регистрации
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        202:
+          description: |
+            Пользователь успешно зарегистрирован
+        403:
+          description: |
+            Данный почтовый ящик уже использован для регистрации другого пользователя
+            или данный логин уже зарегестрирован, или пароли не совпадают
+
+
+  /login:
+    post:
+      summary: Авторизация пользователя
+      description: |
+        Авторизация зарегистрированного пользователя
+      operationId: login
+      parameters:
+        - name: user
+          in: body
+          description: |
+            Данные для авторизации пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        202:
+          description: |
+            Авторизация успешно выполнена
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        403:
+          description: |
+            Данный пользователь уже авторизован
+          schema:
+            $ref: '#/definitions/ApiResponse'
+
+definitions:
+  User:
+    type: object
+    description: |
+      модель пользователя
+    properties:
+      username:
+        type: string
+        description: |
+          Логин пользователя
+      email:
+        type: string
+        description: |
+          email пользователя
+      password:
+        type: string
+        description: |
+          пароль
+    required:
+      - username
+      - email
+      - password
+  ApiResponse:
+    type: object
+    description: |
+      ответ API
+    properties:
+      status:
+        type: string
+        description: |
+          ALREADY_AUTHORIZED = "user is already authorized"
+          NOT_ENOUGH_DATA = "not enough data"
+          AUTHORIZED = "status:successful authorize"
+          BAD_AUTHORIZE = "invalid login or password"
+          EMAIL_ALREADY_EXISTS = "this email already registered"
+          LOGIN_ALREADY_EXISTS = "this login already registered"
+          REGISTERED = "you are registered!!!"
+          PASSWORDS_DO_NOT_MATCH = "passwords don't match"
+      response:
+        type: string
+        description: |
+          Описание ответа. Несет информативный характер
+    required:
+      - status
+      - response
+  HttpSession:
+    type: object
+    description: |
+      объект HttpSession.
+      (https://docs/oracle.com/javaee/7/api/javax/servlet/http/HttpSession.html)
+      Хранит и управляет данными сеанса пользователя.
+      В нашем случае используется, чтобы получать информацию о пользователе
+      (сеанс авторизованного пользователя должен содержать в себе атрибут username).

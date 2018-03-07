@@ -1,12 +1,13 @@
-package server.Controller;
+package server.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.Messages.Message;
-import server.Messages.MessageStates;
-import server.Model.User;
-import server.Services.UserService;
+import server.messages.Message;
+import server.messages.MessageStates;
+import server.model.User;
+import server.model.UserRegister;
+import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +18,7 @@ public class AuthorizationController {
     private final UserService userService;
 
     public AuthorizationController(UserService userService) {
+
         this.userService = userService;
     }
 
@@ -43,9 +45,8 @@ public class AuthorizationController {
 
         Integer userIdInDB = userService.authorizeUserByEmail(user);
 
-        if(userIdInDB != null) {
+        if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);
-            //return ResponseEntity.status(HttpStatus.ACCEPTED).body(Message.AUTHORIZED);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED));
         }
 

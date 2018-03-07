@@ -1,4 +1,4 @@
-package server.Messages;
+package server.messages;
 
 public class Message {
     private String message;

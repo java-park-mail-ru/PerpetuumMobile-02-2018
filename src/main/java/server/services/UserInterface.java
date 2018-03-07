@@ -1,6 +1,7 @@
-package server.Services;
+package server.services;
 
-import server.Model.User;
+import server.model.User;
+
 
 public interface UserInterface {
     void addUser(User newUser);
