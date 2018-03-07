@@ -5,17 +5,23 @@ public class User {
     private String  login;
     private String  email;
     private String  password;
+    private Integer score;
 
 
     public User(String login, String email, String password) {
         this.login = login;
         this.password = password;
         this.email = email;
+        this.score = 0;
     }
 
     public User() {
 
     }
+
+    public Integer getScore() { return score; }
+
+    public void setScore(Integer newScore) { score = newScore; }
 
     public String getLogin() {
         return login;

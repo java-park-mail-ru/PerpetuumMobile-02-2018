@@ -29,7 +29,6 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.ALREADY_AUTHORIZED));
         }
 
-
         //part of universal code: email or login. front must validate.
 
         String loginOrEmail = user.getLogin();
@@ -51,5 +50,19 @@ public class AuthorizationController {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(MessageStates.BAD_AUTHORIZE));
+    }
+
+    @PostMapping(value = "/register", produces = "application/json")
+    public ResponseEntity<Message> register(@RequestBody User user, HttpSession httpSession) {
+        if (userService.isEmailRegistered(user.getEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
+        }
+
+        if (userService.isLoginRegistered(user.getLogin())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
+        }
+
+        userService.addUser(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED));
     }
 }
