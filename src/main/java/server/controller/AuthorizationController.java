@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.User;
-import server.model.UserRegister;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
