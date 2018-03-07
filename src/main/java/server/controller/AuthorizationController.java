@@ -55,8 +55,7 @@ public class AuthorizationController {
     }
 
     @PostMapping(value = "/register", produces = "application/json")
-    public ResponseEntity<Message> register(@RequestBody UserRegister user, HttpSession httpSession) {
-
+    public ResponseEntity<Message> register(@RequestBody User user, HttpSession httpSession) {
         if (userService.isEmailRegistered(user.getEmail())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
         }
@@ -65,14 +64,7 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
         }
 
-        if (!user.getPassword().equals(user.getPasswordRepeat())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.PASSWORDS_DO_NOT_MATCH));
-        }
-
-
-        Integer userIdInDB = userService.addUser(user);
-        httpSession.setAttribute("blendocu", userIdInDB);
-
+        userService.addUser(user);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED));
     }
 
