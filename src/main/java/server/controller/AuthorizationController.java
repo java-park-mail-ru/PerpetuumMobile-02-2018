@@ -22,6 +22,20 @@ public class AuthorizationController {
         this.userService = userService;
     }
 
+    @GetMapping(value = "/me", produces = "application/json")
+    public ResponseEntity whoAmI(HttpSession httpSession) {
+
+        Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
+
+        User requestedUser = userService.getUserById(userIdInSession);
+
+        if (requestedUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(new User(requestedUser.getLogin(), null, null, requestedUser.getScore()));
+    }
+
     @PostMapping(value = "/login", produces = "application/json")
     public ResponseEntity<Message> login(@RequestBody User user, HttpSession httpSession) {
 
