@@ -15,6 +15,13 @@ public class User {
         this.score = 0;
     }
 
+    public User(String login, String email, String password, Integer initScore) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.score = initScore;
+    }
+
     public User() {
     }
 

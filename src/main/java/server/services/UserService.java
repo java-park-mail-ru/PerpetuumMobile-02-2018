@@ -26,7 +26,8 @@ public class UserService implements UserInterface {
 
     @Override
     public User getUserById(Integer id) {
-        return new User();
+
+        return allUsers.get(id);
     }
 
     @Override

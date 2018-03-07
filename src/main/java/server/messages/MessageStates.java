@@ -8,5 +8,6 @@ public class MessageStates {
     public static final String EMAIL_ALREADY_EXISTS = "this email already registered";
     public static final String LOGIN_ALREADY_EXISTS = "this login already registered";
     public static final String REGISTERED = "you are registered!!!";
-    public static final String PASSWORDS_DO_NOT_MATCH = "passwords don't match";
+    //public static final String PASSWORDS_DO_NOT_MATCH = "passwords don't match";
+    public static final String UNAUTHORIZED = "not authorized";
 }
