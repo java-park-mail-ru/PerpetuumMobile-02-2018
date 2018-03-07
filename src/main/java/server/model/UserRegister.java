@@ -1,5 +1,6 @@
 package server.model;
 
+@SuppressWarnings("unused")
 public class UserRegister extends User {
 
     private String passwordRepeat;

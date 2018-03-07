@@ -18,9 +18,13 @@ public class User {
     public User() {
     }
 
-    public Integer getScore() { return score; }
+    public Integer getScore() {
+        return score;
+    }
 
-    public void setScore(Integer newScore) { score = newScore; }
+    public void setScore(Integer newScore) {
+        score = newScore;
+    }
 
     public String getLogin() {
         return login;
