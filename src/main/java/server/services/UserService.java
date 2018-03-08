@@ -85,7 +85,7 @@ public class UserService implements UserInterface {
 
     @Override
     public String checkUserById(Integer userIdInDB) {
-        for(Integer userId: allUsers.keySet()) {
+        for (Integer userId: allUsers.keySet()) {
             if (userId.equals(userIdInDB)) {
                 return allUsers.get(userId).getLogin();
             }
