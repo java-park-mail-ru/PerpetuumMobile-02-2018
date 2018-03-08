@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.User;
-import server.model.UserRegister;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -22,18 +21,17 @@ public class AuthorizationController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/me", produces = "application/json")
-    public ResponseEntity whoAmI(HttpSession httpSession) {
+    @PostMapping(value = "/logout", produces = "application/json")
+    public ResponseEntity logout(HttpSession httpSession) {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
-        User requestedUser = userService.getUserById(userIdInSession);
-
-        if (requestedUser == null) {
+        if (userIdInSession == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(new User(requestedUser.getLogin(), null, null, requestedUser.getScore()));
+        httpSession.removeAttribute("blendocu");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.UNAUTHORIZED));
     }
 
     @PostMapping(value = "/login", produces = "application/json")
@@ -78,14 +76,13 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
         }
 
-        userService.addUser(user);
+        httpSession.setAttribute("blendocu", userService.addUser(user));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED));
     }
 
     @GetMapping(value = "/me", produces = "application/json")
     public ResponseEntity<?> me(HttpSession httpSession) {
         Integer userId = (Integer) httpSession.getAttribute("blendocu");
-        System.out.println(userId);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
         }
