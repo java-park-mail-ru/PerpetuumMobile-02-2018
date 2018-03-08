@@ -55,8 +55,7 @@ public class UserService implements UserInterface {
         return false;
     }
 
-    @Override
-    public Integer authorizeUserByEmail(User tryAuth) {
+    private Integer authorizeUserByEmail(User tryAuth) {
         for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
             User userValue = user.getValue();
             if (tryAuth.getPassword().equals(userValue.getPassword()) && tryAuth.getEmail().equals(userValue.getEmail())) {
@@ -64,6 +63,24 @@ public class UserService implements UserInterface {
             }
         }
         return null;
+    }
+
+    private Integer authorizeUserByLogin(User tryAuth) {
+        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
+            User userValue = user.getValue();
+            if (tryAuth.getPassword().equals(userValue.getPassword()) && tryAuth.getLogin().equals(userValue.getLogin())) {
+                return user.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Integer authorizeUser(User tryAuth) {
+        if (tryAuth.getLogin() != null) {
+            return authorizeUserByLogin(tryAuth);
+        }
+        return authorizeUserByEmail(tryAuth);
     }
 
     @Override

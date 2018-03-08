@@ -12,7 +12,7 @@ public interface UserInterface {
 
     Boolean isLoginRegistered(String login);
 
-    Integer authorizeUserByEmail(User tryAuth);
+    Integer authorizeUser(User tryAuth);
 
     String checkUserById(Integer userIdInDB);
 }

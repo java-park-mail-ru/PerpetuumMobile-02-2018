@@ -43,9 +43,7 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.ALREADY_AUTHORIZED));
         }
 
-
-        //part of universal code: email or login. front must validate.
-
+        // check whether data is enough to authorize
         String loginOrEmail = user.getLogin();
 
         if (loginOrEmail == null) {
@@ -56,13 +54,15 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA));
         }
 
-        Integer userIdInDB = userService.authorizeUserByEmail(user);
+        //authorizing
+        Integer userIdInDB = userService.authorizeUser(user);
 
         if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED));
         }
 
+        //no such user registered
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(MessageStates.BAD_AUTHORIZE));
     }
 
