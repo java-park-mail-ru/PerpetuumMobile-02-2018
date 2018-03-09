@@ -10,4 +10,5 @@ public class MessageStates {
     public static final String REGISTERED = "you are registered!!!";
     //public static final String PASSWORDS_DO_NOT_MATCH = "passwords don't match";
     public static final String UNAUTHORIZED = "not authorized";
+    public static final String CHANGED_USER_DATA = "user data has been changed";
 }
