@@ -17,8 +17,8 @@ public class ScoreboardController {
     @GetMapping(value = "/users", produces = "application/json")
     public List<User> scoreboard(HttpSession httpSession) {
         List<User> users = new ArrayList<>();
-        users.add(new User("her", "her", "her@mail.ru"));
-        users.add(new User("her", "her", "her@mail.ru"));
+        users.add(new User("her", "her@mail.ru", "her"));
+        users.add(new User("her", "her@mail.ru", "her"));
         return users;
     }
 }

@@ -22,13 +22,13 @@ public class UserService implements UserInterface {
     @Override
     public Integer addUser(User newUser) {
         Integer userId = ID_GENERATOR.getAndIncrement();
+        newUser.setAvatar("");
         allUsers.put(userId, newUser);
         return userId;
     }
 
     @Override
     public User getUserById(Integer id) {
-
         return allUsers.get(id);
     }
 
@@ -84,10 +84,10 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public String checkUserById(Integer userIdInDB) {
+    public User checkUserById(Integer userIdInDB) {
         for (Integer userId: allUsers.keySet()) {
             if (userId.equals(userIdInDB)) {
-                return allUsers.get(userId).getLogin();
+                return allUsers.get(userId);
             }
         }
         return null;

@@ -6,7 +6,7 @@ public class User {
     private String  email;
     private String  password;
     private Integer score;
-
+    private String image;
 
     public User(String login, String email, String password) {
         this.login = login;
@@ -60,5 +60,13 @@ public class User {
     public void setEmail(String email) {
 
         this.email = email;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String avatar) {
+        this.image = image;
     }
 }

@@ -14,5 +14,5 @@ public interface UserInterface {
 
     Integer authorizeUser(User tryAuth);
 
-    String checkUserById(Integer userIdInDB);
+    User checkUserById(Integer userIdInDB);
 }
