@@ -53,9 +53,9 @@ public class AuthorizationController {
         changeEmail = !(changeUser.getEmail() == null
                         || changeUser.getEmail().equals(""));
         changeImage = changeUser.getImage() != null;
-        changePassword = !(changeUser.getOldPassword() == null ||
-                         changeUser.getNewPassword() == null ||
-                         changeUser.getNewPassword().equals(""));
+        changePassword = !(changeUser.getOldPassword() == null
+                        || changeUser.getNewPassword() == null
+                        || changeUser.getNewPassword().equals(""));
 
         // Login is already registered
         if (changeLogin) {
