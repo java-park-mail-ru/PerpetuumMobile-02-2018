@@ -7,7 +7,7 @@ public class ChangeUser extends User {
 
     ChangeUser() {
         super();
-    };
+    }
 
     public String getOldPassword() {
         return oldPassword;

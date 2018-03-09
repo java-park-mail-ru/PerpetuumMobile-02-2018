@@ -2,10 +2,10 @@ package server.model;
 
 @SuppressWarnings("unused")
 public class User {
-    protected String  login;
-    protected String  email;
-    protected String  password;
-    protected Integer score;
+    private String  login;
+    private String  email;
+    private String  password;
+    private Integer score;
 
 
     public User(String login, String email, String password) {

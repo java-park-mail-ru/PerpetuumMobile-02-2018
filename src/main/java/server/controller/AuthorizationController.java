@@ -24,7 +24,7 @@ public class AuthorizationController {
     }
 
     @PostMapping(value = "/settings", produces = "application/json")
-    public ResponseEntity settings(@RequestBody ChangeUser changeUser, HttpSession httpSession){
+    public ResponseEntity settings(@RequestBody ChangeUser changeUser, HttpSession httpSession) {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
@@ -43,10 +43,15 @@ public class AuthorizationController {
             //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
         }
 
-        final Boolean changeLogin, changeEmail, changePassword, changeImage;
+        final Boolean changeLogin;
+        final Boolean changeEmail;
+        final Boolean changePassword;
+        final Boolean changeImage;
 
-        changeLogin = !(changeUser.getLogin() == null || changeUser.getLogin().equals(""));
-        changeEmail = !(changeUser.getEmail() == null || changeUser.getEmail().equals(""));
+        changeLogin = !(changeUser.getLogin() == null
+                        || changeUser.getLogin().equals(""));
+        changeEmail = !(changeUser.getEmail() == null
+                        || changeUser.getEmail().equals(""));
         changeImage = changeUser.getImage() != null;
         changePassword = !(changeUser.getOldPassword() == null ||
                          changeUser.getNewPassword() == null ||
