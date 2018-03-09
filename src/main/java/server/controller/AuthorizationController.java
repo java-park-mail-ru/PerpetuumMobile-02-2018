@@ -1,10 +1,12 @@
 package server.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
+import server.model.ChangeUser;
 import server.model.User;
 import server.services.UserService;
 
@@ -21,6 +23,85 @@ public class AuthorizationController {
         this.userService = userService;
     }
 
+    @PostMapping(value = "/settings", produces = "application/json")
+    public ResponseEntity settings(@RequestBody ChangeUser changeUser, HttpSession httpSession) {
+
+        Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
+
+        if (userIdInSession == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+        }
+
+        User oldUser = userService.getUserById(userIdInSession);
+
+        // if user was deleted or something went wrong
+        if (oldUser == null) {
+            httpSession.invalidate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "/");
+            return new ResponseEntity(headers, HttpStatus.TEMPORARY_REDIRECT);
+            //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+        }
+
+        final Boolean changeLogin;
+        final Boolean changeEmail;
+        final Boolean changePassword;
+        final Boolean changeImage;
+
+        changeLogin = !(changeUser.getLogin() == null
+                        || changeUser.getLogin().equals(""));
+        changeEmail = !(changeUser.getEmail() == null
+                        || changeUser.getEmail().equals(""));
+        changeImage = changeUser.getImage() != null;
+        changePassword = !(changeUser.getOldPassword() == null
+                        || changeUser.getNewPassword() == null
+                        || changeUser.getNewPassword().equals(""));
+
+        // Login is already registered
+        if (changeLogin) {
+            if (userService.isLoginRegistered(changeUser.getLogin())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
+            }
+        }
+
+        // Email is already registered
+        if (changeEmail) {
+            if (userService.isEmailRegistered(changeUser.getEmail())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
+            }
+        }
+
+        if (changeEmail && changeLogin) {
+            oldUser.setLogin(changeUser.getLogin());
+            oldUser.setEmail(changeUser.getEmail());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+        }
+
+        if (changeEmail) {
+            oldUser.setEmail(changeUser.getEmail());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+        }
+
+        if (changeLogin) {
+            oldUser.setLogin(changeUser.getLogin());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+        }
+
+        if (changeImage) {
+            // TODO Write it when image will be available to download
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+        }
+
+        if (changePassword) {
+            if (changeUser.getOldPassword().equals(oldUser.getPassword())) {
+                oldUser.setPassword(changeUser.getNewPassword());
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA));
+    }
+
     @PostMapping(value = "/logout", produces = "application/json")
     public ResponseEntity logout(HttpSession httpSession) {
 
@@ -30,7 +111,7 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
         }
 
-        httpSession.removeAttribute("blendocu");
+        httpSession.invalidate();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.UNAUTHORIZED));
     }
 
