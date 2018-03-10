@@ -3,7 +3,10 @@ package server.services;
 
 import org.springframework.stereotype.Service;
 import server.model.User;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,6 +20,11 @@ public class UserService implements UserInterface {
     UserService() {
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("her", "her@mail.ru", "her"));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("warprobot", "warprobot@mail.ru", "her"));
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return new ArrayList<>(allUsers.values());
     }
 
     @Override

@@ -2,8 +2,12 @@ package server.services;
 
 import server.model.User;
 
+import java.util.List;
+
 
 public interface UserInterface {
+    List<User> getAllUsers();
+
     Integer addUser(User newUser);
 
     User getUserById(Integer id);

@@ -11,4 +11,5 @@ public class MessageStates {
     //public static final String PASSWORDS_DO_NOT_MATCH = "passwords don't match";
     public static final String UNAUTHORIZED = "not authorized";
     public static final String CHANGED_USER_DATA = "user data has been changed";
+    public static final String BAD_DATA = "bad data given";
 }

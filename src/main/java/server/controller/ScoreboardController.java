@@ -1,10 +1,15 @@
 package server.controller;
 
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import server.messages.Message;
+import server.messages.MessageStates;
+import server.model.ChangeUser;
+import server.model.Scoreboard;
 import server.model.User;
+import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -14,11 +19,36 @@ import java.util.List;
 @RestController
 public class ScoreboardController {
 
-    @GetMapping(value = "/users", produces = "application/json")
-    public List<User> scoreboard(HttpSession httpSession) {
+    private final UserService userService;
+
+    public ScoreboardController(UserService userService) {
+
+        this.userService = userService;
+    }
+
+    @PostMapping(value = "/users", produces = "application/json")
+    public ResponseEntity scoreboard(@RequestBody Scoreboard pageNum, HttpSession httpSession) {
+        Integer pageNumber = Integer.parseInt(pageNum.getPage());
+        Integer onOnePage = 10;
+        Integer from = (pageNumber - 1) * onOnePage;
+        Integer to = pageNumber * onOnePage;
+
+        if (pageNumber < 1) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.BAD_DATA));
+        }
+
+        List<User> usersFromDb = userService.getAllUsers();
+
+        to = to > usersFromDb.size() ? usersFromDb.size() : to;
+
+        usersFromDb = usersFromDb.subList(from, to);
+
         List<User> users = new ArrayList<>();
-        users.add(new User("her", "her@mail.ru", "her"));
-        users.add(new User("her", "her@mail.ru", "her"));
-        return users;
+
+        for (User copyLoginScore : usersFromDb) {
+            users.add(new User(copyLoginScore.getLogin(), "", "", copyLoginScore.getScore()));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 }
