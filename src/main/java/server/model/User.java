@@ -66,7 +66,7 @@ public class User {
         return image;
     }
 
-    public void setImage(String avatar) {
+    public void setImage(String image) {
         this.image = image;
     }
 }

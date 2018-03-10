@@ -22,7 +22,7 @@ public class UserService implements UserInterface {
     @Override
     public Integer addUser(User newUser) {
         Integer userId = ID_GENERATOR.getAndIncrement();
-        newUser.setAvatar("");
+        newUser.setImage("${pageContext.request.contextPath}/resources/images/no_avatar.png");
         allUsers.put(userId, newUser);
         return userId;
     }

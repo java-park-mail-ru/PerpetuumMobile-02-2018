@@ -171,6 +171,8 @@ public class AuthorizationController {
         User userInDB = userService.checkUserById(userId);
         String userLogin = userInDB.getLogin();
         String userImage = userInDB.getImage();
+        System.out.println(userImage);
+        System.out.println(userLogin);
 
         if (userLogin == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
