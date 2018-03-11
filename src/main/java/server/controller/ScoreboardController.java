@@ -46,7 +46,7 @@ public class ScoreboardController {
         List<User> users = new ArrayList<>();
 
         for (User copyLoginScore : usersFromDb) {
-            users.add(new User(copyLoginScore.getLogin(), copyLoginScore.getEmail(), "", copyLoginScore.getScore()));
+            users.add(new User(copyLoginScore.getLogin(), "", "", copyLoginScore.getScore()));
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(users);
