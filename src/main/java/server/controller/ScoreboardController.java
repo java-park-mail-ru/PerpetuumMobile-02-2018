@@ -14,7 +14,7 @@ import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Comparator;
+//import java.util.Comparator;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com"}, allowCredentials = "true")
@@ -32,7 +32,6 @@ public class ScoreboardController {
     public ResponseEntity scoreboard(@RequestBody Scoreboard pageNum, HttpSession httpSession) {
         Integer pageNumber = Integer.parseInt(pageNum.getPage());
         Integer onOnePage = 10;
-        Integer from = (pageNumber - 1) * onOnePage;
         Integer to = pageNumber * onOnePage;
 
         if (pageNumber < 1) {
@@ -43,7 +42,7 @@ public class ScoreboardController {
 
         usersFromDb.sort((user1, user2) -> user2.getScore() - user1.getScore());
 
-        Integer maxPageNum = (usersFromDb.size() + (onOnePage - 1)) / onOnePage;
+        Integer from = (pageNumber - 1) * onOnePage;
 
         to = to > usersFromDb.size() ? usersFromDb.size() : to;
 
@@ -54,6 +53,8 @@ public class ScoreboardController {
         for (User copyLoginScore : usersFromDb) {
             users.add(new User(copyLoginScore.getLogin(), "", "", copyLoginScore.getScore()));
         }
+
+        Integer maxPageNum = (usersFromDb.size() + (onOnePage - 1)) / onOnePage;
 
         Paginator<List<User>> paginator = new Paginator<>(maxPageNum, users);
 
