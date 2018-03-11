@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
-import server.model.ChangeUser;
+//import server.model.ChangeUser;
 import server.model.Scoreboard;
 import server.model.User;
 import server.services.UserService;
