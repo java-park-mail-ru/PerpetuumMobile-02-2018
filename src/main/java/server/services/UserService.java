@@ -20,6 +20,7 @@ public class UserService implements UserInterface {
     UserService() {
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("her", "her@mail.ru", "her"));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("warprobot", "warprobot@mail.ru", "her"));
+        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("qaz", "qaz@mail.ru", "qazzaq"));
     }
 
     @Override
