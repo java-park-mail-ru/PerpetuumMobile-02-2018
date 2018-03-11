@@ -13,6 +13,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.score = 0;
+        this.image = "no_avatar.png";
     }
 
     public User(String login, String email, String password, Integer initScore) {
@@ -20,6 +21,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.score = initScore;
+        this.image = "no_avatar.png";
     }
 
     public User() {

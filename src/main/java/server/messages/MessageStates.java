@@ -12,4 +12,5 @@ public class MessageStates {
     public static final String UNAUTHORIZED = "not authorized";
     public static final String CHANGED_USER_DATA = "user data has been changed";
     public static final String BAD_DATA = "bad data given";
+    public static final String SUCCESS_UPLOAD = "you successfully uploaded file";
 }

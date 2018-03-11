@@ -23,6 +23,10 @@ public class AuthorizationController {
         this.userService = userService;
     }
 
+    public UserService getUserService() {
+        return userService;
+    }
+
     @PostMapping(value = "/settings", produces = "application/json")
     public ResponseEntity settings(@RequestBody ChangeUser changeUser, HttpSession httpSession) {
 
@@ -149,6 +153,9 @@ public class AuthorizationController {
 
     @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<Message> register(@RequestBody User user, HttpSession httpSession) {
+        user.setImage("no_avatar.png");
+        System.out.println("USER IMAGE:" + user.getImage());
+
         if (userService.isEmailRegistered(user.getEmail())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
         }
@@ -181,6 +188,8 @@ public class AuthorizationController {
         User user = new User();
         user.setLogin(userLogin);
         user.setImage(userImage);
+
+        System.out.println("GOGO" + userImage);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
 

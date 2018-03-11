@@ -3,9 +3,9 @@ package server.controller;
 //import java.io.IOException;
 //import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 //import org.springframework.ui.Model;
@@ -14,21 +14,29 @@ import org.springframework.web.multipart.MultipartFile;
 //import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import server.messages.ChangeImageMessage;
+import server.messages.Message;
+import server.messages.MessageStates;
+import server.services.FileSystemStorageService;
+import server.services.UserService;
 import server.storage.StorageFileNotFoundException;
-import server.storage.StorageService;
+import server.services.StorageService;
+
+import javax.servlet.http.HttpSession;
 
 @CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com"}, allowCredentials = "true")
 @Controller
 public class FileUploadController {
 
-    private final StorageService storageService;
+    private final UserService userService;
+    private final FileSystemStorageService storageService;
 
-    @Autowired
-    public FileUploadController(StorageService storageService) {
+    public FileUploadController(FileSystemStorageService storageService, UserService userService) {
         this.storageService = storageService;
+        this.userService = userService;
     }
-    /*
 
+    /*
     @GetMapping("/")
     public String listUploadedFiles(Model model) throws IOException {
 
@@ -51,15 +59,18 @@ public class FileUploadController {
     }
 
     @PostMapping("/change_avatar")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
-        System.out.println("ZALUPA");
-        System.out.println(file.getOriginalFilename());
-        storageService.store(file);
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
+    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file,
+                                                               HttpSession httpSession) {
+        Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
-        return "redirect:/";
+        System.out.println("Change_avatar");
+        String fileName = userIdInSession + file.getOriginalFilename();
+        System.out.println(fileName);
+        storageService.store(file, fileName);
+        userService.getUserById(userIdInSession).setImage(fileName);
+
+        ChangeImageMessage changeImageMessage = new ChangeImageMessage(MessageStates.SUCCESS_UPLOAD, fileName);
+        return ResponseEntity.ok().body(changeImageMessage);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
