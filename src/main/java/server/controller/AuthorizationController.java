@@ -156,9 +156,7 @@ public class AuthorizationController {
         if (userService.isLoginRegistered(user.getLogin())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
         }
-
         user.setScore(0);
-
         httpSession.setAttribute("blendocu", userService.addUser(user));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED));
     }

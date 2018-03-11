@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
 //import server.model.ChangeUser;
+import server.model.Paginator;
 import server.model.Scoreboard;
 import server.model.User;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com"}, allowCredentials = "true")
@@ -39,6 +41,10 @@ public class ScoreboardController {
 
         List<User> usersFromDb = userService.getAllUsers();
 
+        usersFromDb.sort((user1, user2) -> user2.getScore() - user1.getScore());
+
+        Integer maxPageNum = (usersFromDb.size() + (onOnePage - 1)) / onOnePage;
+
         to = to > usersFromDb.size() ? usersFromDb.size() : to;
 
         usersFromDb = usersFromDb.subList(from, to);
@@ -49,6 +55,8 @@ public class ScoreboardController {
             users.add(new User(copyLoginScore.getLogin(), "", "", copyLoginScore.getScore()));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+        Paginator<List<User>> paginator = new Paginator<>(maxPageNum, users);
+
+        return ResponseEntity.status(HttpStatus.OK).body(paginator);
     }
 }

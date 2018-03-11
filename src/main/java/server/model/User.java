@@ -6,7 +6,7 @@ public class User {
     private String  email;
     private String  password;
     private Integer score;
-    private String image;
+    private String  image;
 
     public User(String login, String email, String password) {
         this.login = login;
