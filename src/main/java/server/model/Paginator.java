@@ -8,9 +8,9 @@ public class Paginator<T> {
 
     }
 
-    public Paginator(Integer _maxPageNum, T _filling) {
-        this.maxPageNum = _maxPageNum;
-        this.filling = _filling;
+    public Paginator(Integer maxPageNum, T filling) {
+        this.maxPageNum = maxPageNum;
+        this.filling = filling;
     }
 
     public Integer getMaxPageNum() {

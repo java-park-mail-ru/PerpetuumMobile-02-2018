@@ -26,7 +26,7 @@ public class UserService implements UserInterface {
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol3", "lol3@mail.ru", "lol3", 3));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol4", "lol4@mail.ru", "lol4", 58));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol5", "lol5@mail.ru", "lol5", 36));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol6", "lol6@mail.ru", "lol6", 23))
+        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol6", "lol6@mail.ru", "lol6", 23));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol7", "lol7@mail.ru", "lol7", 57));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol8", "lol8@mail.ru", "lol8", 234));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol9", "lol9@mail.ru", "lol9", 34));
