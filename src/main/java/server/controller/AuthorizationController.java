@@ -12,7 +12,7 @@ import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
 
-@CrossOrigin(origins = "http://127.0.0.1:3000", allowCredentials = "true")
+@CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com"}, allowCredentials = "true")
 @RestController
 public class AuthorizationController {
 
