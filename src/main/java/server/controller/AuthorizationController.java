@@ -117,7 +117,7 @@ public class AuthorizationController {
 
     @PostMapping(value = "/login", produces = "application/json")
     public ResponseEntity<Message> login(@RequestBody User user, HttpSession httpSession) {
-
+        System.out.println("HELLO!");
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         if (userIdInSession != null) {
