@@ -17,7 +17,7 @@ import server.storage.StorageFileNotFoundException;
 
 import javax.servlet.http.HttpSession;
 
-@CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com", "https://blendocu.herokuapp.com"}, allowCredentials = "true")
 @Controller
 public class FileUploadController {
 

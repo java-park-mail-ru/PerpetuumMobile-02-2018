@@ -17,7 +17,7 @@ import java.util.ArrayList;
 //import java.util.Comparator;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com", "https://blendocu.herokuapp.com"}, allowCredentials = "true")
 @RestController
 public class ScoreboardController {
 
