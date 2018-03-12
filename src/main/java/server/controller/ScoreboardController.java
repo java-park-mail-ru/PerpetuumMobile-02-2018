@@ -40,14 +40,14 @@ public class ScoreboardController {
 
         List<User> usersFromDb = userService.getAllUsers();
 
+        to = to > usersFromDb.size() ? usersFromDb.size() : to;
+
         usersFromDb.sort((user1, user2) -> user2.getScore() - user1.getScore());
 
         Integer from = (pageNumber - 1) * onOnePage;
 
         Integer maxPageNum;
         maxPageNum = (usersFromDb.size() + (onOnePage - 1)) / onOnePage;
-
-        to = to > usersFromDb.size() ? usersFromDb.size() : to;
 
         usersFromDb = usersFromDb.subList(from, to);
 
