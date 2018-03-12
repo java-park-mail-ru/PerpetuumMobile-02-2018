@@ -44,6 +44,9 @@ public class ScoreboardController {
 
         Integer from = (pageNumber - 1) * onOnePage;
 
+        Integer maxPageNum;
+        maxPageNum = (usersFromDb.size() + (onOnePage - 1)) / onOnePage;
+
         to = to > usersFromDb.size() ? usersFromDb.size() : to;
 
         usersFromDb = usersFromDb.subList(from, to);
@@ -53,8 +56,6 @@ public class ScoreboardController {
         for (User copyLoginScore : usersFromDb) {
             users.add(new User(copyLoginScore.getLogin(), "", "", copyLoginScore.getScore()));
         }
-
-        Integer maxPageNum = (usersFromDb.size() + (onOnePage - 1)) / onOnePage;
 
         Paginator<List<User>> paginator = new Paginator<>(maxPageNum, users);
 
