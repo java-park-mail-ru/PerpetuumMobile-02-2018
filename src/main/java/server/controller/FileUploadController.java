@@ -5,22 +5,15 @@ package server.controller;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import server.messages.ChangeImageMessage;
-import server.messages.Message;
 import server.messages.MessageStates;
 import server.services.FileSystemStorageService;
 import server.services.UserService;
 import server.storage.StorageFileNotFoundException;
-import server.services.StorageService;
 
 import javax.servlet.http.HttpSession;
 
