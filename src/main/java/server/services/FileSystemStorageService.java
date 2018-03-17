@@ -3,26 +3,37 @@ package server.services;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import server.storage.StorageException;
 import server.storage.StorageFileNotFoundException;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
+
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    //private final Path rootLocation;
     private StorageProperties storageProperties;
+
+    private void createFileUploadDirectory() {
+        if (!Files.exists(storageProperties.getPath())) {
+            try {
+                Files.createDirectory(storageProperties.getPath());
+            } catch (IOException e) {
+                throw new StorageException("Could not initialize storage", e);
+            }
+        }
+    }
 
     public FileSystemStorageService() {
         storageProperties = new StorageProperties("upload-dir");
-        init();
+        createFileUploadDirectory();
     }
 
     @Override
@@ -31,22 +42,11 @@ public class FileSystemStorageService implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            Files.copy(file.getInputStream(), this.storageProperties.getPath().resolve(fileName));
+
+            Files.copy(file.getInputStream(), this.storageProperties.getPath().resolve(fileName), REPLACE_EXISTING);
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
         }
-    }
-
-    @Override
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.storageProperties.getPath(), 1)
-                    .filter(path -> !path.equals(this.storageProperties.getPath()))
-                    .map(path -> this.storageProperties.getPath().relativize(path));
-        } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
-
     }
 
     @Override
@@ -70,18 +70,12 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(storageProperties.getPath().toFile());
-    }
-
-    @Override
-    public void init() {
-        if (!Files.exists(storageProperties.getPath())) {
-            try {
-                Files.createDirectory(storageProperties.getPath());
-            } catch (IOException e) {
-                throw new StorageException("Could not initialize storage", e);
-            }
+    public void delete(String fileName) {
+        try {
+            Files.delete(storageProperties.getPath().resolve(fileName));
+        } catch (IOException e) {
+            throw new StorageException("Failed to delete file " + fileName, e);
         }
     }
+
 }

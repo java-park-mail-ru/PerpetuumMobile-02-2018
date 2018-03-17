@@ -44,7 +44,6 @@ public class AuthorizationController {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Location", "/");
             return new ResponseEntity(headers, HttpStatus.TEMPORARY_REDIRECT);
-            //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
         }
 
         final Boolean changeLogin;
@@ -154,7 +153,6 @@ public class AuthorizationController {
     @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<Message> register(@RequestBody User user, HttpSession httpSession) {
         user.setImage("no_avatar.png");
-        System.out.println("USER IMAGE:" + user.getImage());
 
         if (userService.isEmailRegistered(user.getEmail())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
@@ -178,8 +176,6 @@ public class AuthorizationController {
         User userInDB = userService.checkUserById(userId);
         String userLogin = userInDB.getLogin();
         String userImage = userInDB.getImage();
-        System.out.println(userImage);
-        System.out.println(userLogin);
 
         if (userLogin == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
@@ -188,8 +184,6 @@ public class AuthorizationController {
         User user = new User();
         user.setLogin(userLogin);
         user.setImage(userImage);
-
-        System.out.println("GOGO" + userImage);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
 

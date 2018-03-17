@@ -1,12 +1,11 @@
 package server.controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import server.MvcConfig;
 import server.messages.Message;
 import server.messages.MessageStates;
-//import server.model.ChangeUser;
 import server.model.Paginator;
 import server.model.Scoreboard;
 import server.model.User;
@@ -14,9 +13,9 @@ import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-//import java.util.Comparator;
 import java.util.List;
 
+//@CrossOrigin(origins = MvcConfig.getOrigins(), allowCredentials = MvcConfig.getAllowCredentials())
 @CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com", "https://blendocu.herokuapp.com"}, allowCredentials = "true")
 @RestController
 public class ScoreboardController {
@@ -24,7 +23,6 @@ public class ScoreboardController {
     private final UserService userService;
 
     public ScoreboardController(UserService userService) {
-
         this.userService = userService;
     }
 
