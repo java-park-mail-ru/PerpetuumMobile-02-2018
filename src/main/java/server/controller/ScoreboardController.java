@@ -30,7 +30,7 @@ public class ScoreboardController {
         Integer to = pageNumber * onOnePage;
 
         if (pageNumber < 1) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.BAD_DATA));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.BAD_DATA.getMessage()));
         }
 
         List<User> usersFromDb = userService.getAllUsers();

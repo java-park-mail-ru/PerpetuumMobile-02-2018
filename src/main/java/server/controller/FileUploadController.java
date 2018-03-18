@@ -46,7 +46,7 @@ public class FileUploadController {
 
         final String fileType = file.getContentType();
         if (!fileType.equals("image/jpeg") && !fileType.equals("image/jpg") && !fileType.equals("image/png")) {
-            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(BAD_DATA);
+            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(BAD_DATA.getMessage());
         }
 
         final Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
@@ -71,7 +71,8 @@ public class FileUploadController {
         }
 
         currentUser.setImage(newCurrentUserImageName);
-        final ChangeImageMessage changeImageMessage = new ChangeImageMessage(MessageStates.SUCCESS_UPLOAD, newCurrentUserImageName);
+        final ChangeImageMessage changeImageMessage = new ChangeImageMessage(MessageStates.SUCCESS_UPLOAD.getMessage(),
+                                                                            newCurrentUserImageName);
         return ResponseEntity.ok().body(changeImageMessage);
     }
 

@@ -32,7 +32,7 @@ public class AuthorizationController {
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         if (userIdInSession == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
         User oldUser = userService.getUserById(userIdInSession);
@@ -62,41 +62,41 @@ public class AuthorizationController {
         // Login is already registered
         if (changeLogin) {
             if (userService.isLoginRegistered(changeUser.getLogin())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS.getMessage()));
             }
         }
 
         // Email is already registered
         if (changeEmail) {
             if (userService.isEmailRegistered(changeUser.getEmail())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS.getMessage()));
             }
         }
 
         if (changeEmail && changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
             oldUser.setEmail(changeUser.getEmail());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeEmail) {
             oldUser.setEmail(changeUser.getEmail());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changePassword) {
             if (changeUser.getOldPassword().equals(oldUser.getPassword())) {
                 oldUser.setPassword(changeUser.getNewPassword());
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
         }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA.getMessage()));
     }
 
     @PostMapping(value = "/logout", produces = "application/json")
@@ -105,11 +105,11 @@ public class AuthorizationController {
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         if (userIdInSession == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
         httpSession.invalidate();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.UNAUTHORIZED));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
     }
 
     @PostMapping(value = "/login", produces = "application/json")
@@ -118,7 +118,7 @@ public class AuthorizationController {
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         if (userIdInSession != null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.ALREADY_AUTHORIZED));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.ALREADY_AUTHORIZED.getMessage()));
         }
 
         // check whether data is enough to authorize
@@ -129,7 +129,7 @@ public class AuthorizationController {
         }
 
         if (loginOrEmail == null || user.getPassword() == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA.getMessage()));
         }
 
         //authorizing
@@ -137,11 +137,11 @@ public class AuthorizationController {
 
         if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED.getMessage()));
         }
 
         //no such user registered
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(MessageStates.BAD_AUTHORIZE));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(MessageStates.BAD_AUTHORIZE.getMessage()));
     }
 
     @PostMapping(value = "/register", produces = "application/json")
@@ -149,22 +149,22 @@ public class AuthorizationController {
         user.setImage("no_avatar.png");
 
         if (userService.isEmailRegistered(user.getEmail())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.EMAIL_ALREADY_EXISTS.getMessage()));
         }
 
         if (userService.isLoginRegistered(user.getLogin())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.LOGIN_ALREADY_EXISTS.getMessage()));
         }
         user.setScore(0);
         httpSession.setAttribute("blendocu", userService.addUser(user));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED.getMessage()));
     }
 
     @GetMapping(value = "/me", produces = "application/json")
     public ResponseEntity<?> me(HttpSession httpSession) {
         Integer userId = (Integer) httpSession.getAttribute("blendocu");
         if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
         User userInDB = userService.checkUserById(userId);
@@ -172,7 +172,7 @@ public class AuthorizationController {
         String userImage = userInDB.getImage();
 
         if (userLogin == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
         User user = new User();
