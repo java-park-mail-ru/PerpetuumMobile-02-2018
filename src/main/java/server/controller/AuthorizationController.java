@@ -12,7 +12,6 @@ import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
 
-@CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com", "https://blendocu.herokuapp.com"}, allowCredentials = "true")
 @RestController
 public class AuthorizationController {
 
@@ -87,11 +86,6 @@ public class AuthorizationController {
 
         if (changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
-        }
-
-        if (changeImage) {
-            // TODO Write it when image will be available to download
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA));
         }
 

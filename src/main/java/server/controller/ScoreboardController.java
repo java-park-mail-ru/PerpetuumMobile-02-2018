@@ -3,7 +3,6 @@ package server.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-//import server.MvcConfig;
 import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.Paginator;
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-//@CrossOrigin(origins = MvcConfig.getOrigins(), allowCredentials = MvcConfig.getAllowCredentials())
-@CrossOrigin(origins = {"http://127.0.0.1:3000", "http://localhost:3000", "https://blend-front.herokuapp.com", "https://blendocu.herokuapp.com"}, allowCredentials = "true")
 @RestController
 public class ScoreboardController {
 
