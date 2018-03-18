@@ -3,7 +3,7 @@ package server.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.MvcConfig;
+//import server.MvcConfig;
 import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.Paginator;

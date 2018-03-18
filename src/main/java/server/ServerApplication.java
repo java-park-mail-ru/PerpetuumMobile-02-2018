@@ -9,11 +9,6 @@ public class ServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
-//        try {
-//            ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] { "spring-bean.xml" });
-//        } catch (Throwable e) {
-//            System.out.println(e);
-//        }
    }
 
 }
