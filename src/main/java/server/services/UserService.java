@@ -67,7 +67,7 @@ public class UserService implements UserInterface {
     public Boolean isLoginRegistered(String login) {
         for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
             User userValue = user.getValue();
-            if (login.equals(userValue.getEmail())) {
+            if (login.equals(userValue.getLogin())) {
                 return true;
             }
         }
