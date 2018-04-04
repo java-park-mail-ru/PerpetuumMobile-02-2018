@@ -45,6 +45,11 @@ public class AuthorizationController {
             return new ResponseEntity(headers, HttpStatus.TEMPORARY_REDIRECT);
         }
 
+        if (!oldUser.getPassword().equals(changeUser.getOldPassword())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.BAD_PASSWORD.getMessage()));
+        }
+
+
         final Boolean changeLogin;
         final Boolean changeEmail;
         final Boolean changePassword;

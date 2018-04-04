@@ -202,6 +202,25 @@ class AuthorizationControllerTest {
     }
 
     @Test
+    void changeLoginInvalidPassword() {
+        final String newLogin = "newLogin";
+        ChangeUser changeUser = new ChangeUser();
+        changeUser.setOldPassword("abcd");
+        changeUser.setLogin(newLogin);
+
+        final List<String> cookies = loginCookie();
+
+        /* restoring cookie */
+        final HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.put(HttpHeaders.COOKIE, cookies);
+        final HttpEntity<ChangeUser> requestEntity = new HttpEntity<>(changeUser, requestHeaders);
+
+        ResponseEntity<Message> response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void changeEmail() {
         final String newEmail = "newemail@test.ru";
         ChangeUser changeUser = new ChangeUser();
@@ -225,6 +244,25 @@ class AuthorizationControllerTest {
         response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+
+    @Test
+    void changeEmailInvalidPassword() {
+        final String newEmail = "newemail@test.ru";
+        ChangeUser changeUser = new ChangeUser();
+        changeUser.setOldPassword("12345");
+        changeUser.setEmail(newEmail);
+
+        final List<String> cookies = loginCookie();
+
+        /* restoring cookie */
+        final HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.put(HttpHeaders.COOKIE, cookies);
+        final HttpEntity<ChangeUser> requestEntity = new HttpEntity<>(changeUser, requestHeaders);
+
+        final ResponseEntity<Message> response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
