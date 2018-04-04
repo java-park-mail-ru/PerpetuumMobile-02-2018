@@ -104,6 +104,7 @@ public class AuthorizationController {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
+
         if (userIdInSession == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
@@ -170,6 +171,7 @@ public class AuthorizationController {
         User userInDB = userService.checkUserById(userId);
         String userLogin = userInDB.getLogin();
         String userImage = userInDB.getImage();
+        String userEmail = userInDB.getEmail();
 
         if (userLogin == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
@@ -178,6 +180,7 @@ public class AuthorizationController {
         User user = new User();
         user.setLogin(userLogin);
         user.setImage(userImage);
+        user.setEmail(userEmail);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
 

@@ -18,6 +18,7 @@ public class UserService implements UserInterface {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 
     UserService() {
+        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("validLogin", "validEmail@test.ru", "validPassword@test.ru", 10));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("her", "her@mail.ru", "her", 10));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("warprobot", "warprobot@mail.ru", "her", 20));
         allUsers.put(ID_GENERATOR.getAndIncrement(), new User("qaz", "qaz@mail.ru", "qazzaq", 27));
