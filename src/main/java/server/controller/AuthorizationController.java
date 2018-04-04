@@ -169,15 +169,17 @@ public class AuthorizationController {
 
         User userInDB = userService.checkUserById(userId);
         String userLogin = userInDB.getLogin();
-        String userImage = userInDB.getImage();
 
         if (userLogin == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
+        String userImage = userInDB.getImage();
+        String userEmail = userInDB.getEmail();
         User user = new User();
         user.setLogin(userLogin);
         user.setImage(userImage);
+        user.setEmail(userEmail);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
 
