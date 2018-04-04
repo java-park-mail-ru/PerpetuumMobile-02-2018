@@ -1,95 +1,135 @@
 package server.services;
 
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import server.model.User;
+import server.dao.UserDao;
+import server.mappers.UserMapper;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.validation.constraints.NotNull;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @SuppressWarnings("unused")
-public class UserService implements UserInterface {
+public class UserService implements UserDao {
+    private final JdbcTemplate jdbcTemplate;
 
     private Map<Integer, User> allUsers = new HashMap<>();
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 
-    UserService() {
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("her", "her@mail.ru", "her", 10));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("warprobot", "warprobot@mail.ru", "her", 20));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("qaz", "qaz@mail.ru", "qazzaq", 27));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol1", "lol1@mail.ru", "lol1", 45));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol2", "lol2@mail.ru", "lol2", 57));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol3", "lol3@mail.ru", "lol3", 3));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol4", "lol4@mail.ru", "lol4", 58));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol5", "lol5@mail.ru", "lol5", 36));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol6", "lol6@mail.ru", "lol6", 23));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol7", "lol7@mail.ru", "lol7", 57));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol8", "lol8@mail.ru", "lol8", 234));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol9", "lol9@mail.ru", "lol9", 34));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol10", "lol10@mail.ru", "lol10", 432));
-        allUsers.put(ID_GENERATOR.getAndIncrement(), new User("lol11", "lol11@mail.ru", "lol11", 34));
+    public UserService(@NotNull JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return new ArrayList<>(allUsers.values());
+    public @NotNull List<User> getAllUsers() {
+        final String sql = "SELECT * FROM public.user";
+        return jdbcTemplate.query(sql, new UserMapper());
     }
 
     @Override
-    public Integer addUser(User newUser) {
-        Integer userId = ID_GENERATOR.getAndIncrement();
-        allUsers.put(userId, newUser);
-        return userId;
+    public Boolean isEmailRegistered(@NotNull String email) {
+        final String sql = "SELECT count(*) from public.user WHERE email = ?";
+        final Integer check = jdbcTemplate.queryForObject(sql, Integer.class, email);
+        return check != null && check > 0;
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return allUsers.get(id);
+    public Boolean isLoginRegistered(@NotNull String username) {
+        final String sql = "SELECT count(*) from public.user WHERE username = ?";
+        final Integer check = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        return check != null && check > 0;
     }
 
     @Override
-    public Boolean isEmailRegistered(String email) {
-        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
-            User userValue = user.getValue();
-
-            if (email.equals(userValue.getEmail())) {
-                return true;
-            }
+    public @Nullable User getUserById(@NotNull Integer id) {
+        final String sql = "SELECT * FROM public.user WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rwNumber) -> {
+                final User user = new User(rs.getInt("id"), rs.getString("username"),
+                        rs.getString("email"), rs.getString("password"),
+                        rs.getString("image"), rs.getInt("score"));
+                return user;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
-        return false;
     }
 
     @Override
-    public Boolean isLoginRegistered(String login) {
-        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
-            User userValue = user.getValue();
-            if (login.equals(userValue.getLogin())) {
-                return true;
-            }
+    public User getUserByUsername(@NotNull String username) {
+        final String sql = "SELECT * FROM public.user WHERE username = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{username}, (rs, rwNumber) -> {
+                final User user = new User(rs.getInt("id"), rs.getString("username"),
+                        rs.getString("email"), rs.getString("password"),
+                        rs.getString("image"), rs.getInt("score"));
+                return user;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
-        return false;
+    }
+
+    @Override
+    public User getUserByEmail(@NotNull String email) {
+        final String sql = "SELECT * FROM public.user WHERE email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{email}, (rs, rwNumber) -> {
+                final User user = new User(rs.getInt("id"), rs.getString("username"),
+                        rs.getString("email"), rs.getString("password"),
+                        rs.getString("image"), rs.getInt("score"));
+                return user;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+
+    @Override
+    public @NotNull Integer addUser(@NotNull User newUser) {
+        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        final Integer three = 3;
+        jdbcTemplate.update(con -> {
+            final PreparedStatement pst = con.prepareStatement(
+                    "insert into public.user(username, email, password)" + " values(?,?,?)" + " returning id",
+                    PreparedStatement.RETURN_GENERATED_KEYS);
+            pst.setString(1, newUser.getLogin());
+            pst.setString(2, newUser.getEmail());
+            pst.setString(three, newUser.getPassword());
+            return pst;
+        }, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     private Integer authorizeUserByEmail(User tryAuth) {
-        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
-            User userValue = user.getValue();
-            if (tryAuth.getPassword().equals(userValue.getPassword()) && tryAuth.getEmail().equals(userValue.getEmail())) {
-                return user.getKey();
-            }
+        User userInDB = getUserByEmail(tryAuth.getEmail());
+        if (userInDB == null) {
+            return null;
+        }
+        if (tryAuth.getPassword().equals(userInDB.getPassword())) {
+            return userInDB.getId();
         }
         return null;
     }
 
     private Integer authorizeUserByLogin(User tryAuth) {
-        for (Map.Entry<Integer, User> user: allUsers.entrySet()) {
-            User userValue = user.getValue();
-            if (tryAuth.getPassword().equals(userValue.getPassword()) && tryAuth.getLogin().equals(userValue.getLogin())) {
-                return user.getKey();
-            }
+        User userInDB = getUserByUsername(tryAuth.getLogin());
+        if (userInDB == null) {
+            return null;
+        }
+        if (tryAuth.getPassword().equals(userInDB.getPassword())) {
+            return userInDB.getId();
         }
         return null;
     }
@@ -104,11 +144,6 @@ public class UserService implements UserInterface {
 
     @Override
     public User checkUserById(Integer userIdInDB) {
-        for (Integer userId: allUsers.keySet()) {
-            if (userId.equals(userIdInDB)) {
-                return allUsers.get(userId);
-            }
-        }
-        return null;
+        return getUserById(userIdInDB);
     }
 }

@@ -36,22 +36,29 @@ class AuthorizationControllerTest {
     void testRegister() throws Exception {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"qwerty\", \"email\": \"qwerty@test.ru\", \"password\": \"12345\"}"))
+                .content("{\"login\": \"qwertyz\", \"email\": \"qwertyz@test.ru\", \"password\": \"12345\"}"))
                 .andExpect(status().isAccepted());
     }
 
     @Test
-    void testRegisterExistUser() throws Exception {
+    void testRegisterExistEmail() throws Exception {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"player\", \"email\": \"test@test.ru\", \"password\": \"12345\"}"));
+                .content("{\"login\": \"player\", \"email\": \"player@test.ru\", \"password\": \"12345\"}"));
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"player\", \"email\": \"player@test.ru\", \"password\": \"12345\"}"))
+                .content("{\"login\": \"tester\", \"email\": \"player@test.ru\", \"password\": \"12345\"}"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testRegisterExistName() throws Exception {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"tester\", \"email\": \"test@test.ru\", \"password\": \"12345\"}"))
+                .content("{\"login\": \"player\", \"email\": \"player@test.ru\", \"password\": \"12345\"}"));
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"login\": \"player\", \"email\": \"test@test.ru\", \"password\": \"12345\"}"))
                 .andExpect(status().isForbidden());
     }
 
@@ -59,14 +66,14 @@ class AuthorizationControllerTest {
     void loginTest() throws Exception {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"logintest\", \"email\": \"logintest@test.ru\", \"password\": \"12345\"}"));
+                .content("{\"login\": \"test\", \"email\": \"test@test.ru\", \"password\": \"12345\"}"));
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"logintest\", \"email\": null, \"password\": \"12345\"}"))
+                .content("{\"login\": \"test\", \"email\": null, \"password\": \"12345\"}"))
                 .andExpect(status().isAccepted());
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": null, \"email\": \"logintest@test.ru\", \"password\": \"12345\"}"))
+                .content("{\"login\": null, \"email\": \"test@test.ru\", \"password\": \"12345\"}"))
                 .andExpect(status().isAccepted());
     }
 
