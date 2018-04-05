@@ -1,3 +1,11 @@
 language: java
 jdk:
 - oraclejdk9
+addons:
+  postgresql: "9.6"
+services:
+- postgresql
+before_script:
+  - psql -c "create user chapay with password '4rfgt5';" -U postgres
+  - psql -c "create database gamedb;" -U postgres
+  - psql -c "grant all on database gamedb to chapay;" -U postgres
