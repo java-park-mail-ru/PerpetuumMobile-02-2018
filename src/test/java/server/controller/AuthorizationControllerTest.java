@@ -14,16 +14,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.springframework.transaction.annotation.Transactional;
 import server.messages.Message;
 import server.model.ChangeUser;
 import server.model.User;
+import server.model.UserAuth;
+import server.services.UserService;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 class AuthorizationControllerTest {
 
@@ -40,12 +44,16 @@ class AuthorizationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private UserService userService;
+
     @Test
+    @Transactional
     void testRegister() throws Exception {
         // register test user
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"qwerty\", \"email\": \"qwerty@test.ru\", \"password\": \"12345\"}"))
+                .content("{\"login\": \"register\", \"email\": \"register@test.ru\", \"password\": \"12345\"}"))
                 .andExpect(status().isAccepted());
     }
 
@@ -68,11 +76,11 @@ class AuthorizationControllerTest {
     void loginTest() throws Exception {
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"login\": \"%s\", \"email\": null, \"password\": \"%s\"}", login, password)))
+                .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", login, password)))
                 .andExpect(status().isAccepted());
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"login\": null, \"email\": \"%s\", \"password\": \"%s\"}", email, password)))
+                .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)))
                 .andExpect(status().isAccepted());
     }
 
@@ -81,25 +89,25 @@ class AuthorizationControllerTest {
         // No info send
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": null, \"email\": null, \"password\": null}"))
+                .content("{\"email\": null, \"password\": null}"))
                 .andExpect(status().isForbidden());
 
         // Unregistered email
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": null, \"email\": \"unreg@test.ru\", \"password\": \"12345\"}"))
+                .content("{\"email\": \"unreg@test.ru\", \"password\": \"12345\"}"))
                 .andExpect(status().isBadRequest());
 
         // Unregistered login
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"unreg\", \"email\": null, \"password\": \"12345\"}"))
+                .content("{\"email\": \"unreg\", \"password\": \"12345\"}"))
                 .andExpect(status().isBadRequest());
 
         // No password specified
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"login\": \"%s\", \"email\": \"%s\", \"password\": null}", login, email)))
+                .content(String.format("{\"email\": \"%s\", \"password\": null}", email)))
                 .andExpect(status().isForbidden());
     }
 
@@ -109,19 +117,22 @@ class AuthorizationControllerTest {
         assertEquals(HttpStatus.UNAUTHORIZED, meResp.getStatusCode());
     }
 
-    private List<String> loginCookie() {
-        final User user = new User();
+    private List<String> loginCookie() throws Exception {
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"%s\", \"email\": \"%s\", \"password\": \"%s\"}", login, email, password)));
+        final UserAuth user = new UserAuth();
         user.setPassword(password);
         user.setLogin(login);
 
-        final HttpEntity<User> entity = new HttpEntity<>(user);
+        final HttpEntity<UserAuth> entity = new HttpEntity<>(user);
         final ResponseEntity<Message> msg = testRestTemplate.exchange("/login", HttpMethod.POST, entity, Message.class);
 
         return msg.getHeaders().get("Set-Cookie");
     }
 
     @Test
-    void meAuthorized() {
+    void meAuthorized() throws Exception {
         final List<String> cookies = loginCookie();
 
         /* restoring cookie */
@@ -152,7 +163,7 @@ class AuthorizationControllerTest {
     }
 
     @Test
-    void logoutAuthorized() {
+    void logoutAuthorized() throws Exception {
         final List<String> cookies = loginCookie();
 
         /* restoring cookie */
@@ -176,7 +187,7 @@ class AuthorizationControllerTest {
     }*/
 
     @Test
-    void changeLogin() {
+    void changeLogin() throws Exception {
         final String newLogin = "newLogin";
         ChangeUser changeUser = new ChangeUser();
         changeUser.setOldPassword(password);
@@ -202,7 +213,7 @@ class AuthorizationControllerTest {
     }
 
     @Test
-    void changeLoginInvalidPassword() {
+    void changeLoginInvalidPassword() throws Exception {
         final String newLogin = "newLogin";
         ChangeUser changeUser = new ChangeUser();
         changeUser.setOldPassword("abcd");
@@ -221,7 +232,7 @@ class AuthorizationControllerTest {
     }
 
     @Test
-    void changeEmail() {
+    void changeEmail() throws Exception {
         final String newEmail = "newemail@test.ru";
         ChangeUser changeUser = new ChangeUser();
         changeUser.setOldPassword(password);
@@ -247,7 +258,7 @@ class AuthorizationControllerTest {
     }
 
     @Test
-    void changeEmailInvalidPassword() {
+    void changeEmailInvalidPassword() throws Exception {
         final String newEmail = "newemail@test.ru";
         ChangeUser changeUser = new ChangeUser();
         changeUser.setOldPassword("12345");
@@ -266,7 +277,7 @@ class AuthorizationControllerTest {
     }
 
     @Test
-    void changePassword() {
+    void changePassword() throws Exception {
         final String newPassword = "newpassword";
         ChangeUser changeUser = new ChangeUser();
         changeUser.setOldPassword(password);

@@ -14,9 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import server.model.UserAuth;
 
 import javax.validation.constraints.NotNull;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @SuppressWarnings("unused")
@@ -112,8 +115,8 @@ public class UserService implements UserDao {
         return keyHolder.getKey().intValue();
     }
 
-    private Integer authorizeUserByEmail(User tryAuth) {
-        User userInDB = getUserByEmail(tryAuth.getEmail());
+    private Integer authorizeUserByEmail(UserAuth tryAuth) {
+        User userInDB = getUserByEmail(tryAuth.getLogin());
         if (userInDB == null) {
             return null;
         }
@@ -123,7 +126,7 @@ public class UserService implements UserDao {
         return null;
     }
 
-    private Integer authorizeUserByLogin(User tryAuth) {
+    private Integer authorizeUserByLogin(UserAuth tryAuth) {
         User userInDB = getUserByUsername(tryAuth.getLogin());
         if (userInDB == null) {
             return null;
@@ -135,11 +138,16 @@ public class UserService implements UserDao {
     }
 
     @Override
-    public Integer authorizeUser(User tryAuth) {
-        if (tryAuth.getLogin() != null) {
-            return authorizeUserByLogin(tryAuth);
+    public Integer authorizeUser(UserAuth tryAuth) {
+
+        Pattern pattern = Pattern.compile("^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
+        Matcher matcher = pattern.matcher(tryAuth.getLogin());
+        boolean isEmail = matcher.matches();
+
+        if (isEmail) {
+            return authorizeUserByEmail(tryAuth);
         }
-        return authorizeUserByEmail(tryAuth);
+        return authorizeUserByLogin(tryAuth);
     }
 
     @Override

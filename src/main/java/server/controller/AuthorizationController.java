@@ -8,6 +8,7 @@ import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.ChangeUser;
 import server.model.User;
+import server.model.UserAuth;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -118,27 +119,27 @@ public class AuthorizationController {
     }
 
     @PostMapping(value = "/login", produces = "application/json")
-    public ResponseEntity<Message> login(@RequestBody User user, HttpSession httpSession) {
+    public ResponseEntity<Message> login(@RequestBody UserAuth userAuth, HttpSession httpSession) {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         if (userIdInSession != null) {
+            System.out.println("AAAAAAAAAAAAAAa");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.ALREADY_AUTHORIZED.getMessage()));
         }
 
         // check whether data is enough to authorize
-        String loginOrEmail = user.getLogin();
+        String login = userAuth.getLogin();
 
-        if (loginOrEmail == null) {
-            loginOrEmail = user.getEmail();
-        }
-
-        if (loginOrEmail == null || user.getPassword() == null) {
+        if (login == null || userAuth.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA.getMessage()));
         }
 
+
         //authorizing
-        Integer userIdInDB = userService.authorizeUser(user);
+        Integer userIdInDB = userService.authorizeUser(userAuth);
+        System.out.println(userAuth.getLogin());
+        System.out.println(userIdInDB);
 
         if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);

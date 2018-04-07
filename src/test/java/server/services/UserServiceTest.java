@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import server.model.User;
+import server.model.UserAuth;
 
 import java.util.List;
 
@@ -75,8 +76,9 @@ class UserServiceTest {
     @Test
     void authorizeUser() {
         User newUser = new User("testname", "testemail@mail.ru", "testpassword");
+        UserAuth newUserAuth = new UserAuth("testname", "testpassword");
         Integer idNewUser = userService.addUser(newUser);
-        Integer idFromAuthorization = userService.authorizeUser(newUser);
+        Integer idFromAuthorization = userService.authorizeUser(newUserAuth);
         assertEquals(idNewUser, idFromAuthorization);
     }
 

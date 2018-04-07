@@ -2,6 +2,7 @@ package server.dao;
 
 import org.springframework.lang.Nullable;
 import server.model.User;
+import server.model.UserAuth;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface UserDao {
 
     Boolean isLoginRegistered(@NotNull String login);
 
-    Integer authorizeUser(@NotNull User tryAuth);
+    Integer authorizeUser(@NotNull UserAuth tryAuth);
 
     User checkUserById(@NotNull Integer userIdInDB);
 }
