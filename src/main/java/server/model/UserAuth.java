@@ -9,7 +9,7 @@ public class UserAuth {
         this.email = login;
     }
 
-    public UserAuth() {}
+    public UserAuth() { }
 
 
     public String getLogin() {
