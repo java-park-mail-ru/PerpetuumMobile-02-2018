@@ -60,7 +60,7 @@ public class AuthorizationController {
                         || changeUser.getLogin().equals(""));
         changeEmail = !(changeUser.getEmail() == null
                         || changeUser.getEmail().equals(""));
-        changeImage = changeUser.getImage() != null;
+        //  changeImage = changeUser.getImage() != null;
         changePassword = !(changeUser.getOldPassword() == null
                         || changeUser.getNewPassword() == null
                         || changeUser.getNewPassword().equals(""));
@@ -82,22 +82,26 @@ public class AuthorizationController {
         if (changeEmail && changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
             oldUser.setEmail(changeUser.getEmail());
+            userService.updateUser(oldUser);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeEmail) {
             oldUser.setEmail(changeUser.getEmail());
+            userService.updateUser(oldUser);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
+            userService.updateUser(oldUser);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changePassword) {
             if (changeUser.getOldPassword().equals(oldUser.getPassword())) {
                 oldUser.setPassword(changeUser.getNewPassword());
+                userService.updateUser(oldUser);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
         }
@@ -124,7 +128,6 @@ public class AuthorizationController {
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         if (userIdInSession != null) {
-            System.out.println("AAAAAAAAAAAAAAa");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.ALREADY_AUTHORIZED.getMessage()));
         }
 
@@ -138,8 +141,6 @@ public class AuthorizationController {
 
         //authorizing
         Integer userIdInDB = userService.authorizeUser(userAuth);
-        System.out.println(userAuth.getLogin());
-        System.out.println(userIdInDB);
 
         if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);

@@ -49,6 +49,11 @@ public class FileUploadController {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(BAD_DATA.getMessage());
         }
 
+        String fileFormat = "jpeg";
+        if (fileType.equals("image/png")) {
+            fileFormat = "png";
+        }
+
         final Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         final User currentUser = userService.getUserById(userIdInSession);
@@ -62,7 +67,7 @@ public class FileUploadController {
             }
         }
 
-        final String newCurrentUserImageName = UUID.randomUUID().toString() + '_' + Integer.toString(userIdInSession);
+        final String newCurrentUserImageName = UUID.randomUUID().toString() + '_' + Integer.toString(userIdInSession) + '.' + fileFormat;
 
         try {
             storageService.store(file, newCurrentUserImageName);
@@ -71,6 +76,7 @@ public class FileUploadController {
         }
 
         currentUser.setImage(newCurrentUserImageName);
+        userService.updateUser(currentUser);
         final ChangeImageMessage changeImageMessage = new ChangeImageMessage(MessageStates.SUCCESS_UPLOAD.getMessage(),
                                                                             newCurrentUserImageName);
         return ResponseEntity.ok().body(changeImageMessage);
