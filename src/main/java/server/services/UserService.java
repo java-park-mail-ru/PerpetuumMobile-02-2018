@@ -69,7 +69,8 @@ public class UserService implements UserDao {
     public User getUserByUsername(@NotNull String username) {
         final String sql = "SELECT * FROM public.user WHERE username = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, new Object[]{username}, (rs, rwNumber) -> new User(rs.getInt("id"), rs.getString("username"),
+            return jdbcTemplate.queryForObject(sql, new Object[]{username},
+                    (rs, rwNumber) -> new User(rs.getInt("id"), rs.getString("username"),
                     rs.getString("email"), rs.getString("password"),
                     rs.getString("image"), rs.getInt("score")));
         } catch (EmptyResultDataAccessException e) {
@@ -81,7 +82,8 @@ public class UserService implements UserDao {
     public User getUserByEmail(@NotNull String email) {
         final String sql = "SELECT * FROM public.user WHERE email = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, new Object[]{email}, (rs, rwNumber) -> new User(rs.getInt("id"), rs.getString("username"),
+            return jdbcTemplate.queryForObject(sql, new Object[]{email},
+                    (rs, rwNumber) -> new User(rs.getInt("id"), rs.getString("username"),
                     rs.getString("email"), rs.getString("password"),
                     rs.getString("image"), rs.getInt("score")));
         } catch (EmptyResultDataAccessException e) {
