@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Configuration
-@PropertySource("config/config.properties")
+@PropertySource("classpath:/config/config.properties")
 public class MvcConfig {
 
     @Value("#{'${ORIGINS}'.split(',')}")
