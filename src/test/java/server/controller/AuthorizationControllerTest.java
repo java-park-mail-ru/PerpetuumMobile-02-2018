@@ -1,8 +1,10 @@
 package server.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -12,8 +14,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import server.messages.Message;
 import server.model.ChangeUser;
@@ -26,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Transactional
 class AuthorizationControllerTest {
@@ -44,45 +49,40 @@ class AuthorizationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    /*@Before
-    void registerTestUser() throws Exception {
-        // register test user
+    @BeforeEach
+    void setup() throws Exception {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"login\": \"%s\", \"email\": \"%s\", \"password\": \"%s\"}", login, email, password)))
                 .andExpect(status().isAccepted());
-    }*/
-
-    @Test
-    void testRegister() throws Exception {
-        // register test user
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"qwerty\", \"email\": \"qwerty@test.ru\", \"password\": \"12345\"}"))
-                .andExpect(status().isAccepted());
     }
 
     @Test
-    void testRegisterExistUser() throws Exception {
-        // Register user with the login that is already registered
+    void testRegisterExistingLogin() throws Exception {
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"login\": \"%s\", \"email\": \"player@test.ru\", \"password\": \"12345\"}", login)))
-                .andExpect(status().isForbidden());
-
-        // Register user with the same email that is already registered
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"login\": \"tester\", \"email\": \"%s\", \"password\": \"12345\"}", email)))
+                .content(String.format("{\"login\": \"%s\", \"email\": \"email@test.ru\", \"password\": \"%s\"}", login, password)))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void loginTest() throws Exception {
+    void testRegisterExistingEmail() throws Exception {
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"tester\", \"email\": \"%s\", \"password\": \"%s\"}", email, password)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testLoginLogin() throws Exception {
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", login, password)))
+                .content(String.format("{\"login\": \"%s\", \"password\": \"%s\"}", login, password)))
                 .andExpect(status().isAccepted());
+    }
+
+    @Test
+    void testLoginEmail() throws Exception {
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)))
@@ -90,221 +90,177 @@ class AuthorizationControllerTest {
     }
 
     @Test
-    void loginTestUnsuccess() throws Exception {
-        // No info send
+    void testLoginNoInfo() throws Exception {
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\": null, \"password\": null}"))
-                .andExpect(status().isForbidden());
-
-        // Unregistered email
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\": \"unreg@test.ru\", \"password\": \"12345\"}"))
+                .content("{\"email\": \"null\", \"password\": \"null\"}"))
                 .andExpect(status().isBadRequest());
+    }
 
-        // Unregistered login
+    @Test
+    void testLoginUnregEmail() throws Exception {
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\": \"unreg\", \"password\": \"12345\"}"))
+                .content("{\"email\": \"newemail@new.com\", \"password\": \"12345\"}"))
                 .andExpect(status().isBadRequest());
+    }
 
-        // No password specified
+    @Test
+    void testLoginUnregLogin() throws Exception {
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"email\": \"%s\", \"password\": null}", email)))
+                .content("{\"login\": \"newlogin\", \"password\": \"12345\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testLoginNoPassword() throws Exception {
+        mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"%s\", \"password\": \"\"}", login)))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void testMeRequiresLogin() {
-        final ResponseEntity<User> meResp = testRestTemplate.getForEntity("/me", User.class);
-        assertEquals(HttpStatus.UNAUTHORIZED, meResp.getStatusCode());
-    }
-
-    private List<String> loginCookie() {
-        /*mockMvc.perform(post("/register")
+    void testLoginWrongPassword() throws Exception {
+        mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)));*/
-        final UserAuth user = new UserAuth();
-        user.setPassword(password);
-        user.setLogin(login);
-
-        final HttpEntity<UserAuth> entity = new HttpEntity<>(user);
-        final ResponseEntity<Message> msg = testRestTemplate.exchange("/login", HttpMethod.POST, entity, Message.class);
-
-        return msg.getHeaders().get("Set-Cookie");
+                .content(String.format("{\"login\": \"%s\", \"password\": \"wrong123\"}", login)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void meAuthorized() {
-        final List<String> cookies = loginCookie();
+    void testMeUnauthorized() throws Exception {
+        mockMvc.perform(get("/me")).andExpect(status().isUnauthorized());
+    }
 
-        /* restoring cookie */
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.put(HttpHeaders.COOKIE, cookies);
-        final HttpEntity<Void> requestEntity = new HttpEntity<>(requestHeaders);
-
-        final ResponseEntity<User> response = testRestTemplate.exchange("/me", HttpMethod.GET, requestEntity, User.class);
-
-        final User userResp = response.getBody();
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        assertEquals(login, userResp.getLogin());
-        assertEquals(email, userResp.getEmail());
-        assertEquals("no_avatar.png", userResp.getImage());
-        assertEquals(null, userResp.getPassword());
+    private MockHttpSession loginCookie() {
+        MvcResult result = null;
+        try {
+            result = mockMvc.perform(post("/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)))
+                    .andExpect(status().isAccepted()).andReturn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assert result != null;
+        return (MockHttpSession)result.getRequest().getSession();
     }
 
     @Test
-    void meUnauthorized() {
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        final HttpEntity<User> requestEntity = new HttpEntity<>(requestHeaders);
+    void meAuthorized() throws Exception {
+        final MockHttpSession session = loginCookie();
 
-        final ResponseEntity<Message> response = testRestTemplate.exchange("/me", HttpMethod.GET, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        mockMvc.perform(get("/me").session(session))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("login").value(login))
+                .andExpect(jsonPath("email").value(email))
+                .andExpect(jsonPath("image").value("no_avatar.png"));
     }
 
     @Test
-    void logoutAuthorized() {
-        final List<String> cookies = loginCookie();
-
-        /* restoring cookie */
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.put(HttpHeaders.COOKIE, cookies);
-        final HttpEntity<Void> requestEntity = new HttpEntity<>(requestHeaders);
-
-        final ResponseEntity<Message> response = testRestTemplate.exchange("/logout", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-    }
-
-    // Have no ideas why it is not works
-    /*@Test
-    void logoutUnauthorized() {
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        final HttpEntity<Void> requestEntity = new HttpEntity<>(requestHeaders);
-        ResponseEntity<Message> response = testRestTemplate.exchange("/logout", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }*/
-
-    @Test
-    void changeLogin() {
-        final String newLogin = "newLogin";
-        ChangeUser changeUser = new ChangeUser();
-        changeUser.setOldPassword(password);
-        changeUser.setLogin(newLogin);
-
-        final List<String> cookies = loginCookie();
-
-        /* restoring cookie */
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.put(HttpHeaders.COOKIE, cookies);
-        final HttpEntity<ChangeUser> requestEntity = new HttpEntity<>(changeUser, requestHeaders);
-
-        ResponseEntity<Message> response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-
-        // restore test user data
-        changeUser.setLogin(login);
-
-        response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-    }
-
-    @Test
-    void changeLoginInvalidPassword() {
-        final String newLogin = "newLogin";
-        ChangeUser changeUser = new ChangeUser();
-        changeUser.setOldPassword("abcd");
-        changeUser.setLogin(newLogin);
-
-        final List<String> cookies = loginCookie();
-
-        /* restoring cookie */
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.put(HttpHeaders.COOKIE, cookies);
-        final HttpEntity<ChangeUser> requestEntity = new HttpEntity<>(changeUser, requestHeaders);
-
-        ResponseEntity<Message> response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
-
-    @Test
-    void changeEmail() {
+    void changeEmail() throws Exception {
         final String newEmail = "newemail@test.ru";
-        ChangeUser changeUser = new ChangeUser();
-        changeUser.setOldPassword(password);
-        changeUser.setEmail(newEmail);
+        final MockHttpSession session = loginCookie();
 
-        final List<String> cookies = loginCookie();
-
-        /* restoring cookie */
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.put(HttpHeaders.COOKIE, cookies);
-        final HttpEntity<ChangeUser> requestEntity = new HttpEntity<>(changeUser, requestHeaders);
-
-        ResponseEntity<Message> response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-
-        // restore test user data
-        changeUser.setEmail(email);
-
-        response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        mockMvc.perform(post("/settings").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"email\": \"%s\", \"oldPassword\": \"%s\"}", newEmail, password)))
+                .andExpect(status().isAccepted());
     }
 
     @Test
-    void changeEmailInvalidPassword() {
+    void changeEmailExisting() throws Exception {
+        final MockHttpSession session = loginCookie();
+
+        mockMvc.perform(post("/settings").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"email\": \"%s\", \"oldPassword\": \"%s\"}", email, password)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void changeEmailInvalidPassword() throws Exception {
         final String newEmail = "newemail@test.ru";
-        ChangeUser changeUser = new ChangeUser();
-        changeUser.setOldPassword("12345");
-        changeUser.setEmail(newEmail);
+        final MockHttpSession session = loginCookie();
 
-        final List<String> cookies = loginCookie();
-
-        /* restoring cookie */
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.put(HttpHeaders.COOKIE, cookies);
-        final HttpEntity<ChangeUser> requestEntity = new HttpEntity<>(changeUser, requestHeaders);
-
-        final ResponseEntity<Message> response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        mockMvc.perform(post("/settings").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"email\": \"%s\", \"oldPassword\": \"wrong123\"}", newEmail)))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void changePassword() {
-        final String newPassword = "newpassword";
-        ChangeUser changeUser = new ChangeUser();
-        changeUser.setOldPassword(password);
-        changeUser.setNewPassword(newPassword);
+    void changeLogin() throws Exception {
+        final String newLogin = "newLogin";
+        final MockHttpSession session = loginCookie();
 
-        final List<String> cookies = loginCookie();
-
-        /* restoring cookie */
-        final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.put(HttpHeaders.COOKIE, cookies);
-        final HttpEntity<ChangeUser> requestEntity = new HttpEntity<>(changeUser, requestHeaders);
-
-        ResponseEntity<Message> response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-
-        // restore test user data
-        changeUser.setOldPassword(newPassword);
-        changeUser.setNewPassword(password);
-
-        response = testRestTemplate.exchange("/settings", HttpMethod.POST, requestEntity, Message.class);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        mockMvc.perform(post("/settings").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"%s\", \"oldPassword\": \"%s\"}", newLogin, password)))
+                .andExpect(status().isAccepted());
     }
 
+    @Test
+    void changeLoginExisting() throws Exception {
+        final MockHttpSession session = loginCookie();
+
+        mockMvc.perform(post("/settings").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"%s\", \"oldPassword\": \"%s\"}", login, password)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void changeLoginInvalidPassword() throws Exception {
+        final String newLogin = "newLogin";
+        final MockHttpSession session = loginCookie();
+
+        mockMvc.perform(post("/settings").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"%s\", \"oldPassword\": \"wrong123\"}", newLogin)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void changePassword() throws Exception {
+        final String newPassword = "newPassword";
+        final MockHttpSession session = loginCookie();
+
+        mockMvc.perform(post("/settings").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"oldPassword\": \"%s\", \"newPassword\": \"%s\"}", password, newPassword)))
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    void changeSettingsUnauthorized() throws Exception {
+        mockMvc.perform(post("/settings")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"newLogin\", \"oldPassword\": \"%s\"}",password)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void logoutAuthorized() throws Exception {
+        final MockHttpSession session = loginCookie();
+
+        mockMvc.perform(get("/me").session(session)).andExpect(status().isAccepted());
+    }
+
+    @Test
+    void logoutUnauthorized() throws Exception {
+        mockMvc.perform(get("/me")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testLoginAuthoruzed() throws Exception {
+        final MockHttpSession session = loginCookie();
+
+        mockMvc.perform(post("/login").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"login\": \"%s\", \"password\": \"%s\"}", login, password)))
+                .andExpect(status().isForbidden());
+    }
 }

@@ -134,7 +134,7 @@ public class AuthorizationController {
         // check whether data is enough to authorize
         String login = userAuth.getLogin();
 
-        if (login == null || userAuth.getPassword() == null) {
+        if (login == null || userAuth.getPassword() == null || userAuth.getPassword().equals("")) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA.getMessage()));
         }
 
