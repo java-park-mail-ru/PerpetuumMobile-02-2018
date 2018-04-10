@@ -2,6 +2,7 @@ package server.model;
 
 @SuppressWarnings("unused")
 public class User {
+    private Integer id;
     private String  login;
     private String  email;
     private String  password;
@@ -16,12 +17,31 @@ public class User {
         this.image = "no_avatar.png";
     }
 
-    public User(String login, String email, String password, Integer initScore) {
+    public User(Integer id, String login, String email, String password, Integer initScore) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
         this.score = initScore;
         this.image = "no_avatar.png";
+    }
+
+    public User(String login, String email, String password, Integer initScore) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.score = initScore;
+        this.image = "no_avatar.png";
+    }
+
+    public User(Integer id, String login, String email, String password, String image, Integer initScore) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.score = initScore;
+        this.image = image;
     }
 
     public User() {
@@ -47,6 +67,10 @@ public class User {
     public String getPassword() {
 
         return password;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public void setPassword(String password) {

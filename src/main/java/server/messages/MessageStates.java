@@ -7,6 +7,7 @@ public enum MessageStates {
     BAD_AUTHORIZE("invalid login or password"),
     EMAIL_ALREADY_EXISTS("this email already registered"),
     LOGIN_ALREADY_EXISTS("this login already registered"),
+    BAD_PASSWORD("bad password"),
     REGISTERED("you are registered!!!"),
     PASSWORDS_DO_NOT_MATCH("passwords don't match"),
     UNAUTHORIZED("not authorized"),

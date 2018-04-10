@@ -5,7 +5,7 @@ public class ChangeUser extends User {
     private String oldPassword;
     private String image;
 
-    ChangeUser() {
+    public ChangeUser() {
         super();
     }
 

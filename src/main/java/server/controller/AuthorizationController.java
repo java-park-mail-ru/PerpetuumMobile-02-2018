@@ -8,6 +8,7 @@ import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.ChangeUser;
 import server.model.User;
+import server.model.UserAuth;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -45,6 +46,11 @@ public class AuthorizationController {
             return new ResponseEntity(headers, HttpStatus.TEMPORARY_REDIRECT);
         }
 
+        if (!oldUser.getPassword().equals(changeUser.getOldPassword())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.BAD_PASSWORD.getMessage()));
+        }
+
+
         final Boolean changeLogin;
         final Boolean changeEmail;
         final Boolean changePassword;
@@ -54,7 +60,7 @@ public class AuthorizationController {
                         || changeUser.getLogin().equals(""));
         changeEmail = !(changeUser.getEmail() == null
                         || changeUser.getEmail().equals(""));
-        changeImage = changeUser.getImage() != null;
+        //  changeImage = changeUser.getImage() != null;
         changePassword = !(changeUser.getOldPassword() == null
                         || changeUser.getNewPassword() == null
                         || changeUser.getNewPassword().equals(""));
@@ -76,22 +82,26 @@ public class AuthorizationController {
         if (changeEmail && changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
             oldUser.setEmail(changeUser.getEmail());
+            userService.updateUser(oldUser);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeEmail) {
             oldUser.setEmail(changeUser.getEmail());
+            userService.updateUser(oldUser);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
+            userService.updateUser(oldUser);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changePassword) {
             if (changeUser.getOldPassword().equals(oldUser.getPassword())) {
                 oldUser.setPassword(changeUser.getNewPassword());
+                userService.updateUser(oldUser);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
         }
@@ -113,7 +123,7 @@ public class AuthorizationController {
     }
 
     @PostMapping(value = "/login", produces = "application/json")
-    public ResponseEntity<Message> login(@RequestBody User user, HttpSession httpSession) {
+    public ResponseEntity<Message> login(@RequestBody UserAuth userAuth, HttpSession httpSession) {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
@@ -122,18 +132,15 @@ public class AuthorizationController {
         }
 
         // check whether data is enough to authorize
-        String loginOrEmail = user.getLogin();
+        String login = userAuth.getLogin();
 
-        if (loginOrEmail == null) {
-            loginOrEmail = user.getEmail();
-        }
-
-        if (loginOrEmail == null || user.getPassword() == null) {
+        if (login == null || userAuth.getPassword() == null || userAuth.getPassword().equals("")) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA.getMessage()));
         }
 
+
         //authorizing
-        Integer userIdInDB = userService.authorizeUser(user);
+        Integer userIdInDB = userService.authorizeUser(userAuth);
 
         if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);
@@ -169,15 +176,17 @@ public class AuthorizationController {
 
         User userInDB = userService.checkUserById(userId);
         String userLogin = userInDB.getLogin();
-        String userImage = userInDB.getImage();
 
         if (userLogin == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
+        String userImage = userInDB.getImage();
+        String userEmail = userInDB.getEmail();
         User user = new User();
         user.setLogin(userLogin);
         user.setImage(userImage);
+        user.setEmail(userEmail);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
 
