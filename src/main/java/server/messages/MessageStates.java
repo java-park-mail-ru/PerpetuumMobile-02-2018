@@ -13,7 +13,12 @@ public enum MessageStates {
     UNAUTHORIZED("not authorized"),
     CHANGED_USER_DATA("user data has been changed"),
     BAD_DATA("bad data given"),
-    SUCCESS_UPLOAD("you successfully uploaded file");
+    SUCCESS_UPLOAD("you successfully uploaded file"),
+    SUCCESS_UPDATE("successfully update"),
+    MAP_NOT_FOUND("map not found"),
+    LEVEL_NOT_FOUND("level not found"),
+    NOT_UPDATED("nothing to update"),
+    DATABASE_ERROR("database error");
 
     private String message;
 
