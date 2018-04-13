@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,7 +41,7 @@ public class GameController {
         }
 
 
-        String path = filesDir +"maps/" + levelName + ".map";
+        String path = filesDir + "maps/" + levelName + ".map";
         String body = "";
         List<String> lines;
         try {

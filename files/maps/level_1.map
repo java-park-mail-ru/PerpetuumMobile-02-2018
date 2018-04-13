@@ -1,28 +1,28 @@
 {
-    countX: 2,
-    countY: 3,
-    cells: [{
-        x: 0,
-        y: 0,
-        fixed: true,
-        colour: "#691f23"
+    "countX": 2,
+    "countY": 3,
+    "cells": [{
+        "x": 0,
+        "y": 0,
+        "fixed": true,
+        "colour": "#691f23"
     },
     {
-        x: 0,
-        y: 2,
-        fixed: true,
-        colour: "#875a03"
+        "x": 0,
+        "y": 2,
+        "fixed": true,
+        "colour": "#875a03"
     },
     {
-        x: 0,
-        y: 1,
-        fixed: false,
-        colour: "#993d0c"
+        "x": 0,
+        "y": 1,
+        "fixed": false,
+        "colour": "#993d0c"
     },
     {
-        x: 1,
-        y: 0,
-        fixed: false,
-        colour: "#992837"
+        "x": 1,
+        "y": 0,
+        "fixed": false,
+        "colour": "#992837"
     }]
 }
