@@ -133,7 +133,7 @@ public class UserService implements UserDao {
     @Override
     public Integer authorizeUser(UserAuth tryAuth) {
 
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+        Pattern pattern = Pattern.compile("^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$");
         Matcher matcher = pattern.matcher(tryAuth.getLogin());
         boolean isEmail = matcher.matches();
 
