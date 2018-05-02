@@ -58,11 +58,13 @@ public class FileUploadController {
 
         final User currentUser = userService.getUserById(userIdInSession);
         final String currentUserImageName = currentUser.getImage();
-
+        
         if (!currentUserImageName.equals("no_avatar.png")) {
             try {
                 storageService.delete(currentUser.getImage());
             } catch (StorageException e) {
+                currentUser.setImage("no_avatar.png");
+                userService.updateUser(currentUser);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
             }
         }
