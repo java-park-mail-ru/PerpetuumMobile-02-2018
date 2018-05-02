@@ -69,7 +69,7 @@ public class GameController {
     public ResponseEntity saveResult(@RequestBody SaveResult saveResult, HttpSession httpSession) {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
-
+        
         if (userIdInSession == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
@@ -118,7 +118,8 @@ public class GameController {
         }
 
         if (score <= saveResult.getTime()) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+            System.out.println(MessageStates.NOT_UPDATED.getMessage());
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(new Message(MessageStates.NOT_UPDATED.getMessage()));
         }
 
