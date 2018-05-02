@@ -119,7 +119,6 @@ public class GameController {
         }
 
         if (score <= saveResult.getTime()) {
-            System.out.println(MessageStates.NOT_UPDATED.getMessage());
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(new Message(MessageStates.NOT_UPDATED.getMessage()));
         }
