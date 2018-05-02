@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
+import server.model.LevelsInfo;
 import server.model.SaveResult;
 
 import javax.servlet.http.HttpSession;
@@ -131,5 +132,20 @@ public class GameController {
 
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(new Message(MessageStates.SUCCESS_UPDATE.getMessage()));
+    }
+
+
+    @GetMapping("/levelCount")
+    public ResponseEntity<?> getMap() {
+        final String sql = "SELECT COUNT(*) from public.levels";
+        String levelCount;
+        try {
+            levelCount = jdbcTemplate.queryForObject(sql, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Message(MessageStates.DATABASE_ERROR.getMessage()));
+        }
+        final LevelsInfo body = new LevelsInfo();
+        body.setCount(levelCount);
+        return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 }
