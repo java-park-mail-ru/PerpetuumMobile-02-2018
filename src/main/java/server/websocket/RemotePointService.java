@@ -1,0 +1,46 @@
+package server.websocket;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Component
+public class RemotePointService {
+    private final Map<Integer, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    private final ObjectMapper objectMapper;
+
+    public RemotePointService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public void registerUser(@NotNull Integer userId, @NotNull WebSocketSession webSocketSession) {
+        sessions.put(userId, webSocketSession);
+    }
+
+    public void removeUser(@NotNull Integer userId) {
+        sessions.remove(userId);
+    }
+
+    public void sendMessageToUser(@NotNull Integer userId, @NotNull Message message) throws IOException {
+        final WebSocketSession webSocketSession = sessions.get(userId);
+        if (webSocketSession == null) {
+            throw new IOException("no game websocket for user " + userId);
+        }
+        if (!webSocketSession.isOpen()) {
+            throw new IOException("session is closed or not exsists");
+        }
+        //noinspection OverlyBroadCatchBlock
+        try {
+            //noinspection ConstantConditions
+            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+        } catch (IOException e) {
+            throw new IOException("Unable to send message", e);
+        }
+    }
+}

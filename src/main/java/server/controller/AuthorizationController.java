@@ -3,6 +3,7 @@ package server.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
@@ -57,13 +58,12 @@ public class AuthorizationController {
         final Boolean changeImage;
 
         changeLogin = !(changeUser.getLogin() == null
-                        || changeUser.getLogin().equals(""));
+                        || StringUtils.isEmpty(changeUser.getLogin()));
         changeEmail = !(changeUser.getEmail() == null
-                        || changeUser.getEmail().equals(""));
+                        || StringUtils.isEmpty(changeUser.getEmail()));
         //  changeImage = changeUser.getImage() != null;
         changePassword = !(changeUser.getOldPassword() == null
-                        || changeUser.getNewPassword() == null
-                        || changeUser.getNewPassword().equals(""));
+                        || StringUtils.isEmpty(changeUser.getNewPassword()));
 
         // Login is already registered
         if (changeLogin) {

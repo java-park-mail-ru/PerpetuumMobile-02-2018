@@ -44,7 +44,6 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(MessageStates.MAP_NOT_FOUND.getMessage()));
         }
 
-
         String path = filesDir + "maps/" + levelName + ".map";
         String body = "";
         List<String> lines;
@@ -70,7 +69,7 @@ public class GameController {
     public ResponseEntity saveResult(@RequestBody SaveResult saveResult, HttpSession httpSession) {
 
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
-        
+
         if (userIdInSession == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
@@ -119,7 +118,6 @@ public class GameController {
         }
 
         if (score <= saveResult.getTime()) {
-            System.out.println(MessageStates.NOT_UPDATED.getMessage());
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(new Message(MessageStates.NOT_UPDATED.getMessage()));
         }
@@ -137,7 +135,7 @@ public class GameController {
 
 
     @GetMapping("/levelCount")
-    public ResponseEntity<?> getMap() {
+    public ResponseEntity<?> getLevelCount() {
         final String sql = "SELECT COUNT(*) from public.levels";
         String levelCount;
         try {
