@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import server.mechanic.GameInitService;
 import server.mechanic.game.GameSession;
+import server.mechanic.services.event.client.ClientEventService;
 import server.model.User;
 import server.websocket.RemotePointService;
 
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -36,22 +36,22 @@ public class GameSessionService {
 
 //    @NotNull
 //    private final GameTaskScheduler gameTaskScheduler;
-//
-//    @NotNull
-//    private final ClientSnapshotsService clientSnapshotsService;
+
+    @NotNull
+    private final ClientEventService clientEventService;
 
 
     public GameSessionService(@NotNull RemotePointService remotePointService,
 //                              @NotNull MechanicsTimeService timeService,
-                              @NotNull GameInitService gameInitService
+                              @NotNull GameInitService gameInitService,
 //                              @NotNull GameTaskScheduler gameTaskScheduler,
-//                              @NotNull ClientSnapshotsService clientSnapshotsService,
+                              @NotNull ClientEventService clientEventService
         ) {
         this.remotePointService = remotePointService;
 //        this.timeService = timeService;
         this.gameInitService = gameInitService;
 //        this.gameTaskScheduler = gameTaskScheduler;
-//        this.clientSnapshotsService = clientSnapshotsService;
+        this.clientEventService = clientEventService;
 //        this.shuffler = shuffler;
     }
 
@@ -78,8 +78,8 @@ public class GameSessionService {
             remotePointService.cutDownConnection(gameSession.getFirst().getUserId(), status);
             remotePointService.cutDownConnection(gameSession.getSecond().getUserId(), status);
         }
-//        clientSnapshotsService.clearForUser(gameSession.getFirst().getUserId());
-//        clientSnapshotsService.clearForUser(gameSession.getSecond().getUserId());
+        clientEventService.clearForUser(gameSession.getFirst().getUserId());
+        clientEventService.clearForUser(gameSession.getSecond().getUserId());
 
         LOGGER.info("Game session " + gameSession.getSessionId() + (error ? " was terminated due to error. " : " was cleaned. ")
                 + gameSession.toString());

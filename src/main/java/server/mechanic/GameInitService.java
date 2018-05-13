@@ -66,7 +66,7 @@ public class GameInitService {
 //        colors.put(gameSession.getEnemy(userId).getUserId(), Config.ENEMY_COLOR);
 
         initGameMessage.setSelf(userId);
-        initGameMessage.setEnemy(gameSession.getEnemy(userId).getUserId());
+        initGameMessage.setOpponent(gameSession.getEnemy(userId).getUserId());
         initGameMessage.setNames(names);
 //        initGameMessage.setColors(colors);
 //        initGameMessage.setPlayers(playerSnaps);

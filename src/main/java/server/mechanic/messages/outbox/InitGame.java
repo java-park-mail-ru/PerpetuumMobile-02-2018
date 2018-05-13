@@ -8,7 +8,7 @@ import java.util.Map;
 public class InitGame {
     public static final class Request extends Message {
         private Integer self;
-        private Integer enemy;
+        private Integer opponent;
 //        private Board.BoardSnap board;
 //        private Map<Integer, GameUser.ServerPlayerSnap> players;
         private Map<Integer, String> names;
@@ -36,12 +36,12 @@ public class InitGame {
             return self;
         }
 
-        public Integer getEnemy() {
-            return enemy;
+        public Integer getOpponent() {
+            return opponent;
         }
 
-        public void setEnemy(Integer enemy) {
-            this.enemy = enemy;
+        public void setOpponent(Integer opponent) {
+            this.opponent = opponent;
         }
 
 //        @NotNull

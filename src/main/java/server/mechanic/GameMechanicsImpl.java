@@ -3,7 +3,9 @@ package server.mechanic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.CloseStatus;
+import server.mechanic.game.GameSession;
+import server.mechanic.services.event.client.ClientEvent;
+import server.mechanic.services.event.client.ClientEventService;
 import server.mechanic.services.GameSessionService;
 import server.model.User;
 import server.services.UserService;
@@ -22,8 +24,8 @@ public class GameMechanicsImpl implements GameMechanics {
     @NotNull
     private final UserService userService;
 
-//    @NotNull
-//    private final ClientSnapshotsService clientSnapshotsService;
+    @NotNull
+    private final ClientEventService clientEventService;
 
 //    @NotNull
 //    private final ServerSnapshotService serverSnapshotService;
@@ -51,10 +53,17 @@ public class GameMechanicsImpl implements GameMechanics {
 
     public GameMechanicsImpl(@NotNull UserService userService,
                              @NotNull RemotePointService remotePointService,
-                             @NotNull GameSessionService gameSessionService) {
+                             @NotNull GameSessionService gameSessionService,
+                             @NotNull ClientEventService clientEventService) {
         this.userService = userService;
         this.remotePointService = remotePointService;
         this.gameSessionService = gameSessionService;
+        this.clientEventService = clientEventService;
+    }
+
+    @Override
+    public void addClientEvent(@NotNull Integer userId, @NotNull ClientEvent clientEvent) {
+        tasks.add(() -> clientEventService.pushClientEvent(userId, clientEvent));
     }
 
     @Override
@@ -108,9 +117,9 @@ public class GameMechanicsImpl implements GameMechanics {
             }
         }
 
-//        for (GameSession session : gameSessionService.getSessions()) {
-//            clientSnapshotsService.processSnapshotsFor(session);
-//        }
+        for (GameSession session : gameSessionService.getSessions()) {
+            clientEventService.processEventsFor(session);
+        }
 
 //        gameTaskScheduler.tick();
 
@@ -139,7 +148,7 @@ public class GameMechanicsImpl implements GameMechanics {
 //        sessionsToFinish.forEach(session -> gameSessionService.forceTerminate(session, false));
 
         tryStartGames();
-//        clientSnapshotsService.reset();
+        clientEventService.reset();
 //        timeService.tick(frameTime);
     }
 

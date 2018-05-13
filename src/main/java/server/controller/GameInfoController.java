@@ -21,13 +21,12 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-public class GameController {
+public class GameInfoController {
 
-    public GameController(@NotNull JdbcTemplate jdbcTemplate) {
+    public GameInfoController(@NotNull JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
