@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.LevelsInfo;
+import server.model.MapResult;
 import server.model.SaveResult;
 
 import javax.servlet.http.HttpSession;
@@ -19,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -63,6 +66,36 @@ public class GameController {
             body = fileStr.toString();
         }
         return ResponseEntity.status(HttpStatus.OK).body(body);
+    }
+
+
+    @GetMapping(value = "/results", produces = "application/json")
+    public ResponseEntity mapResults(HttpSession httpSession) {
+
+        Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
+
+        if (userIdInSession == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
+        }
+
+        String sql = "SELECT level_id, score FROM public.user JOIN public.user_results "
+                + "ON public.user.id = public.user_results.user_id "
+                + "WHERE user_results.user_id = ?";
+        List<MapResult> result;
+        try {
+            result = jdbcTemplate.query(sql, (ResultSet resultSet, int i) -> {
+                final MapResult mapRes = new MapResult();
+                mapRes.setMapNum(resultSet.getInt("level_id"));
+                mapRes.setTime(resultSet.getInt("score"));
+                return mapRes;
+            }, userIdInSession);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(result);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new Message(MessageStates.DATABASE_ERROR.getMessage()));
+        }
     }
 
     @PostMapping(value = "/save", produces = "application/json")
