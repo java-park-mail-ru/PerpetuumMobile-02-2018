@@ -27,7 +27,6 @@ public class User {
     }
 
     public User(String login, String email, String password, Integer initScore) {
-        this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
@@ -45,6 +44,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public User safeGet() {
+        User userCopy = new User();
+        userCopy.setImage(this.image);
+        userCopy.setLogin(this.login);
+        userCopy.setScore(this.score);
+        return userCopy;
     }
 
     public Integer getScore() {

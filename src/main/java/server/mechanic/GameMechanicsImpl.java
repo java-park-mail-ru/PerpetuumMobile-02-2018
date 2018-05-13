@@ -71,7 +71,6 @@ public class GameMechanicsImpl implements GameMechanics {
         if (gameSessionService.isPlaying(userId)) {
             return;
         }
-        LOGGER.info("User wait : " + userId);
         waiters.add(userId);
         if (LOGGER.isDebugEnabled()) {
             final User user = userService.getUserById(userId);

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
+import server.mechanic.map.GameMap;
 import server.mechanic.messages.outbox.InitGame;
 import server.model.User;
 import server.websocket.RemotePointService;
@@ -65,11 +66,10 @@ public class GameInitService {
 //        colors.put(userId, Config.SELF_COLOR);
 //        colors.put(gameSession.getEnemy(userId).getUserId(), Config.ENEMY_COLOR);
 
-        initGameMessage.setSelf(userId);
-        initGameMessage.setOpponent(gameSession.getEnemy(userId).getUserId());
-        initGameMessage.setNames(names);
-//        initGameMessage.setColors(colors);
-//        initGameMessage.setPlayers(playerSnaps);
+
+        initGameMessage.setOpponent(gameSession.getEnemy(userId).getUserProfile().safeGet());
+
+        initGameMessage.setMap(new GameMap());
 
 //        initGameMessage.setBoard(gameSession.getBoard().getSnap());
         return initGameMessage;

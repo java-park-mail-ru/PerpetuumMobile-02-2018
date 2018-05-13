@@ -3,8 +3,12 @@ package server.mechanic.services.event.client;
 import org.springframework.stereotype.Service;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
+import server.mechanic.messages.TestMessage;
+import server.websocket.Message;
+import server.websocket.RemotePointService;
 
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -13,12 +17,19 @@ import java.util.*;
 @Service
 public class ClientEventService {
 
+    @NotNull
+    private final RemotePointService remotePointService;
+
     private final Map<Integer, List<ClientEvent>> events = new HashMap<>();
 
     public void pushClientEvent(@NotNull Integer userId, @NotNull ClientEvent event) {
         this.events.putIfAbsent(userId, new ArrayList<>());
         final List<ClientEvent> clientSnaps = events.get(userId);
         clientSnaps.add(event);
+    }
+
+    public ClientEventService(@NotNull RemotePointService remotePointService) {
+        this.remotePointService = remotePointService;
     }
 
     @NotNull
@@ -37,7 +48,13 @@ public class ClientEventService {
             }
 
             for (ClientEvent evt: playerEvents){
-                evt.operate(gameSession);
+                List<Message> messagesToUsers = evt.operate(gameSession);
+                try {
+                    remotePointService.sendMessageToUser(gameSession.getFirst().getUserId(), messagesToUsers.get(0));
+                    remotePointService.sendMessageToUser(gameSession.getSecond().getUserId(), messagesToUsers.get(1));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
