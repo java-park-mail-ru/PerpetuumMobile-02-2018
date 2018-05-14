@@ -1,17 +1,24 @@
 package server.mechanic.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import server.mechanic.GameInitService;
 import server.mechanic.game.GameSession;
+import server.mechanic.game.GameUser;
+import server.mechanic.map.GameMap;
 import server.mechanic.services.event.client.ClientEventService;
 import server.model.User;
 import server.websocket.RemotePointService;
 
 import javax.validation.constraints.NotNull;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -19,6 +26,12 @@ import java.util.Set;
 
 @Service
 public class GameSessionService {
+    @Value("${MULTIPLAYER_MAPS_DIR}")
+    private String filesDir;
+    @Value("${MULTIPLAYER_MAPS_COUNT}")
+    private Integer mapsCount;
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(GameSessionService.class);
     @NotNull
     private final Map<Integer, GameSession> usersMap = new HashMap<>();
@@ -85,12 +98,23 @@ public class GameSessionService {
                 + gameSession.toString());
     }
 
-//    public boolean checkHealthState(@NotNull GameSession gameSession) {
-//        return gameSession.getPlayers().stream().map(GameUser::getUserId).allMatch(remotePointService::isConnected);
-//    }
+    public boolean checkHealthState(@NotNull GameSession gameSession) {
+        return gameSession.getPlayers().stream().map(GameUser::getUserId).allMatch(remotePointService::isConnected);
+    }
 
     public void startGame(@NotNull User first, @NotNull User second) {
-        final GameSession gameSession = new GameSession(first, second, this);//, timeService, shuffler);
+        ObjectMapper mapper = new ObjectMapper();
+        Integer mapNum  = 1 + (int) (Math.random() * (mapsCount - 1));
+        String mapName = "multi_" + mapNum;
+        String filePath = filesDir + mapName + ".map";
+        GameMap gameMap = null;
+        try {
+            gameMap = mapper.readValue(new FileInputStream(filePath), GameMap.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        final GameSession gameSession = new GameSession(first, second, gameMap, this);//, timeService, shuffler);
         gameSessions.add(gameSession);
         usersMap.put(gameSession.getFirst().getUserId(), gameSession);
         usersMap.put(gameSession.getSecond().getUserId(), gameSession);

@@ -8,6 +8,7 @@ import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
 import server.mechanic.map.GameMap;
 import server.mechanic.messages.outbox.InitGame;
+import server.mechanic.services.event.client.ClientEventService;
 import server.model.User;
 import server.websocket.RemotePointService;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 
 @Service
 public class GameInitService {
-//    private static final Logger LOGGER = LoggerFactory.getLogger(ServerSnapshotService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientEventService.class);
 
     @NotNull
     private final RemotePointService remotePointService;
@@ -42,7 +43,7 @@ public class GameInitService {
                 // TODO: Reentrance mechanism
                 players.forEach(playerToCutOff -> remotePointService.cutDownConnection(playerToCutOff.getUserId(),
                         CloseStatus.SERVER_ERROR));
-//                LOGGER.error("Unnable to start a game", e);
+                LOGGER.error("Unnable to start a game", e);
             }
         }
     }
@@ -69,7 +70,7 @@ public class GameInitService {
 
         initGameMessage.setOpponent(gameSession.getEnemy(userId).getUserProfile().safeGet());
 
-        initGameMessage.setMap(new GameMap());
+        initGameMessage.setMap(gameSession.getGameMap().getMapForClient());
 
 //        initGameMessage.setBoard(gameSession.getBoard().getSnap());
         return initGameMessage;

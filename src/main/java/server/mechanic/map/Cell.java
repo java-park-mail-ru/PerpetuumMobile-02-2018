@@ -4,6 +4,16 @@ public class Cell {
     private Integer x;
     private Integer y;
     private String colour;
+    private Boolean fixed;
+
+
+    public Boolean isFixed() {
+        return fixed;
+    }
+
+    public void setFixed(Boolean fixed) {
+        this.fixed = fixed;
+    }
 
     public Integer getX() {
         return x;

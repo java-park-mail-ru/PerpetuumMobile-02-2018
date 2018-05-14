@@ -1,7 +1,8 @@
 package server.mechanic.map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameMap {
@@ -11,30 +12,23 @@ public class GameMap {
     private List<Cell> cells;
     private List<Cell> pool;
 
+    public GameMap() {    }
 
-    public GameMap() {
-        this.countX = 3;
-        this.countY = 1;
-        Cell cell1 = new Cell();
-        cell1.setX(0);
-        cell1.setY(0);
-        cell1.setColour("#730d13");
-        this.cells = new ArrayList<>();
-        this.cells.add(cell1);
-        Cell cell2 = new Cell();
-        cell2.setX(1);
-        cell2.setY(0);
-        this.cells.add(cell2);
-        Cell cell3 = new Cell();
-        cell3.setX(2);
-        cell3.setY(0);
-        cell3.setColour("#dcd3e0");
-        this.cells.add(cell3);
-        Cell cell4 = new Cell();
-        cell4.setColour("#f05a69");
-        this.pool = new ArrayList<>();
-        this.pool.add(cell4);
+    @JsonIgnore
+    public GameMap getMapForClient() {
+        GameMap mapForUser = new GameMap();
+        mapForUser.countX = this.countX;
+        mapForUser.countY = this.countY;
+        mapForUser.pool = this.pool;
+        mapForUser.cells = this.cells;
 
+        mapForUser.cells.forEach(cell -> {
+           if (!cell.isFixed()) {
+               cell.setColour(null);
+           }
+        });
+
+        return mapForUser;
     }
 
     public Integer getCountX() {

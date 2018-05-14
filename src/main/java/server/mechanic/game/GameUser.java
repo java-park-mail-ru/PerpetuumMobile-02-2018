@@ -10,6 +10,8 @@ import java.util.Map;
 public class GameUser extends GameObject {
     @NotNull
     private final User userProfile;
+    private Integer score = 0;
+
 
     public GameUser(@NotNull User userProfile) {//, @NotNull MechanicsTimeService timeService) {
         this.userProfile = userProfile;
@@ -27,6 +29,13 @@ public class GameUser extends GameObject {
         return userProfile.getId();
     }
 
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 //    @Override
 //    public @NotNull ServerPlayerSnap getSnap() {
 //        return ServerPlayerSnap.snapPlayer(this);

@@ -1,20 +1,17 @@
 package server.mechanic.messages.inbox;
 
 import server.mechanic.game.GameSession;
-import server.mechanic.map.Coord;
-import server.mechanic.messages.TestMessage;
+import server.mechanic.messages.outbox.CubicSet;
 import server.mechanic.services.event.client.ClientEvent;
 import server.websocket.Message;
-import server.websocket.RemotePointService;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SetCubic extends Message implements ClientEvent {
     private Integer x;
     private Integer y;
-    private String color;
+    private String colour;
 
     public Integer getX() {
         return x;
@@ -32,20 +29,23 @@ public class SetCubic extends Message implements ClientEvent {
         this.y = y;
     }
 
-    public String getColor() {
-        return color;
+    public String getColour() {
+        return colour;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColour(String colour) {
+        this.colour = colour;
     }
 
     public List<Message> operate(GameSession gameSession) {
+        System.out.println(this.colour);
         List<Message> messages = new ArrayList<>();
-        TestMessage testMessage1 = new TestMessage("I receive SendCubic 1");
-        TestMessage testMessage2 = new TestMessage("I receive SendCubic 2");
-        messages.add(testMessage1);
-        messages.add(testMessage2);
+        CubicSet message1 = new CubicSet(2, 1, "#f05a69", true, 2,1);
+
+//        TestMessage testMessage1 = new TestMessage("I receive SendCubic 1");
+//        TestMessage testMessage2 = new TestMessage("I receive SendCubic 2");
+        messages.add(message1);
+        messages.add(message1);
         return  messages;
     }
 }

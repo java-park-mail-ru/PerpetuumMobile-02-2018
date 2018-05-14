@@ -1,6 +1,6 @@
 package server.mechanic.game;
 
-
+import server.mechanic.map.GameMap;
 import server.mechanic.services.GameSessionService;
 import server.model.User;
 
@@ -20,20 +20,22 @@ public class GameSession {
     private final GameUser first;
     @NotNull
     private final GameUser second;
-//    @NotNull
-//    private final Board board;
+
+    @NotNull
+    private final GameMap gameMap;
     @NotNull
     private final GameSessionService gameSessionService;
 
     public GameSession(@NotNull User user1,
                        @NotNull User user2,
+                       @NotNull GameMap gameMap,
                        @NotNull GameSessionService gameSessionService) {
 //                       @NotNull MechanicsTimeService mechanicsTimeService) {
         this.gameSessionService = gameSessionService;
         this.sessionId = ID_GENERATOR.getAndIncrement();
         this.first = new GameUser(user1);//, mechanicsTimeService);
+        this.gameMap = gameMap;
         this.second = new GameUser(user2);//, mechanicsTimeService);
-//        this.board = new Board(this, shuffler);
         this.isFinished = false;
     }
 
@@ -66,6 +68,10 @@ public class GameSession {
     @NotNull
     public GameUser getSecond() {
         return second;
+    }
+
+    public GameMap getGameMap() {
+        return gameMap;
     }
 
     @Override

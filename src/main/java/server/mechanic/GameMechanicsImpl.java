@@ -122,18 +122,18 @@ public class GameMechanicsImpl implements GameMechanics {
 
 //        gameTaskScheduler.tick();
 
-//        final List<GameSession> sessionsToTerminate = new ArrayList<>();
+        final List<GameSession> sessionsToTerminate = new ArrayList<>();
 //        final List<GameSession> sessionsToFinish = new ArrayList<>();
-//        for (GameSession session : gameSessionService.getSessions()) {
+        for (GameSession session : gameSessionService.getSessions()) {
 //            if (session.tryFinishGame()) {
 //                sessionsToFinish.add(session);
 //                continue;
 //            }
 //
-//            if (!gameSessionService.checkHealthState(session)) {
-//                sessionsToTerminate.add(session);
-//                continue;
-//            }
+            if (!gameSessionService.checkHealthState(session)) {
+                sessionsToTerminate.add(session);
+                continue;
+            }
 //
 //            try {
 //                serverSnapshotService.sendSnapshotsFor(session, frameTime);
@@ -142,8 +142,8 @@ public class GameMechanicsImpl implements GameMechanics {
 //                sessionsToTerminate.add(session);
 //            }
 //            pullTheTriggerService.pullTheTriggers(session);
-//        }
-//        sessionsToTerminate.forEach(session -> gameSessionService.forceTerminate(session, true));
+        }
+        sessionsToTerminate.forEach(session -> gameSessionService.forceTerminate(session, true));
 //        sessionsToFinish.forEach(session -> gameSessionService.forceTerminate(session, false));
 
         tryStartGames();
