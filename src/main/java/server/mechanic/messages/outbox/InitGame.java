@@ -1,15 +1,13 @@
 package server.mechanic.messages.outbox;
 
-import server.mechanic.map.GameMap;
+import server.mechanic.game.map.GameMap;
 import server.model.User;
 import server.websocket.Message;
-
-import javax.validation.constraints.NotNull;
 
 public class InitGame {
     public static final class Request extends Message {
         private User opponent;
-        private GameMap map;
+        private GameMap.GameMapClient map;
 
         public User getOpponent() {
             return opponent;
@@ -19,11 +17,11 @@ public class InitGame {
             this.opponent = opponent;
         }
 
-        public GameMap getMap() {
+        public GameMap.GameMapClient getMap() {
             return map;
         }
 
-        public void setMap(GameMap map) {
+        public void setMap(GameMap.GameMapClient map) {
             this.map = map;
         }
     }

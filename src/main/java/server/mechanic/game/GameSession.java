@@ -1,6 +1,6 @@
 package server.mechanic.game;
 
-import server.mechanic.map.GameMap;
+import server.mechanic.game.map.GameMap;
 import server.mechanic.services.GameSessionService;
 import server.model.User;
 
@@ -20,7 +20,6 @@ public class GameSession {
     private final GameUser first;
     @NotNull
     private final GameUser second;
-
     @NotNull
     private final GameMap gameMap;
     @NotNull
@@ -30,12 +29,11 @@ public class GameSession {
                        @NotNull User user2,
                        @NotNull GameMap gameMap,
                        @NotNull GameSessionService gameSessionService) {
-//                       @NotNull MechanicsTimeService mechanicsTimeService) {
         this.gameSessionService = gameSessionService;
         this.sessionId = ID_GENERATOR.getAndIncrement();
-        this.first = new GameUser(user1);//, mechanicsTimeService);
+        this.first = new GameUser(user1);
         this.gameMap = gameMap;
-        this.second = new GameUser(user2);//, mechanicsTimeService);
+        this.second = new GameUser(user2);
         this.isFinished = false;
     }
 
@@ -43,11 +41,6 @@ public class GameSession {
     public Integer getSessionId() {
         return sessionId;
     }
-
-//    @NotNull
-//    public Board getBoard() {
-//        return board;
-//    }
 
     @NotNull
     public GameUser getEnemy(@NotNull Integer userId) {
@@ -110,14 +103,6 @@ public class GameSession {
         return sessionId.hashCode();
     }
 
-//    @Override
-//    public String toString() {
-//        return '['
-//                + "sessionId=" + sessionId
-//                + ", first=" + first
-//                + ", second=" + second
-//                + ']';
-//    }
 
 //    public boolean tryFinishGame() {
 //        if (first.claimPart(MechanicPart.class).getScore() >= Config.SCORES_TO_WIN

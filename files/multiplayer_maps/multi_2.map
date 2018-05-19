@@ -20,10 +20,5 @@
             "colour":"#dcd3e0",
             "fixed": true
         }
-    ],
-    "pool":[
-        {
-            "colour":"#f05a69"
-        }
     ]
 }

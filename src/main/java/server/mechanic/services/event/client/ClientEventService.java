@@ -48,10 +48,11 @@ public class ClientEventService {
             }
 
             for (ClientEvent evt: playerEvents){
-                List<Message> messagesToUsers = evt.operate(gameSession);
+                final Map<Integer, Message> messagesToUsers = evt.operate(gameSession, player);
                 try {
-                    remotePointService.sendMessageToUser(gameSession.getFirst().getUserId(), messagesToUsers.get(0));
-                    remotePointService.sendMessageToUser(gameSession.getSecond().getUserId(), messagesToUsers.get(1));
+                    for (Map.Entry<Integer, Message> messageToUser: messagesToUsers.entrySet()) {
+                        remotePointService.sendMessageToUser(messageToUser.getKey(), messageToUser.getValue());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

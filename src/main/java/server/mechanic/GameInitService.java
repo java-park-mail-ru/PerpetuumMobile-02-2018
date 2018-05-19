@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
-import server.mechanic.map.GameMap;
 import server.mechanic.messages.outbox.InitGame;
 import server.mechanic.services.event.client.ClientEventService;
-import server.model.User;
 import server.websocket.RemotePointService;
 
 import javax.validation.constraints.NotNull;
@@ -52,27 +50,19 @@ public class GameInitService {
     private InitGame.Request createInitMessageFor(@NotNull GameSession gameSession, @NotNull Integer userId) {
         final InitGame.Request initGameMessage = new InitGame.Request();
 
-//        final Map<Id<User>, GameUser.ServerPlayerSnap> playerSnaps = new HashMap<>();
-        final Map<Integer, String> names = new HashMap<>();
-        final Map<Integer, String> colors = new HashMap<>();
+        /*final Map<Integer, String> names = new HashMap<>();
 
         final Collection<GameUser> players = new ArrayList<>();
         players.add(gameSession.getFirst());
         players.add(gameSession.getSecond());
         for (GameUser player : players) {
-//            playerSnaps.put(player.getUserId(), player.getSnap());
             names.put(player.getUserId(), player.getUserProfile().getLogin());
-        }
-
-//        colors.put(userId, Config.SELF_COLOR);
-//        colors.put(gameSession.getEnemy(userId).getUserId(), Config.ENEMY_COLOR);
-
+        }*/
 
         initGameMessage.setOpponent(gameSession.getEnemy(userId).getUserProfile().safeGet());
 
-        initGameMessage.setMap(gameSession.getGameMap().getMapForClient());
+        initGameMessage.setMap(gameSession.getGameMap().safeGet());
 
-//        initGameMessage.setBoard(gameSession.getBoard().getSnap());
         return initGameMessage;
     }
 }

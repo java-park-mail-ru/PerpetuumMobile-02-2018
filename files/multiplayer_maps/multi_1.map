@@ -50,16 +50,5 @@
 			"fixed": true,
 			"colour": "#75476c"
 		}
-	],
-	"pool": [
-		{
-			"colour": "#256b73"
-		},
-		{
-			"colour": "#78f0c3"
-		},
-		{
-			"colour": "#4c394d"
-		}
 	]
 }

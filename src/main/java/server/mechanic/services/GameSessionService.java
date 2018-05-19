@@ -1,6 +1,5 @@
 package server.mechanic.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,7 @@ import org.springframework.web.socket.CloseStatus;
 import server.mechanic.GameInitService;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
-import server.mechanic.map.GameMap;
+import server.mechanic.game.map.GameMap;
 import server.mechanic.services.event.client.ClientEventService;
 import server.model.User;
 import server.websocket.RemotePointService;
