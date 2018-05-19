@@ -41,14 +41,14 @@ public class UserService implements UserDao {
 
     @Override
     public Boolean isEmailRegistered(@NotNull String email) {
-        final String sql = "SELECT count(*) from public.user WHERE email ILIKE ?";
+        final String sql = "SELECT count(*) from public.user WHERE LOWER(email) = LOWER(?)";
         final Integer check = jdbcTemplate.queryForObject(sql, Integer.class, email);
         return check > 0;
     }
 
     @Override
     public Boolean isLoginRegistered(@NotNull String username) {
-        final String sql = "SELECT count(*) from public.user WHERE username ILIKE ?";
+        final String sql = "SELECT count(*) from public.user WHERE LOWER(username) = LOWER(?)";
         final Integer check = jdbcTemplate.queryForObject(sql, Integer.class, username);
         return check > 0;
     }
@@ -67,7 +67,7 @@ public class UserService implements UserDao {
 
     @Override
     public User getUserByUsername(@NotNull String username) {
-        final String sql = "SELECT * FROM public.user WHERE username ILIKE ?";
+        final String sql = "SELECT * FROM public.user WHERE LOWER(username) = LOWER(?)";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{username},
                     (rs, rwNumber) -> new User(rs.getInt("id"), rs.getString("username"),
@@ -80,7 +80,7 @@ public class UserService implements UserDao {
 
     @Override
     public User getUserByEmail(@NotNull String email) {
-        final String sql = "SELECT * FROM public.user WHERE email ILIKE ?";
+        final String sql = "SELECT * FROM public.user WHERE LOWER(email) = LOWER(?)";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{email},
                     (rs, rwNumber) -> new User(rs.getInt("id"), rs.getString("username"),
@@ -98,7 +98,7 @@ public class UserService implements UserDao {
         final Integer three = 3;
         jdbcTemplate.update(con -> {
             final PreparedStatement pst = con.prepareStatement(
-                    "insert into public.user(username, email, password)" + " values(?,LOWER(?),?)" + " returning id",
+                    "insert into public.user(username, email, password)" + " values(?,?,?)" + " returning id",
                     PreparedStatement.RETURN_GENERATED_KEYS);
             pst.setString(1, newUser.getLogin());
             pst.setString(2, newUser.getEmail());
@@ -133,7 +133,7 @@ public class UserService implements UserDao {
     @Override
     public Integer authorizeUser(UserAuth tryAuth) {
 
-        Pattern pattern = Pattern.compile("^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$");
+        Pattern pattern = Pattern.compile("^([a-zA-Z0-9_-]+\\.)*[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)*\\.[a-zA-Z]{2,6}$");
         Matcher matcher = pattern.matcher(tryAuth.getLogin());
         boolean isEmail = matcher.matches();
 
@@ -150,7 +150,7 @@ public class UserService implements UserDao {
 
     @Override
     public boolean updateUser(User user) {
-        final String sql = "UPDATE public.user SET username = ?, email = LOWER(?), password = ?, image = ? WHERE id = ?";
+        final String sql = "UPDATE public.user SET username = ?, email = ?, password = ?, image = ? WHERE id = ?";
         try {
             jdbcTemplate.update(sql, user.getLogin(), user.getEmail(), user.getPassword(), user.getImage(), user.getId());
             return true;
