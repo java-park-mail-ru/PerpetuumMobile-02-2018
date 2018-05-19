@@ -112,6 +112,8 @@ public class GameSocketHandler extends TextWebSocketHandler {
         try {
             session.close(status);
         } catch (Exception ignore) {
+            //for checkstyle
+            ignore.getMessage();
         }
 
     }

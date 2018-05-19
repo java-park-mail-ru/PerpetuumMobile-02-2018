@@ -82,7 +82,7 @@ public class GameInfoController {
                 + "WHERE user_results.user_id = ?";
         List<MapResult> result;
         try {
-            result = jdbcTemplate.query(sql, (ResultSet resultSet, int i) -> {
+            result = jdbcTemplate.query(sql, (ResultSet resultSet, int ignore) -> {
                 final MapResult mapRes = new MapResult();
                 mapRes.setMapNum(resultSet.getInt("level_id"));
                 mapRes.setTime(resultSet.getInt("score"));

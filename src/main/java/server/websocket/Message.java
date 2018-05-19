@@ -3,7 +3,6 @@ package server.websocket;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import server.mechanic.messages.TestMessage;
 import server.mechanic.messages.inbox.CloseGame;
 import server.mechanic.messages.inbox.JoinGame;
 import server.mechanic.messages.inbox.SetCubic;
@@ -21,7 +20,6 @@ import server.mechanic.messages.outbox.InitGame;
         @Type(value = CubicNotSet.class, name = "CUBIC_DROP"),
         @Type(value = CloseGame.class, name = "CLOSE"),
         @Type(value = EndGame.class, name = "END_GAME"),
-        @Type(TestMessage.class),
 })
 public abstract class Message {
 }

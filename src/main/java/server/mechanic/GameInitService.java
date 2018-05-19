@@ -14,8 +14,6 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class GameInitService {
@@ -38,7 +36,6 @@ public class GameInitService {
             try {
                 remotePointService.sendMessageToUser(player.getUserId(), initMessage);
             } catch (IOException e) {
-                // TODO: Reentrance mechanism
                 players.forEach(playerToCutOff -> remotePointService.cutDownConnection(playerToCutOff.getUserId(),
                         CloseStatus.SERVER_ERROR));
                 LOGGER.error("Unnable to start a game", e);
@@ -49,15 +46,6 @@ public class GameInitService {
     @SuppressWarnings("TooBroadScope")
     private InitGame.Request createInitMessageFor(@NotNull GameSession gameSession, @NotNull Integer userId) {
         final InitGame.Request initGameMessage = new InitGame.Request();
-
-        /*final Map<Integer, String> names = new HashMap<>();
-
-        final Collection<GameUser> players = new ArrayList<>();
-        players.add(gameSession.getFirst());
-        players.add(gameSession.getSecond());
-        for (GameUser player : players) {
-            names.put(player.getUserId(), player.getUserProfile().getLogin());
-        }*/
 
         initGameMessage.setOpponent(gameSession.getEnemy(userId).getUserProfile().safeGet());
 

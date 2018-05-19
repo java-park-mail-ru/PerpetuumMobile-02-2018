@@ -3,7 +3,6 @@ package server.mechanic.messages.handlers;
 import org.springframework.stereotype.Component;
 import server.mechanic.GameMechanics;
 import server.mechanic.messages.inbox.CloseGame;
-import server.mechanic.messages.inbox.JoinGame;
 import server.websocket.MessageHandler;
 import server.websocket.MessageHandlerContainer;
 
@@ -22,6 +21,7 @@ public class CloseGameHandler extends MessageHandler<CloseGame> {
         this.gameMechanics = gameMechanics;
         this.messageHandlerContainer = messageHandlerContainer;
     }
+
     @PostConstruct
     private void init() {
         messageHandlerContainer.registerHandler(CloseGame.class, this);

@@ -16,7 +16,7 @@ public class SetCubicHandler extends MessageHandler<SetCubic> {
     @NotNull
     private final MessageHandlerContainer messageHandlerContainer;
 
-    public SetCubicHandler (@NotNull GameMechanics gameMechanics, @NotNull MessageHandlerContainer messageHandlerContainer) {
+    public SetCubicHandler(@NotNull GameMechanics gameMechanics, @NotNull MessageHandlerContainer messageHandlerContainer) {
         super(SetCubic.class);
         this.gameMechanics = gameMechanics;
         this.messageHandlerContainer = messageHandlerContainer;
@@ -28,5 +28,7 @@ public class SetCubicHandler extends MessageHandler<SetCubic> {
     }
 
     @Override
-    public void handle(@NotNull SetCubic message, @NotNull Integer forUser) { gameMechanics.addClientEvent(forUser, message);}
+    public void handle(@NotNull SetCubic message, @NotNull Integer forUser) {
+        gameMechanics.addClientEvent(forUser, message);
+    }
 }

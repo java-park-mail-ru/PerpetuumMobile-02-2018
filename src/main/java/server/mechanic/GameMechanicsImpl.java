@@ -28,23 +28,11 @@ public class GameMechanicsImpl implements GameMechanics {
     @NotNull
     private final ClientEventService clientEventService;
 
-//    @NotNull
-//    private final ServerSnapshotService serverSnapshotService;
-
     @NotNull
     private final RemotePointService remotePointService;
 
-//    @NotNull
-//    private final PullTheTriggerService pullTheTriggerService;
-
-//    @NotNull
+    @NotNull
     private final GameSessionService gameSessionService;
-
-//    @NotNull
-//    private final MechanicsTimeService timeService;
-
-//    @NotNull
-//    private final GameTaskScheduler gameTaskScheduler;
 
     @NotNull
     private ConcurrentLinkedQueue<Integer> waiters = new ConcurrentLinkedQueue<>();
@@ -84,7 +72,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void removeUser(@NotNull Integer userId) {
-        if(waiters.contains(userId)) {
+        if (waiters.contains(userId)) {
             waiters.remove(userId);
             return;
         }
@@ -92,7 +80,7 @@ public class GameMechanicsImpl implements GameMechanics {
             return;
         }
         usersForRemove.add(userId);
-        LOGGER.debug("User deleted from waiting list: "+ userId);
+        LOGGER.debug("User deleted from waiting list: " + userId);
     }
 
 
@@ -138,7 +126,6 @@ public class GameMechanicsImpl implements GameMechanics {
             clientEventService.processEventsFor(session);
         }
 
-//        gameTaskScheduler.tick();
         final List<GameSession> sessionsToTerminate = new ArrayList<>();
         final List<GameSession> sessionsToFinish = new ArrayList<>();
         for (GameSession session : gameSessionService.getSessions()) {
@@ -150,23 +137,23 @@ public class GameMechanicsImpl implements GameMechanics {
             List<Integer> usersCloseGame = new ArrayList<>();
             Integer firstUserId = session.getFirst().getUserId();
             Integer secondUserId = session.getSecond().getUserId();
-            if(usersForRemove.contains(firstUserId)){
+            if (usersForRemove.contains(firstUserId)) {
                 usersCloseGame.add(firstUserId);
                 usersForRemove.remove(firstUserId);
             }
-            if(usersForRemove.contains(secondUserId)){
+            if (usersForRemove.contains(secondUserId)) {
                 usersCloseGame.add(secondUserId);
                 usersForRemove.remove(secondUserId);
             }
 
 
-            if(usersCloseGame.contains(firstUserId)) {
+            if (usersCloseGame.contains(firstUserId)) {
                 session.tryFinishGameClose(firstUserId);
                 sessionsToFinish.add(session);
                 continue;
             }
 
-            if(usersCloseGame.contains(secondUserId)) {
+            if (usersCloseGame.contains(secondUserId)) {
                 session.tryFinishGameClose(secondUserId);
                 sessionsToFinish.add(session);
                 continue;
@@ -189,33 +176,11 @@ public class GameMechanicsImpl implements GameMechanics {
                 sessionsToFinish.add(session);
                 continue;
             }
-//
-//            try {
-//                serverSnapshotService.sendSnapshotsFor(session, frameTime);
-//            } catch (RuntimeException ex) {
-//                LOGGER.error("Failed to send snapshots, terminating the session", ex);
-//                sessionsToTerminate.add(session);
-//            }
-//            pullTheTriggerService.pullTheTriggers(session);
         }
         sessionsToTerminate.forEach(session -> gameSessionService.forceTerminate(session, true));
         sessionsToFinish.forEach(session -> gameSessionService.forceTerminate(session, false));
 
         tryStartGames();
         clientEventService.reset();
-//        timeService.tick(frameTime);
     }
-
-//    @Override
-//    public void reset() {
-//        for (GameSession session : gameSessionService.getSessions()) {
-//            gameSessionService.forceTerminate(session, true);
-//        }
-//        waiters.forEach(user -> remotePointService.cutDownConnection(user, CloseStatus.SERVER_ERROR));
-//        waiters.clear();
-//        tasks.clear();
-//        clientSnapshotsService.reset();
-//        timeService.reset();
-//        gameTaskScheduler.reset();
-//    }
 }

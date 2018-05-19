@@ -1,10 +1,15 @@
 package server.mechanic.messages.outbox;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import server.websocket.Message;
 
 public class CubicSet extends Message {
-    private Integer x;
-    private Integer y;
+    @JsonProperty(value = "x")
+    private Integer coordX;
+    @JsonProperty(value = "y")
+    private Integer coordY;
     private String colour;
     private Boolean youSet;
     private Integer your;
@@ -13,29 +18,33 @@ public class CubicSet extends Message {
     public CubicSet() {
     }
 
-    public CubicSet(Integer x, Integer y, String colour, Boolean youSet, Integer your, Integer opponent) {
-        this.x = x;
-        this.y = y;
+    public CubicSet(Integer coordX, Integer coordY, String colour, Boolean youSet, Integer your, Integer opponent) {
+        this.coordX = coordX;
+        this.coordY = coordY;
         this.colour = colour;
         this.youSet = youSet;
         this.your = your;
         this.opponent = opponent;
     }
 
-    public Integer getX() {
-        return x;
+    @JsonGetter(value = "x")
+    public Integer getCoordX() {
+        return coordX;
     }
 
-    public void setX(Integer x) {
-        this.x = x;
+    @JsonSetter(value = "x")
+    public void setCoordX(Integer coordX) {
+        this.coordX = coordX;
     }
 
-    public Integer getY() {
-        return y;
+    @JsonGetter(value = "y")
+    public Integer getCoordY() {
+        return coordY;
     }
 
-    public void setY(Integer y) {
-        this.y = y;
+    @JsonSetter(value = "y")
+    public void setCoordY(Integer coordY) {
+        this.coordY = coordY;
     }
 
     public String getColour() {

@@ -1,11 +1,8 @@
 package server.mechanic.game;
 
-
 import server.model.User;
-
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class GameUser {
     @NotNull

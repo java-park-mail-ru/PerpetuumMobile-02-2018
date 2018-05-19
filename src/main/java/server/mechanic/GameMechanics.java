@@ -14,5 +14,4 @@ public interface GameMechanics {
 
     void gmStep(long frameTime);
 
-//    void reset();
 }

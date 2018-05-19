@@ -38,6 +38,8 @@ public class RemotePointService {
             try {
                 webSocketSession.close(closeStatus);
             } catch (IOException ignore) {
+                //for checkstyle
+                ignore.getMessage();
             }
         }
     }

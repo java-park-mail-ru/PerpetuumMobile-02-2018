@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameSession {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(0);
-//    private boolean isFinished;
 
     @NotNull
     private final Integer sessionId;
@@ -34,7 +33,6 @@ public class GameSession {
         this.first = new GameUser(user1);
         this.gameMap = gameMap;
         this.second = new GameUser(user2);
-//        this.isFinished = false;
     }
 
     @NotNull
@@ -86,18 +84,6 @@ public class GameSession {
         return Arrays.asList(first, second);
     }
 
-//    public boolean isFinished() {
-//        return isFinished;
-//    }
-//
-//    public void setFinished() {
-//        isFinished = true;
-//    }
-
-//    public void terminateSession() {
-//        gameSessionService.forceTerminate(this, true);
-//    }
-
     @Override
     public int hashCode() {
         return sessionId.hashCode();
@@ -137,19 +123,10 @@ public class GameSession {
             reasonSecond = "You scored more points than your opponent";
         } else {
             winnerId = null;
-            reasonFirst = reasonSecond = "You scored the same points as your opponent";
+            reasonFirst = "You scored the same points as your opponent";
+            reasonSecond = reasonFirst;
         }
         gameSessionService.finishGame(this, winnerId, reasonFirst, reasonSecond);
         return true;
     }
-
-//    public boolean tryFinishGame() {
-//        if (first.claimPart(MechanicPart.class).getScore() >= Config.SCORES_TO_WIN
-//                || second.claimPart(MechanicPart.class).getScore() >= Config.SCORES_TO_WIN) {
-//            gameSessionService.finishGame(this);
-//            isFinished = true;
-//            return true;
-//        }
-//        return false;
-//    }
 }

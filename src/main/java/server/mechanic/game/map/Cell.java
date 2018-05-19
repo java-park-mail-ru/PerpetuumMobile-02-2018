@@ -1,8 +1,14 @@
 package server.mechanic.game.map;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 public class Cell {
-    private Integer x;
-    private Integer y;
+    @JsonProperty(value = "x")
+    private Integer coordX;
+    @JsonProperty(value = "y")
+    private Integer coordY;
     private String colour;
     private Boolean fixed;
     private Integer whoSetUserId;
@@ -16,20 +22,24 @@ public class Cell {
         this.fixed = fixed;
     }
 
-    public Integer getX() {
-        return x;
+    @JsonGetter(value = "x")
+    public Integer getCoordX() {
+        return coordX;
     }
 
-    public void setX(Integer x) {
-        this.x = x;
+    @JsonSetter(value = "x")
+    public void setCoordX(Integer coordX) {
+        this.coordX = coordX;
     }
 
-    public Integer getY() {
-        return y;
+    @JsonGetter(value = "y")
+    public Integer getCoordY() {
+        return coordY;
     }
 
-    public void setY(Integer y) {
-        this.y = y;
+    @JsonSetter(value = "y")
+    public void setCoordY(Integer coordY) {
+        this.coordY = coordY;
     }
 
     public String getColour() {
@@ -54,8 +64,8 @@ public class Cell {
         if (cell.fixed) {
             return null;
         }
-        cell.x = null;
-        cell.y = null;
+        cell.coordX = null;
+        cell.coordY = null;
         return cell;
     }
 
@@ -68,34 +78,41 @@ public class Cell {
     }
 
     public static class CellClient {
-        private Integer x;
-        private Integer y;
+        @JsonProperty(value = "x")
+        private Integer coordX;
+
+        @JsonProperty(value = "y")
+        private Integer coordY;
 
         private String colour;
         private Boolean fixed;
 
         CellClient(Cell cell) {
             this.fixed = cell.isFixed();
-            this.x = cell.getX();
-            this.y = cell.getY();
+            this.coordX = cell.getCoordX();
+            this.coordY = cell.getCoordY();
             this.colour = cell.getColour();
 
         }
 
-        public Integer getX() {
-            return x;
+        @JsonGetter(value = "x")
+        public Integer getCoordX() {
+            return coordX;
         }
 
-        public void setX(Integer x) {
-            this.x = x;
+        @JsonSetter(value = "x")
+        public void setCoordX(Integer coordX) {
+            this.coordX = coordX;
         }
 
-        public Integer getY() {
-            return y;
+        @JsonGetter(value = "y")
+        public Integer getCoordY() {
+            return coordY;
         }
 
-        public void setY(Integer y) {
-            this.y = y;
+        @JsonSetter(value = "y")
+        public void setCoordY(Integer coordY) {
+            this.coordY = coordY;
         }
 
         public String getColour() {

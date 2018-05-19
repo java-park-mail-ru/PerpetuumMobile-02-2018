@@ -3,7 +3,6 @@ package server.mechanic.services.event.client;
 import org.springframework.stereotype.Service;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
-import server.mechanic.messages.TestMessage;
 import server.websocket.Message;
 import server.websocket.RemotePointService;
 
@@ -47,7 +46,7 @@ public class ClientEventService {
                 continue;
             }
 
-            for (ClientEvent evt: playerEvents){
+            for (ClientEvent evt: playerEvents) {
                 final Map<Integer, Message> messagesToUsers = evt.operate(gameSession, player);
                 try {
                     for (Map.Entry<Integer, Message> messageToUser: messagesToUsers.entrySet()) {

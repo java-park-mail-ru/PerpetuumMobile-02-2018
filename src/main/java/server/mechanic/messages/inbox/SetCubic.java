@@ -1,5 +1,8 @@
 package server.mechanic.messages.inbox;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
 import server.mechanic.game.map.Cell;
@@ -11,24 +14,30 @@ import server.websocket.Message;
 import java.util.*;
 
 public class SetCubic extends Message implements ClientEvent {
-    private Integer x;
-    private Integer y;
+    @JsonProperty(value = "x")
+    private Integer coordX;
+    @JsonProperty(value = "y")
+    private Integer coordY;
     private String colour;
 
-    public Integer getX() {
-        return x;
+    @JsonGetter(value = "x")
+    public Integer getCoordX() {
+        return coordX;
     }
 
-    public void setX(Integer x) {
-        this.x = x;
+    @JsonSetter(value = "x")
+    public void setCoordX(Integer coordX) {
+        this.coordX = coordX;
     }
 
-    public Integer getY() {
-        return y;
+    @JsonGetter(value = "y")
+    public Integer getCoordY() {
+        return coordY;
     }
 
-    public void setY(Integer y) {
-        this.y = y;
+    @JsonSetter(value = "y")
+    public void setCoordY(Integer coordY) {
+        this.coordY = coordY;
     }
 
     public String getColour() {
@@ -43,7 +52,7 @@ public class SetCubic extends Message implements ClientEvent {
     public Map<Integer, Message> operate(GameSession gameSession, GameUser player) {
 
         Optional<Cell> cellInMapOpt = gameSession.getGameMap().getCells().stream().filter(
-                cell -> cell.getX().equals(this.x) && cell.getY().equals(this.y) && !cell.isFixed()
+            cell -> cell.getCoordX().equals(this.coordX) && cell.getCoordY().equals(this.coordY) && !cell.isFixed()
         ).findFirst();
 
         Map<Integer, Message> messages = new HashMap<>();
@@ -57,8 +66,20 @@ public class SetCubic extends Message implements ClientEvent {
                 final GameUser playerOpponent = gameSession.getEnemy(player.getUserId());
                 player.setScore(player.getScore() + 1);
 
-                final CubicSet messageSelf = new CubicSet(this.x, this.y, this.colour, true, player.getScore(), playerOpponent.getScore());
-                final CubicSet messageOpponent = new CubicSet(this.x, this.y, this.colour, false, playerOpponent.getScore(), player.getScore());
+                final CubicSet messageSelf = new CubicSet(
+                        this.coordX,
+                        this.coordY,
+                        this.colour,
+                        true,
+                        player.getScore(),
+                        playerOpponent.getScore());
+                final CubicSet messageOpponent = new CubicSet(
+                        this.coordX,
+                        this.coordY,
+                        this.colour,
+                        false,
+                        playerOpponent.getScore(),
+                        player.getScore());
 
                 messages.put(player.getUserId(), messageSelf);
                 messages.put(playerOpponent.getUserId(), messageOpponent);
