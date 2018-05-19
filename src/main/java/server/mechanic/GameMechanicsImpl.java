@@ -15,6 +15,7 @@ import server.websocket.RemotePointService;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Service
 public class GameMechanicsImpl implements GameMechanics {
@@ -49,6 +50,9 @@ public class GameMechanicsImpl implements GameMechanics {
     private ConcurrentLinkedQueue<Integer> waiters = new ConcurrentLinkedQueue<>();
 
     @NotNull
+    private Set<Integer> usersForRemove = new CopyOnWriteArraySet<>();
+
+    @NotNull
     private final Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
     public GameMechanicsImpl(@NotNull UserService userService,
@@ -77,6 +81,20 @@ public class GameMechanicsImpl implements GameMechanics {
             LOGGER.debug(String.format("User %s added to the waiting list", user.getLogin()));
         }
     }
+
+    @Override
+    public void removeUser(@NotNull Integer userId) {
+        if(waiters.contains(userId)) {
+            waiters.remove(userId);
+            return;
+        }
+        if (!gameSessionService.isPlaying(userId)) {
+            return;
+        }
+        usersForRemove.add(userId);
+        LOGGER.debug("User deleted from waiting list: "+ userId);
+    }
+
 
     private void tryStartGames() {
         final Set<User> matchedPlayers = new LinkedHashSet<>();
@@ -121,17 +139,54 @@ public class GameMechanicsImpl implements GameMechanics {
         }
 
 //        gameTaskScheduler.tick();
-
         final List<GameSession> sessionsToTerminate = new ArrayList<>();
-//        final List<GameSession> sessionsToFinish = new ArrayList<>();
+        final List<GameSession> sessionsToFinish = new ArrayList<>();
         for (GameSession session : gameSessionService.getSessions()) {
-//            if (session.tryFinishGame()) {
-//                sessionsToFinish.add(session);
-//                continue;
-//            }
-//
-            if (!gameSessionService.checkHealthState(session)) {
+            if (session.tryFinishGame()) {
+                sessionsToFinish.add(session);
+                continue;
+            }
+
+            List<Integer> usersCloseGame = new ArrayList<>();
+            Integer firstUserId = session.getFirst().getUserId();
+            Integer secondUserId = session.getSecond().getUserId();
+            if(usersForRemove.contains(firstUserId)){
+                usersCloseGame.add(firstUserId);
+                usersForRemove.remove(firstUserId);
+            }
+            if(usersForRemove.contains(secondUserId)){
+                usersCloseGame.add(secondUserId);
+                usersForRemove.remove(secondUserId);
+            }
+
+
+            if(usersCloseGame.contains(firstUserId)) {
+                session.tryFinishGameClose(firstUserId);
+                sessionsToFinish.add(session);
+                continue;
+            }
+
+            if(usersCloseGame.contains(secondUserId)) {
+                session.tryFinishGameClose(secondUserId);
+                sessionsToFinish.add(session);
+                continue;
+            }
+
+
+            if (!gameSessionService.checkHealthStateAny(session)) {
                 sessionsToTerminate.add(session);
+                continue;
+            }
+
+            if (!gameSessionService.checkHealthState(session)) {
+                Integer userId;
+                if (remotePointService.isConnected(firstUserId)) {
+                    userId = secondUserId;
+                } else {
+                    userId = firstUserId;
+                }
+                session.tryFinishGameClose(userId);
+                sessionsToFinish.add(session);
                 continue;
             }
 //
@@ -144,7 +199,7 @@ public class GameMechanicsImpl implements GameMechanics {
 //            pullTheTriggerService.pullTheTriggers(session);
         }
         sessionsToTerminate.forEach(session -> gameSessionService.forceTerminate(session, true));
-//        sessionsToFinish.forEach(session -> gameSessionService.forceTerminate(session, false));
+        sessionsToFinish.forEach(session -> gameSessionService.forceTerminate(session, false));
 
         tryStartGames();
         clientEventService.reset();

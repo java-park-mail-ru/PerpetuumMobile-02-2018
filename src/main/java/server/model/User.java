@@ -1,5 +1,7 @@
 package server.model;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class User {
     private Integer id;
@@ -8,6 +10,20 @@ public class User {
     private String  password;
     private Integer score;
     private String  image;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
+    }
 
     public User(String login, String email, String password) {
         this.login = login;

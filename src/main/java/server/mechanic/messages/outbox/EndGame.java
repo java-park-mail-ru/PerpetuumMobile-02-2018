@@ -1,9 +1,20 @@
 package server.mechanic.messages.outbox;
 
-public class EndGame {
+import server.websocket.Message;
+
+public class EndGame extends Message {
     private Integer your;
     private Integer opponent;
     private String result;
+    private String reason;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
     public Integer getYour() {
         return your;

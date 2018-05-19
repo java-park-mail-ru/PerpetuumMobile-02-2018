@@ -10,6 +10,8 @@ public interface GameMechanics {
 
     void addUser(@NotNull Integer userId);
 
+    void removeUser(@NotNull Integer userId);
+
     void gmStep(long frameTime);
 
 //    void reset();

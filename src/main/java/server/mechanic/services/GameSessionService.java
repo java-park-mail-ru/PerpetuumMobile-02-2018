@@ -11,6 +11,7 @@ import server.mechanic.GameInitService;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
 import server.mechanic.game.map.GameMap;
+import server.mechanic.messages.outbox.EndGame;
 import server.mechanic.services.event.client.ClientEventService;
 import server.model.User;
 import server.websocket.RemotePointService;
@@ -82,14 +83,14 @@ public class GameSessionService {
 
     public void forceTerminate(@NotNull GameSession gameSession, boolean error) {
         final boolean exists = gameSessions.remove(gameSession);
-        gameSession.setFinished();
+//        gameSession.setFinished();
         usersMap.remove(gameSession.getFirst().getUserId());
         usersMap.remove(gameSession.getSecond().getUserId());
         final CloseStatus status = error ? CloseStatus.SERVER_ERROR : CloseStatus.NORMAL;
-        if (exists) {
-            remotePointService.cutDownConnection(gameSession.getFirst().getUserId(), status);
-            remotePointService.cutDownConnection(gameSession.getSecond().getUserId(), status);
-        }
+//        if (exists) {
+//            remotePointService.cutDownConnection(gameSession.getFirst().getUserId(), status);
+//            remotePointService.cutDownConnection(gameSession.getSecond().getUserId(), status);
+//        }
         clientEventService.clearForUser(gameSession.getFirst().getUserId());
         clientEventService.clearForUser(gameSession.getSecond().getUserId());
 
@@ -99,6 +100,10 @@ public class GameSessionService {
 
     public boolean checkHealthState(@NotNull GameSession gameSession) {
         return gameSession.getPlayers().stream().map(GameUser::getUserId).allMatch(remotePointService::isConnected);
+    }
+
+    public boolean checkHealthStateAny(@NotNull GameSession gameSession) {
+        return gameSession.getPlayers().stream().map(GameUser::getUserId).anyMatch(remotePointService::isConnected);
     }
 
     public void startGame(@NotNull User first, @NotNull User second) {
@@ -121,6 +126,39 @@ public class GameSessionService {
         gameInitService.initGameFor(gameSession);
 //        gameTaskScheduler.schedule(Config.START_SWITCH_DELAY, new SwapTask(gameSession, gameTaskScheduler, Config.START_SWITCH_DELAY));
         LOGGER.info("Game session " + gameSession.getSessionId() + " started. " + gameSession.toString());
+    }
+
+    public void finishGame(@NotNull GameSession gameSession, @NotNull Integer winnerId, String reasonFirst, String reasonSecond) {
+        final EndGame firstMessage = new EndGame();
+        final EndGame secondMessage = new EndGame();
+
+        firstMessage.setYour(gameSession.getFirst().getScore());
+        firstMessage.setOpponent(gameSession.getSecond().getScore());
+        secondMessage.setYour(gameSession.getSecond().getScore());
+        secondMessage.setOpponent(gameSession.getFirst().getScore());
+
+        firstMessage.setReason(reasonFirst);
+        secondMessage.setReason(reasonSecond);
+
+        if(winnerId == null) {
+            firstMessage.setResult("DRAW");
+            firstMessage.setResult("DRAW");
+        } else if (gameSession.getSecond().getUserId().equals(winnerId)) {
+            firstMessage.setResult("LOSE");
+            secondMessage.setResult("WIN");
+        } else {
+            firstMessage.setResult("WIN");
+            secondMessage.setResult("LOSE");
+        }
+
+        try {
+            remotePointService.sendMessageToUser(gameSession.getFirst().getUserId(), firstMessage);
+        } catch (IOException ignored) {
+        }
+        try {
+            remotePointService.sendMessageToUser(gameSession.getSecond().getUserId(), secondMessage);
+        } catch (IOException ignored) {
+        }
     }
 
 //

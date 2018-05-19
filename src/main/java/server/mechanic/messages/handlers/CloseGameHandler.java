@@ -29,7 +29,7 @@ public class CloseGameHandler extends MessageHandler<CloseGame> {
 
     @Override
     public void handle(@NotNull CloseGame message, @NotNull Integer forUser) {
-        gameMechanics.addClientEvent(forUser, message);
+        gameMechanics.removeUser(forUser);
     }
 
 }

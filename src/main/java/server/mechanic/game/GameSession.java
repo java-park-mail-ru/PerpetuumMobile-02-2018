@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameSession {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(0);
-    private boolean isFinished;
+//    private boolean isFinished;
 
     @NotNull
     private final Integer sessionId;
@@ -34,7 +34,7 @@ public class GameSession {
         this.first = new GameUser(user1);
         this.gameMap = gameMap;
         this.second = new GameUser(user2);
-        this.isFinished = false;
+//        this.isFinished = false;
     }
 
     @NotNull
@@ -86,23 +86,62 @@ public class GameSession {
         return Arrays.asList(first, second);
     }
 
-    public boolean isFinished() {
-        return isFinished;
-    }
+//    public boolean isFinished() {
+//        return isFinished;
+//    }
+//
+//    public void setFinished() {
+//        isFinished = true;
+//    }
 
-    public void setFinished() {
-        isFinished = true;
-    }
-
-    public void terminateSession() {
-        gameSessionService.forceTerminate(this, true);
-    }
+//    public void terminateSession() {
+//        gameSessionService.forceTerminate(this, true);
+//    }
 
     @Override
     public int hashCode() {
         return sessionId.hashCode();
     }
 
+
+    public boolean tryFinishGameClose(Integer userId) {
+        String reasonFirst;
+        String reasonSecond;
+
+        if (getFirst().getUserId().equals(userId)) {
+            reasonFirst = "You close the game";
+            reasonSecond = "Your opponent close the game";
+        } else {
+            reasonFirst = "Your opponent close the game";
+            reasonSecond = "You close the game";
+        }
+        gameSessionService.finishGame(this, getEnemy(userId).getUserId(), reasonFirst, reasonSecond);
+        return true;
+    }
+
+    public boolean tryFinishGame() {
+        Boolean finishCond = this.gameMap.getCells().stream().allMatch(cell -> cell.isFixed() || cell.getWhoSetUserId() != null);
+        if (!finishCond) {
+            return false;
+        }
+        Integer winnerId;
+        String reasonFirst;
+        String reasonSecond;
+        if (first.getScore() > second.getScore()) {
+            winnerId = first.getUserId();
+            reasonFirst = "You scored more points than your opponent";
+            reasonSecond = "You scored less points than your opponent";
+        } else if (second.getScore() > first.getScore()) {
+            winnerId = second.getUserId();
+            reasonFirst = "You scored less points than your opponent";
+            reasonSecond = "You scored more points than your opponent";
+        } else {
+            winnerId = null;
+            reasonFirst = reasonSecond = "You scored the same points as your opponent";
+        }
+        gameSessionService.finishGame(this, winnerId, reasonFirst, reasonSecond);
+        return true;
+    }
 
 //    public boolean tryFinishGame() {
 //        if (first.claimPart(MechanicPart.class).getScore() >= Config.SCORES_TO_WIN
