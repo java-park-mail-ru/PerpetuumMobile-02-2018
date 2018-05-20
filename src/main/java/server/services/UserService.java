@@ -12,14 +12,11 @@ import server.dao.UserDao;
 import server.mappers.UserMapper;
 
 import java.sql.PreparedStatement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import server.model.UserAuth;
 
 import javax.validation.constraints.NotNull;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,9 +25,6 @@ import java.util.regex.Pattern;
 public class UserService implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final PasswordEncoder passwordEncoder;
-
-    private Map<Integer, User> allUsers = new HashMap<>();
-    private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 
     @Autowired
     public UserService(@NotNull JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
@@ -153,14 +147,42 @@ public class UserService implements UserDao {
         return getUserById(userIdInDB);
     }
 
+
+    /**
+     * Update user in DataBase without password.
+     * @param user
+     *
+     * @return true if success, else false
+     */
     @Override
     public boolean updateUser(User user) {
-        final String sql = "UPDATE public.user SET username = ?, email = ?, password = ?, image = ? WHERE id = ?";
+        final String sql = "UPDATE public.user SET username = ?, email = ?, image = ? WHERE id = ?";
         try {
-            jdbcTemplate.update(sql, user.getLogin(), user.getEmail(), passwordEncoder.encode(user.getPassword()), user.getImage(), user.getId());
+            jdbcTemplate.update(sql, user.getLogin(), user.getEmail(), user.getImage(), user.getId());
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserPassword(User user) {
+        final String sql = "UPDATE public.user SET password = ? WHERE id = ?";
+        try {
+            jdbcTemplate.update(sql, passwordEncoder.encode(user.getPassword()), user.getId());
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    @Override
+    public void increaseScoreById(@NotNull Integer userId, @NotNull Integer scoreIncrease) {
+        final String sql = "UPDATE public.user SET score = score + ? WHERE id = ?";
+        try {
+            jdbcTemplate.update(sql, scoreIncrease, userId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

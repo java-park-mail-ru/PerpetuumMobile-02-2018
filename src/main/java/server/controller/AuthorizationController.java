@@ -105,7 +105,7 @@ public class AuthorizationController {
         if (changePassword) {
             if (passwordEncoder.matches(changeUser.getOldPassword(), oldUser.getPassword())) {
                 oldUser.setPassword(changeUser.getNewPassword());
-                userService.updateUser(oldUser);
+                userService.updateUserPassword(oldUser);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
         }
