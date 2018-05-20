@@ -1,9 +1,11 @@
 package server.services;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.lang.Nullable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import server.model.User;
 import server.dao.UserDao;
@@ -25,12 +27,15 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class UserService implements UserDao {
     private final JdbcTemplate jdbcTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     private Map<Integer, User> allUsers = new HashMap<>();
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 
-    public UserService(@NotNull JdbcTemplate jdbcTemplate) {
+    @Autowired
+    public UserService(@NotNull JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
         this.jdbcTemplate = jdbcTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -102,7 +107,7 @@ public class UserService implements UserDao {
                     PreparedStatement.RETURN_GENERATED_KEYS);
             pst.setString(1, newUser.getLogin());
             pst.setString(2, newUser.getEmail());
-            pst.setString(three, newUser.getPassword());
+            pst.setString(three, passwordEncoder.encode(newUser.getPassword()));
             return pst;
         }, keyHolder);
         return keyHolder.getKey().intValue();
@@ -113,7 +118,7 @@ public class UserService implements UserDao {
         if (userInDB == null) {
             return null;
         }
-        if (tryAuth.getPassword().equals(userInDB.getPassword())) {
+        if (passwordEncoder.matches(tryAuth.getPassword(), userInDB.getPassword())) {
             return userInDB.getId();
         }
         return null;
@@ -124,7 +129,7 @@ public class UserService implements UserDao {
         if (userInDB == null) {
             return null;
         }
-        if (tryAuth.getPassword().equals(userInDB.getPassword())) {
+        if (passwordEncoder.matches(tryAuth.getPassword(), userInDB.getPassword())) {
             return userInDB.getId();
         }
         return null;
@@ -152,7 +157,7 @@ public class UserService implements UserDao {
     public boolean updateUser(User user) {
         final String sql = "UPDATE public.user SET username = ?, email = ?, password = ?, image = ? WHERE id = ?";
         try {
-            jdbcTemplate.update(sql, user.getLogin(), user.getEmail(), user.getPassword(), user.getImage(), user.getId());
+            jdbcTemplate.update(sql, user.getLogin(), user.getEmail(), passwordEncoder.encode(user.getPassword()), user.getImage(), user.getId());
             return true;
         } catch (Exception e) {
             return false;
