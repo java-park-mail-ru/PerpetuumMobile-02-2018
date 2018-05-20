@@ -157,7 +157,8 @@ public class UserService implements UserDao {
     public boolean updateUser(User user) {
         final String sql = "UPDATE public.user SET username = ?, email = ?, password = ?, image = ? WHERE id = ?";
         try {
-            jdbcTemplate.update(sql, user.getLogin(), user.getEmail(), passwordEncoder.encode(user.getPassword()), user.getImage(), user.getId());
+            jdbcTemplate.update(sql, user.getLogin(), user.getEmail(), passwordEncoder.encode(user.getPassword()),
+                    user.getImage(), user.getId());
             return true;
         } catch (Exception e) {
             return false;
