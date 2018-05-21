@@ -97,9 +97,16 @@ public class GameInfoController {
         }
     }
 
+    /**
+     * Save result for singleplayer level in DB if levelTime less than levelTime in DB
+     * or if player play this level first time.
+     *
+     * @param saveResult (levelNum, levelTime)
+     * @param httpSession cookies
+     * @return message
+     */
     @PostMapping(value = "/save", produces = "application/json")
     public ResponseEntity saveResult(@RequestBody SaveResult saveResult, HttpSession httpSession) {
-
         Integer userIdInSession = (Integer) httpSession.getAttribute("blendocu");
 
         if (userIdInSession == null) {

@@ -102,7 +102,7 @@ public class GameSessionService {
 
     public void startGame(@NotNull User first, @NotNull User second) {
         ObjectMapper mapper = new ObjectMapper();
-        Integer mapNum  = 1 + (int) (Math.random() * (mapsCount - 1));
+        Integer mapNum  = 1 + (int) (Math.random() * mapsCount);
         String mapName = "multi_" + mapNum;
         String filePath = filesDir + mapName + ".map";
         GameMap gameMap = null;
