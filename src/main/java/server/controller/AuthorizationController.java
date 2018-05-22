@@ -148,6 +148,7 @@ public class AuthorizationController {
 
         if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);
+            httpSession.setMaxInactiveInterval(21600);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED.getMessage()));
         }
 
@@ -168,6 +169,7 @@ public class AuthorizationController {
         }
         user.setScore(0);
         httpSession.setAttribute("blendocu", userService.addUser(user));
+        httpSession.setMaxInactiveInterval(21600);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED.getMessage()));
     }
 
