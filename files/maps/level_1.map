@@ -1,8 +1,8 @@
 {
     "countX": 3,
     "countY": 1,
-    "stars3": 15,
-    "stars2": 30,
+    "stars3": 5,
+    "stars2": 10,
     "cells": [{
         "x": 0,
         "y": 0,
