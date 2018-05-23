@@ -180,7 +180,7 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
-        User userInDB = userService.checkUserById(userId);
+        User userInDB = userService.getUserById(userId);
         String userLogin = userInDB.getLogin();
 
         if (userLogin == null) {

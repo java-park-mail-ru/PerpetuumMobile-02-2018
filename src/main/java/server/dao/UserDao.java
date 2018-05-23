@@ -27,7 +27,7 @@ public interface UserDao {
 
     Integer authorizeUser(@NotNull UserAuth tryAuth);
 
-    User checkUserById(@NotNull Integer userIdInDB);
+    boolean checkUserById(@NotNull Integer userIdInDB);
 
     boolean updateUser(@NotNull User user);
 

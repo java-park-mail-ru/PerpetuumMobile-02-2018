@@ -143,8 +143,8 @@ public class UserService implements UserDao {
     }
 
     @Override
-    public User checkUserById(Integer userIdInDB) {
-        return getUserById(userIdInDB);
+    public boolean checkUserById(Integer userIdInDB) {
+        return getUserById(userIdInDB) != null;
     }
 
 

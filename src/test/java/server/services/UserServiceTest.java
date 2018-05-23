@@ -83,6 +83,6 @@ class UserServiceTest {
     void checkUserById() {
         User newUser = new User("testname", "testemail@mail.ru", "testpassword");
         Integer idNewUser = userService.addUser(newUser);
-        assertNotNull(userService.checkUserById(idNewUser));
+        assertTrue(userService.checkUserById(idNewUser));
     }
 }

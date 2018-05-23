@@ -106,7 +106,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private boolean insureCandidate(@NotNull Integer candidate) {
         return remotePointService.isConnected(candidate)
-                && userService.getUserById(candidate) != null;
+                && userService.checkUserById(candidate);
     }
 
     @Override
