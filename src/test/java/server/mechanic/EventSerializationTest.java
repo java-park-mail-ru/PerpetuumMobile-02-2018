@@ -4,11 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.mechanic.game.GameUser;
+import server.mechanic.game.map.Cell;
+import server.mechanic.game.map.GameMap;
 import server.mechanic.messages.inbox.SetCubic;
+import server.mechanic.messages.outbox.CubicNotSet;
 import server.mechanic.messages.outbox.CubicSet;
+import server.mechanic.messages.outbox.EndGame;
+import server.mechanic.messages.outbox.InitGame;
 import server.model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +42,58 @@ class EventSerializationTest {
         final SetCubic setCubic = objectMapper.readValue(setCubicStr, SetCubic.class);
         final String setCubicJSON = objectMapper.writeValueAsString(setCubic);
         assertNotNull(setCubicJSON);
+    }
+
+    @Test
+    void CubicSet() throws IOException {
+        final CubicSet cubicSet = new CubicSet();
+        cubicSet.setCoordX(5);
+        cubicSet.setCoordY(5);
+        cubicSet.setColour("#magicC");
+        cubicSet.setYour(10);
+        cubicSet.setOpponent(9);
+        cubicSet.setYouSet(true);
+        final String result = objectMapper.writeValueAsString(cubicSet);
+        objectMapper.readValue(result, CubicSet.class);
+    }
+
+    @Test
+    void CubicNotSet() throws IOException {
+        final CubicNotSet cubicNotSet = new CubicNotSet();
+        cubicNotSet.setColour("#magicC");
+        final String result = objectMapper.writeValueAsString(cubicNotSet);
+        objectMapper.readValue(result, CubicNotSet.class);
+    }
+
+    @Test
+    void EndGame() throws IOException {
+        final EndGame endGame = new EndGame();
+        endGame.setResult("WIN");
+        endGame.setReason("You win");
+        endGame.setOpponent(42);
+        endGame.setYour(41);
+        final String result = objectMapper.writeValueAsString(endGame);
+        objectMapper.readValue(result,EndGame.class);
+    }
+
+    @Test
+    void serverInitTest() throws IOException {
+        final InitGame.Request initGame = new InitGame.Request();
+        final User opponent = new User();
+        opponent.setLogin("MegaUser");
+        opponent.setImage("opyat.jpeg");
+        initGame.setOpponent(opponent);
+        final GameMap gameMap = new GameMap();
+        gameMap.setCountX(1);
+        gameMap.setCountY(1);
+        Cell cell = new Cell();
+        cell.setColour("#magicC");
+        cell.setFixed(false);
+        List<Cell> cells = new ArrayList<>();
+        cells.add(cell);
+        gameMap.setCells(cells);
+        final String initGameJson = objectMapper.writeValueAsString(initGame);
+        assertNotNull(initGameJson);
     }
 
 }

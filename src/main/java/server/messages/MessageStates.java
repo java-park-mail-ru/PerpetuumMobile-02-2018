@@ -12,7 +12,7 @@ public enum MessageStates {
     PASSWORDS_DO_NOT_MATCH("passwords don't match"),
     UNAUTHORIZED("not authorized"),
     CHANGED_USER_DATA("user data has been changed"),
-    BAD_DATA("bad data given"),
+    BAD_DATA("unsupported file given"),
     SUCCESS_UPLOAD("you successfully uploaded file"),
     SUCCESS_UPDATE("successfully update"),
     MAP_NOT_FOUND("map not found"),
