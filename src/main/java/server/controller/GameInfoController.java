@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
 import server.model.LevelsInfo;
-import server.model.MapResult;
 import server.model.SaveResult;
 
 import javax.servlet.http.HttpSession;
@@ -77,16 +76,16 @@ public class GameInfoController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
-        String sql = "SELECT level_id, score FROM public.user JOIN public.user_results "
-                + "ON public.user.id = public.user_results.user_id "
-                + "WHERE user_results.user_id = ?";
-        List<MapResult> result;
+        String sql = "SELECT ur.level_id, ur.score "
+                + "FROM public.user u JOIN public.user_results ur ON u.id = ur.user_id "
+                + "WHERE ur.user_id = ?";
+        List<SaveResult> result;
         try {
             result = jdbcTemplate.query(sql, (ResultSet resultSet, int ignore) -> {
-                final MapResult mapRes = new MapResult();
-                mapRes.setMapNum(resultSet.getInt("level_id"));
-                mapRes.setTime(resultSet.getInt("score"));
-                return mapRes;
+                final SaveResult saveRes = new SaveResult();
+                saveRes.setLevelNum(resultSet.getInt("level_id"));
+                saveRes.setTime(resultSet.getInt("score"));
+                return saveRes;
             }, userIdInSession);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(result);
