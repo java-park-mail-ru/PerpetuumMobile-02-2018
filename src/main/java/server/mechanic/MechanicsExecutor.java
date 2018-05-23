@@ -16,6 +16,7 @@ public class MechanicsExecutor implements Runnable {
     @NotNull
     private static final Logger LOGGER = LoggerFactory.getLogger(MechanicsExecutor.class);
     private static final long STEP_TIME = 50;
+    private static final int THREAD_COUNT = 2;
 
     @NotNull
     private final GameMechanics gameMechanics;
@@ -23,7 +24,7 @@ public class MechanicsExecutor implements Runnable {
     @NotNull
     private final Clock clock = Clock.systemDefaultZone();
 
-    private final Executor tickExecutor = Executors.newSingleThreadExecutor();
+    private final Executor tickExecutor = Executors.newFixedThreadPool(THREAD_COUNT);
 
     @Autowired
     public MechanicsExecutor(@NotNull GameMechanics gameMechanics) {
@@ -32,11 +33,14 @@ public class MechanicsExecutor implements Runnable {
 
     @PostConstruct
     public void initAfterStartup() {
-        tickExecutor.execute(this);
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tickExecutor.execute(this);
+        }
     }
 
     @Override
     public void run() {
+        LOGGER.info("Thread " + Thread.currentThread().getId() + " started");
         try {
             mainCycle();
         } finally {
@@ -45,12 +49,12 @@ public class MechanicsExecutor implements Runnable {
     }
 
     private void mainCycle() {
-        long lastFrameMillis = STEP_TIME;
+        LOGGER.info("Thread " + Thread.currentThread().getId() + " in main cycle!!!");
         while (true) {
             try {
                 final long before = clock.millis();
 
-                gameMechanics.gmStep(lastFrameMillis);
+                gameMechanics.gmStep(THREAD_COUNT);
 
                 final long after = clock.millis();
                 try {
@@ -65,7 +69,6 @@ public class MechanicsExecutor implements Runnable {
                     return;
                 }
                 final long afterSleep = clock.millis();
-                lastFrameMillis = afterSleep - before;
             } catch (RuntimeException e) {
                 LOGGER.error("Mechanics executor was reseted due to exception", e);
                 //gameMechanics.reset();

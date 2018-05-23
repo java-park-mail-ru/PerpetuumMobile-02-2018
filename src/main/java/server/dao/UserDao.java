@@ -31,4 +31,8 @@ public interface UserDao {
 
     boolean updateUser(@NotNull User user);
 
+    boolean updateUserPassword(User user);
+
+    void increaseScoreById(@NotNull Integer userId, @NotNull Integer scoreIncrease);
+
 }

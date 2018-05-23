@@ -13,6 +13,7 @@ import server.mechanic.game.map.GameMap;
 import server.mechanic.messages.outbox.EndGame;
 import server.mechanic.services.event.client.ClientEventService;
 import server.model.User;
+import server.services.UserService;
 import server.websocket.RemotePointService;
 
 import javax.validation.constraints.NotNull;
@@ -46,14 +47,25 @@ public class GameSessionService {
     @NotNull
     private final ClientEventService clientEventService;
 
+    @NotNull
+    private final UserService userService;
+
+    @Value("${SCORE_WIN}")
+    private Integer scoreWin;
+    @Value("${SCORE_LOSE}")
+    private Integer scoreLose;
+    @Value("${SCORE_DRAW}")
+    private Integer scoreDraw;
+
 
     public GameSessionService(@NotNull RemotePointService remotePointService,
                               @NotNull GameInitService gameInitService,
-                              @NotNull ClientEventService clientEventService
-        ) {
+                              @NotNull ClientEventService clientEventService,
+                              @NotNull UserService userService) {
         this.remotePointService = remotePointService;
         this.gameInitService = gameInitService;
         this.clientEventService = clientEventService;
+        this.userService = userService;
     }
 
     public Set<GameSession> getSessions() {
@@ -90,7 +102,7 @@ public class GameSessionService {
 
     public void startGame(@NotNull User first, @NotNull User second) {
         ObjectMapper mapper = new ObjectMapper();
-        Integer mapNum  = 1 + (int) (Math.random() * (mapsCount - 1));
+        Integer mapNum  = 1 + (int) (Math.random() * mapsCount);
         String mapName = "multi_" + mapNum;
         String filePath = filesDir + mapName + ".map";
         GameMap gameMap = null;
@@ -122,13 +134,19 @@ public class GameSessionService {
 
         if (winnerId == null) {
             firstMessage.setResult("DRAW");
-            firstMessage.setResult("DRAW");
+            secondMessage.setResult("DRAW");
+            userService.increaseScoreById(gameSession.getFirst().getUserId(), scoreDraw);
+            userService.increaseScoreById(gameSession.getSecond().getUserId(), scoreDraw);
         } else if (gameSession.getSecond().getUserId().equals(winnerId)) {
             firstMessage.setResult("LOSE");
             secondMessage.setResult("WIN");
+            userService.increaseScoreById(gameSession.getFirst().getUserId(), scoreLose);
+            userService.increaseScoreById(gameSession.getSecond().getUserId(), scoreWin);
         } else {
             firstMessage.setResult("WIN");
             secondMessage.setResult("LOSE");
+            userService.increaseScoreById(gameSession.getFirst().getUserId(), scoreWin);
+            userService.increaseScoreById(gameSession.getSecond().getUserId(), scoreLose);
         }
 
         try {

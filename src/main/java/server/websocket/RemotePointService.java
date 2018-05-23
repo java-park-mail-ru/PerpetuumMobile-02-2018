@@ -55,7 +55,9 @@ public class RemotePointService {
         //noinspection OverlyBroadCatchBlock
         try {
             //noinspection ConstantConditions
-            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            synchronized (this) {
+                webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            }
         } catch (IOException e) {
             throw new IOException("Unnable to send message", e);
         }

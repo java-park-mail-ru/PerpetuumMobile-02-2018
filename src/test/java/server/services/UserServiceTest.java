@@ -34,10 +34,8 @@ class UserServiceTest {
         User settedUser2 = users.get(users.size()-1);
         assertEquals(settedUser1.getLogin(), user1.getLogin());
         assertEquals(settedUser1.getEmail(), user1.getEmail());
-        assertEquals(settedUser1.getPassword(), user1.getPassword());
         assertEquals(settedUser2.getLogin(), user2.getLogin());
         assertEquals(settedUser2.getEmail(), user2.getEmail());
-        assertEquals(settedUser2.getPassword(), user2.getPassword());
     }
 
     @Test
@@ -54,7 +52,6 @@ class UserServiceTest {
         User settedUser = userService.getUserById(id);
         assertEquals(newUser.getLogin(), settedUser.getLogin());
         assertEquals(newUser.getEmail(), settedUser.getEmail());
-        assertEquals(newUser.getPassword(),settedUser.getPassword());
     }
 
     @Test

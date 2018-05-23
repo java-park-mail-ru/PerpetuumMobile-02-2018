@@ -47,6 +47,7 @@ public class User {
     }
 
     public User(String login, String email, String password, Integer initScore) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
