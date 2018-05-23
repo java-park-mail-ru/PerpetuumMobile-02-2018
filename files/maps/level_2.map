@@ -6,49 +6,49 @@
     "cells": [{
         "x": 2,
         "y": 2,
-        "fixed": false,
+        "fixed": true,
         "colour": "#256b73"
     },
     {
         "x": 2,
         "y": 0,
-        "fixed": false,
+        "fixed": true,
         "colour": "#78f0c3"
     },
     {
         "x": 0,
         "y": 2,
-        "fixed": false,
+        "fixed": true,
         "colour": "#4c394d"
     },
     {
         "x": 2,
         "y": 1,
-        "fixed": true,
+        "fixed": false,
         "colour": "#4faa99"
     },
     {
         "x": 0,
         "y": 0,
-        "fixed": true,
+        "fixed": false,
         "colour": "#a15088"
     },
     {
         "x": 1,
         "y": 0,
-        "fixed": true,
+        "fixed": false,
         "colour": "#9ba5a6"
     },
     {
         "x": 1,
         "y": 2,
-        "fixed": true,
+        "fixed": false,
         "colour": "#425262"
     },
     {
         "x": 0,
         "y": 1,
-        "fixed": true,
+        "fixed": false,
         "colour": "#75476c"
     }]
 }
