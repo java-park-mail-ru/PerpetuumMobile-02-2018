@@ -1,5 +1,6 @@
 package server.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import server.messages.MessageStates;
 import server.model.ChangeUser;
 import server.model.User;
 import server.model.UserAuth;
+import server.services.JavaMailService;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -20,12 +22,14 @@ public class AuthorizationController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final JavaMailService mailService;
 
 
 
-    public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder, JavaMailService mailService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     public UserService getUserService() {
@@ -170,6 +174,15 @@ public class AuthorizationController {
         user.setScore(0);
         httpSession.setAttribute("blendocu", userService.addUser(user));
         httpSession.setMaxInactiveInterval(21600);
+        try {
+            String msg = String.format("<h1>We are glad to see you in <a href='https://blendocu.com'>Blendocu</a>.</h1>"
+                    + "<h3>Registration is successfully completed.</h3>"
+                    + "Your credentials are:<br>Login: %s<br>Password: %s<br><br><i>Best regards,</i><br>Blendocu Team.",
+                    user.getLogin(), user.getPassword());
+            mailService.sendEmail(user.getEmail(), "Welcome to Blendocu, " + user.getLogin() + "!", msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED.getMessage()));
     }
 
