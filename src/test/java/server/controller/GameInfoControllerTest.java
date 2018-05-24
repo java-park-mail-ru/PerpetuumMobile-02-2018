@@ -2,6 +2,8 @@ package server.controller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,16 +33,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(print = MockMvcPrint.DEFAULT)
 @Transactional
 public class GameInfoControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JdbcOperations jdbcTemplate;
 
 
     final String login = "validLogin";
     final String email = "validEmail@test.ru";
     final String password = "validPassword@test.ru";
-    final Integer levelNum = 1;
+    final Integer levelNum = 10042;
     final Integer time = 1;
+    final String levelName = "level";
+
 
     @BeforeEach
     void setup() throws Exception {
@@ -79,7 +86,7 @@ public class GameInfoControllerTest {
             e.printStackTrace();
         }
         assert result != null;
-        return (MockHttpSession)result.getRequest().getSession();
+        return (MockHttpSession) result.getRequest().getSession();
     }
 
     @Test
@@ -95,9 +102,11 @@ public class GameInfoControllerTest {
                 .content(String.format("{\"levelNum\": \"%d\", \"time\": %d}", levelNum, time))).andExpect(status().isUnauthorized());
     }
 
-    /*@Test
-    @Transactional
+
+    @Test
     void testSave() throws Exception {
+        String sql = "INSERT INTO public.levels VALUES(default, " + levelNum + ", '" + levelName +"')";
+        jdbcTemplate.update(sql);
         final MockHttpSession session = loginCookie();
         mockMvc.perform(post("/save").session(session)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -105,13 +114,15 @@ public class GameInfoControllerTest {
     }
 
     @Test
-    @Transactional
     void testSaveAndGetResults() throws Exception {
+        String sql = "INSERT INTO public.levels VALUES(default, " + levelNum + ", '" + levelName +"')";
+        jdbcTemplate.update(sql);
         final MockHttpSession session = loginCookie();
         mockMvc.perform(post("/save").session(session)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"levelNum\": \"%d\", \"time\": %d}", levelNum, time))).andExpect(status().isAccepted());
         MvcResult resultsRes = mockMvc.perform(get("/results").session(session)).andExpect(status().isOk()).andReturn();
+        System.out.println(resultsRes.getResponse().getContentAsString());
         JSONArray results = new JSONArray(resultsRes.getResponse().getContentAsString());
         if (!levelNum.equals(results.getJSONObject(0).getInt("levelNum"))) {
             throw new Exception();
@@ -119,5 +130,5 @@ public class GameInfoControllerTest {
         if (!time.equals(results.getJSONObject(0).getInt("time"))) {
             throw new Exception();
         }
-    }*/
+    }
 }

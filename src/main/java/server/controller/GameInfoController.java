@@ -76,13 +76,14 @@ public class GameInfoController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
-        String sql = "SELECT level_id, score FROM public.user_results ur "
-                + "WHERE user_id = ?";
+        String sql = "SELECT lv.level, score FROM public.levels lv"
+                + " LEFT JOIN public.user_results ur ON ur.level_id = lv.id"
+                + " WHERE ur.user_id = ?";
         List<SaveResult> result;
         try {
             result = jdbcTemplate.query(sql, (ResultSet resultSet, int ignore) -> {
                 final SaveResult mapRes = new SaveResult();
-                mapRes.setLevelNum(resultSet.getInt("level_id"));
+                mapRes.setLevelNum(resultSet.getInt("level"));
                 mapRes.setTime(resultSet.getInt("score"));
                 return mapRes;
             }, userIdInSession);
