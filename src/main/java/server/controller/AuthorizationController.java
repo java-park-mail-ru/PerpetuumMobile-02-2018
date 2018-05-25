@@ -1,5 +1,6 @@
 package server.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,8 @@ public class AuthorizationController {
     private final PasswordEncoder passwordEncoder;
     private final JavaMailService mailService;
 
+    @Value("${EMAIL_NOREPLY}")
+    private String emailNoreply;
 
 
     public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder, JavaMailService mailService) {
@@ -173,12 +176,12 @@ public class AuthorizationController {
         user.setScore(0);
         httpSession.setAttribute("blendocu", userService.addUser(user));
         httpSession.setMaxInactiveInterval(21600);
-        try {
-            String msg = String.format("<h1>We are glad to see you in <a href='https://blendocu.com'>Blendocu</a>.</h1>"
+        String msg = String.format("<h1>We are glad to see you in <a href='https://blendocu.com'>Blendocu</a>.</h1>"
                     + "<h3>Registration is successfully completed.</h3>"
                     + "Your credentials are:<br>Login: %s<br>Password: %s<br><br><i>Best regards,</i><br>Blendocu Team.",
                     user.getLogin(), user.getPassword());
-            mailService.sendEmail(user.getEmail(), "Welcome to Blendocu, " + user.getLogin() + "!", msg);
+        try {
+            mailService.sendEmail(emailNoreply, user.getEmail(), "Welcome to Blendocu, " + user.getLogin() + "!", msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
