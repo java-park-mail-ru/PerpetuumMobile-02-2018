@@ -18,7 +18,9 @@ public enum MessageStates {
     MAP_NOT_FOUND("map not found"),
     LEVEL_NOT_FOUND("level not found"),
     NOT_UPDATED("nothing to update"),
-    DATABASE_ERROR("database error");
+    DATABASE_ERROR("database error"),
+    EMAIL_NOT_FOUND("email not found"),
+    PASWORD_CHANGED("password has been changed");
 
     private String message;
 

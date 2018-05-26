@@ -212,5 +212,47 @@ public class AuthorizationController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
 
     }
+
+    /**
+     * Reset user password by email and send new password to user email.
+     *
+     * @param user email
+     * @return status
+     */
+    @PostMapping(value = "/reset", produces = "application/json")
+    public ResponseEntity<Message> resetPassword(@RequestBody User user) {
+        User resetUser = userService.getUserByEmail(user.getEmail());
+        if (resetUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(MessageStates.EMAIL_NOT_FOUND.getMessage()));
+        }
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder symbols = new StringBuilder();
+        symbols.append("abcdefghijklmnopqrstuvwxyz");
+        symbols.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        symbols.append("0123456789");
+        String set = symbols.toString();
+
+        int iter;
+        int passLen = 9;
+        for (iter = 0; iter < passLen; iter++) {
+            Integer ind  = (int) (Math.random() * set.length());
+            sb.append(set.charAt(ind));
+        }
+        String newPassword = sb.toString();
+
+        resetUser.setPassword(newPassword);
+        userService.updateUserPassword(resetUser);
+
+        String msg = String.format("<h3>Your password in <a href='https://blendocu.com'>Blendocu</a> has been changed.</h3>"
+                        + "Your password: %s<br><br><i>Best regards,</i><br>Blendocu Team.", newPassword);
+        try {
+            mailService.sendEmail(emailNoreply, user.getEmail(), "Password reset.", msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.PASWORD_CHANGED.getMessage()));
+    }
 }
 
