@@ -1,5 +1,5 @@
 # PerpetuumMobile-02-2018
-
+## [Blendocu.com](https://blendocu.com) || [Blendocu.me](https://blendocu.me)
 ## Состав
 
 - Васильева Надя [@Thewhiterabbit123](https://github.com/Thewhiterabbit123)
@@ -20,3 +20,11 @@ Blendocu - это головоломка, в которой надо распо�
 Документация на API в файле [swagger.yml](swagger.yml).
 
 Для просмотра скопируйте его в [онлайн-редактор Swagger](http://editor.swagger.io/#).
+
+## FRONTEND 
+
+https://github.com/frontend-park-mail-ru/2018_1_perpetuum_mobile
+
+## HEROCU
+
+https://blendocu.herokuapp.com/

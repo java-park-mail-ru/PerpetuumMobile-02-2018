@@ -3,6 +3,8 @@ package server.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import server.messages.Message;
 import server.messages.MessageStates;
@@ -17,10 +19,13 @@ import javax.servlet.http.HttpSession;
 public class AuthorizationController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthorizationController(UserService userService) {
 
+
+    public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserService getUserService() {
@@ -46,7 +51,7 @@ public class AuthorizationController {
             return new ResponseEntity(headers, HttpStatus.TEMPORARY_REDIRECT);
         }
 
-        if (!oldUser.getPassword().equals(changeUser.getOldPassword())) {
+        if (!passwordEncoder.matches(changeUser.getOldPassword(), oldUser.getPassword())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.BAD_PASSWORD.getMessage()));
         }
 
@@ -57,13 +62,12 @@ public class AuthorizationController {
         final Boolean changeImage;
 
         changeLogin = !(changeUser.getLogin() == null
-                        || changeUser.getLogin().equals(""));
+                        || StringUtils.isEmpty(changeUser.getLogin()));
         changeEmail = !(changeUser.getEmail() == null
-                        || changeUser.getEmail().equals(""));
+                        || StringUtils.isEmpty(changeUser.getEmail()));
         //  changeImage = changeUser.getImage() != null;
         changePassword = !(changeUser.getOldPassword() == null
-                        || changeUser.getNewPassword() == null
-                        || changeUser.getNewPassword().equals(""));
+                        || StringUtils.isEmpty(changeUser.getNewPassword()));
 
         // Login is already registered
         if (changeLogin) {
@@ -99,9 +103,13 @@ public class AuthorizationController {
         }
 
         if (changePassword) {
-            if (changeUser.getOldPassword().equals(oldUser.getPassword())) {
+            if (passwordEncoder.matches(changeUser.getOldPassword(), oldUser.getPassword())) {
                 oldUser.setPassword(changeUser.getNewPassword());
-                userService.updateUser(oldUser);
+                boolean updateStatus = userService.updateUserPassword(oldUser);
+                if (!updateStatus) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(new Message(MessageStates.DATABASE_ERROR.getMessage()));
+                }
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
         }
@@ -144,6 +152,7 @@ public class AuthorizationController {
 
         if (userIdInDB != null) {
             httpSession.setAttribute("blendocu", userIdInDB);
+            httpSession.setMaxInactiveInterval(21600);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.AUTHORIZED.getMessage()));
         }
 
@@ -164,6 +173,7 @@ public class AuthorizationController {
         }
         user.setScore(0);
         httpSession.setAttribute("blendocu", userService.addUser(user));
+        httpSession.setMaxInactiveInterval(21600);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED.getMessage()));
     }
 
@@ -174,7 +184,7 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
         }
 
-        User userInDB = userService.checkUserById(userId);
+        User userInDB = userService.getUserById(userId);
         String userLogin = userInDB.getLogin();
 
         if (userLogin == null) {

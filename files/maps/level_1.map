@@ -1,0 +1,24 @@
+{
+    "countX": 3,
+    "countY": 1,
+    "stars3": 5,
+    "stars2": 10,
+    "cells": [{
+        "x": 0,
+        "y": 0,
+        "fixed": false,
+        "colour": "#730d13"
+    },
+    {
+        "x": 1,
+        "y": 0,
+        "fixed": true,
+        "colour": "#f05a69"
+    },
+    {
+        "x": 2,
+        "y": 0,
+        "fixed": false,
+        "colour": "#dcd3e0"
+    }]
+}

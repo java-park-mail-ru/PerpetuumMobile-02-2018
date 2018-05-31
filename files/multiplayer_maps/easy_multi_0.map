@@ -1,0 +1,24 @@
+{
+    "countX":3,
+    "countY":1,
+    "cells":[
+        {
+            "x":0,
+            "y":0,
+            "colour":"#730d13",
+            "fixed": true
+        },
+        {
+            "x":1,
+            "y":0,
+            "colour": "#f05a69",
+            "fixed": false
+        },
+        {
+            "x":2,
+            "y":0,
+            "colour":"#dcd3e0",
+            "fixed": true
+        }
+    ]
+}

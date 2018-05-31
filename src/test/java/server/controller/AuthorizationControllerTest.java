@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@AutoConfigureMockMvc(print = MockMvcPrint.NONE)
+@AutoConfigureMockMvc(print = MockMvcPrint.DEFAULT)
 @Transactional
 class AuthorizationControllerTest {
 

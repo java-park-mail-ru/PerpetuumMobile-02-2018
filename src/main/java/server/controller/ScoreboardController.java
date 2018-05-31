@@ -44,7 +44,11 @@ public class ScoreboardController {
         Integer maxPageNum;
         maxPageNum = (usersFromDb.size() + (onOnePage - 1)) / onOnePage;
 
-        usersFromDb = usersFromDb.subList(from, to);
+        if (to >= from) {
+            usersFromDb = usersFromDb.subList(from, to);
+        } else {
+            usersFromDb = usersFromDb.subList(to, to);
+        }
 
         List<User> users = new ArrayList<>();
 
