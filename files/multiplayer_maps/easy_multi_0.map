@@ -12,7 +12,8 @@
             "x":1,
             "y":0,
             "colour": "#f05a69",
-            "fixed": false
+            "fixed": false,
+            "cubicId": 1
         },
         {
             "x":2,

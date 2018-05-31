@@ -1,8 +1,6 @@
 {
     "countX": 8,
     "countY": 5,
-    "stars3": 50000,
-    "stars2": 70000,
     "cells": [{
         "x": 0,
         "y": 1,
@@ -13,31 +11,36 @@
         "x": 1,
         "y": 1,
         "fixed": false,
-        "colour": "#9C649B"
+        "colour": "#9C649B",
+        "cubicId": 1
     },
     {
         "x": 2,
         "y": 0,
         "fixed": false,
-        "colour": "#958B8D"
+        "colour": "#958B8D",
+        "cubicId": 2
     },
     {
         "x": 2,
         "y": 1,
         "fixed": false,
-        "colour": "#938992"
+        "colour": "#938992",
+        "cubicId": 3
     },
     {
         "x": 2,
         "y": 2,
         "fixed": false,
-        "colour": "#918697"
+        "colour": "#918697",
+        "cubicId": 4
     },
     {
         "x": 2,
         "y": 3,
         "fixed": false,
-        "colour": "#8F839E"
+        "colour": "#8F839E",
+        "cubicId": 5
     },
     {
         "x": 2,
@@ -49,25 +52,29 @@
         "x": 3,
         "y": 1,
         "fixed": false,
-        "colour": "#86A787"
+        "colour": "#86A787",
+        "cubicId": 6
     },
 	{
         "x": 4,
         "y": 1,
         "fixed": false,
-        "colour": "#70BF79"
+        "colour": "#70BF79",
+        "cubicId": 7
     },
 	{
         "x": 4,
         "y": 2,
         "fixed": false,
-        "colour": "#9FC191"
+        "colour": "#9FC191",
+        "cubicId": 8
     },
 	{
         "x": 4,
         "y": 3,
         "fixed": false,
-        "colour": "#C0C2A9"
+        "colour": "#C0C2A9",
+        "cubicId": 9
     },
 	{
         "x": 4,
@@ -79,13 +86,15 @@
         "x": 5,
         "y": 4,
         "fixed": false,
-        "colour": "#C2A891"
+        "colour": "#C2A891",
+        "cubicId": 10
     },
 	{
         "x": 6,
         "y": 4,
         "fixed": false,
-        "colour": "#AC8666"
+        "colour": "#AC8666",
+        "cubicId": 11
     },
 	{
         "x": 7,
@@ -97,13 +106,15 @@
         "x": 7,
         "y": 3,
         "fixed": false,
-        "colour": "#926559"
+        "colour": "#926559",
+        "cubicId": 12
     },
 	{
         "x": 7,
         "y": 2,
         "fixed": false,
-        "colour": "#956970"
+        "colour": "#956970",
+        "cubicId": 13
     },
 	{
         "x": 7,
