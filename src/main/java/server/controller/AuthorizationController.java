@@ -67,12 +67,10 @@ public class AuthorizationController {
         final Boolean changePassword;
         final Boolean changeImage;
 
-        changeLogin = !(changeUser.getLogin() == null
-                        || StringUtils.isEmpty(changeUser.getLogin()));
-        changeEmail = !(changeUser.getEmail() == null
-                        || StringUtils.isEmpty(changeUser.getEmail()));
+        changeLogin = !(StringUtils.isEmpty(changeUser.getLogin()));
+        changeEmail = !(StringUtils.isEmpty(changeUser.getEmail()));
         //  changeImage = changeUser.getImage() != null;
-        changePassword = !(changeUser.getOldPassword() == null
+        changePassword = !(StringUtils.isEmpty(changeUser.getOldPassword())
                         || StringUtils.isEmpty(changeUser.getNewPassword()));
 
         // Login is already registered
@@ -218,6 +216,9 @@ public class AuthorizationController {
         }
 
         User userInDB = userService.getUserById(userId);
+        if (userInDB == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
+        }
         String userLogin = userInDB.getLogin();
 
         if (userLogin == null) {
@@ -274,7 +275,7 @@ public class AuthorizationController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.PASWORD_CHANGED.getMessage()));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.PASSWORD_CHANGED.getMessage()));
     }
 }
 
