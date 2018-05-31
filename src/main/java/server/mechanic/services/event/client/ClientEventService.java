@@ -3,14 +3,12 @@ package server.mechanic.services.event.client;
 import org.springframework.stereotype.Service;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
-import server.mechanic.services.GameSessionService;
 import server.websocket.Message;
 import server.websocket.RemotePointService;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Not thread safe! Per game mechanic service.
@@ -21,7 +19,7 @@ public class ClientEventService {
     @NotNull
     private final RemotePointService remotePointService;
 
-    private final Map<Integer, List<ClientEvent>> events = new ConcurrentHashMap<>();
+    private final Map<Integer, List<ClientEvent>> events = new HashMap<>();
 
     public void pushClientEvent(@NotNull Integer userId, @NotNull ClientEvent event) {
         this.events.putIfAbsent(userId, new ArrayList<>());
@@ -65,17 +63,7 @@ public class ClientEventService {
         events.remove(userProfileId);
     }
 
-    public void resetGarbage(GameSessionService gameSessionService) {
-        events.forEach((userId, event) -> {
-                    if (!gameSessionService.isPlaying(userId)) {
-                        events.remove(userId);
-                    }
-                }
-        );
-    }
-
-    public void resetForGameSession(GameSession gameSession) {
-        events.remove(gameSession.getFirst().getUserId());
-        events.remove(gameSession.getSecond().getUserId());
+    public void reset() {
+        events.clear();
     }
 }

@@ -32,7 +32,6 @@ public class GameInitService {
         players.add(gameSession.getSecond());
         for (GameUser player : players) {
             final InitGame.Request initMessage = createInitMessageFor(gameSession, player.getUserId());
-            //noinspection OverlyBroadCatchBlock
             try {
                 remotePointService.sendMessageToUser(player.getUserId(), initMessage);
             } catch (IOException e) {

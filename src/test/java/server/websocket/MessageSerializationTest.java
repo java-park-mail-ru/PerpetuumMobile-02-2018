@@ -3,7 +3,6 @@ package server.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import server.mechanic.game.map.GameMap;
 import server.mechanic.messages.inbox.CloseGame;
 import server.mechanic.messages.inbox.JoinGame;
 import server.mechanic.messages.inbox.SetCubic;
@@ -14,8 +13,6 @@ import server.mechanic.messages.outbox.InitGame;
 import server.model.User;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;

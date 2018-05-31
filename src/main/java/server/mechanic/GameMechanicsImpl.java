@@ -106,11 +106,11 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private boolean insureCandidate(@NotNull Integer candidate) {
         return remotePointService.isConnected(candidate)
-                && userService.checkUserById(candidate);
+                && userService.getUserById(candidate) != null;
     }
 
     @Override
-    public void gmStep(int threadCount) {
+    public void gmStep(long frameTime) {
         while (!tasks.isEmpty()) {
             final Runnable nextTask = tasks.poll();
             if (nextTask != null) {
@@ -122,25 +122,13 @@ public class GameMechanicsImpl implements GameMechanics {
             }
         }
 
-
         for (GameSession session : gameSessionService.getSessions()) {
-            Integer sessionMod = session.getSessionId() % threadCount;
-            Integer curThreadMod = (int) Thread.currentThread().getId() % threadCount;
-            if (sessionMod.equals(curThreadMod)) {
-                clientEventService.processEventsFor(session);
-            }
+            clientEventService.processEventsFor(session);
         }
 
         final List<GameSession> sessionsToTerminate = new ArrayList<>();
         final List<GameSession> sessionsToFinish = new ArrayList<>();
-
         for (GameSession session : gameSessionService.getSessions()) {
-            Integer sessionMod = session.getSessionId() % threadCount;
-            Integer curThreadMod = (int) Thread.currentThread().getId() % threadCount;
-            if (!sessionMod.equals(curThreadMod)) {
-                continue;
-            }
-
             if (session.tryFinishGame()) {
                 sessionsToFinish.add(session);
                 continue;
@@ -188,19 +176,11 @@ public class GameMechanicsImpl implements GameMechanics {
                 sessionsToFinish.add(session);
                 continue;
             }
-            clientEventService.resetForGameSession(session);
         }
-
-        for (GameSession session : sessionsToTerminate) {
-            clientEventService.resetForGameSession(session);
-            gameSessionService.forceTerminate(session, true);
-        }
-        for (GameSession session : sessionsToFinish) {
-            clientEventService.resetForGameSession(session);
-            gameSessionService.forceTerminate(session, false);
-        }
+        sessionsToTerminate.forEach(session -> gameSessionService.forceTerminate(session, true));
+        sessionsToFinish.forEach(session -> gameSessionService.forceTerminate(session, false));
 
         tryStartGames();
-        clientEventService.resetGarbage(gameSessionService);
+        clientEventService.reset();
     }
 }
