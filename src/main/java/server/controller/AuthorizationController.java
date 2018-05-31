@@ -235,9 +235,9 @@ public class AuthorizationController {
 
         String userImage = userInDB.getImage();
         String userEmail = userInDB.getEmail();
-        Integer userIdDb = userInDB.getId();
+        Integer userToken = userInDB.getId();
         User user = new User();
-        user.setId(userIdDb);
+        user.setToken(userToken);
         user.setLogin(userLogin);
         user.setImage(userImage);
         user.setEmail(userEmail);

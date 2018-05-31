@@ -1,20 +1,24 @@
 package server.model;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-
 import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class User {
-    @JsonProperty(value = "token")
     private Integer id;
     private String  login;
     private String  email;
     private String  password;
     private Integer score;
     private String  image;
+    private Integer token;
+
+    public Integer getToken() {
+        return token;
+    }
+
+    public void setToken(Integer token) {
+        this.token = token;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -102,14 +106,8 @@ public class User {
         return password;
     }
 
-    @JsonGetter(value = "token")
     public Integer getId() {
         return id;
-    }
-
-    @JsonSetter(value = "token")
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public void setPassword(String password) {
