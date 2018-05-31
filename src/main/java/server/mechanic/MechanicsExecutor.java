@@ -61,14 +61,12 @@ public class MechanicsExecutor implements Runnable {
                 }
 
                 if (Thread.currentThread().isInterrupted()) {
-                    //gameMechanics.reset();
                     return;
                 }
                 final long afterSleep = clock.millis();
                 lastFrameMillis = afterSleep - before;
             } catch (RuntimeException e) {
                 LOGGER.error("Mechanics executor was reseted due to exception", e);
-                //gameMechanics.reset();
             }
         }
     }

@@ -109,7 +109,7 @@ public class GameSessionService {
         try {
             gameMap = mapper.readValue(new FileInputStream(filePath), GameMap.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Can't read file " + filePath);
         }
 
         final GameSession gameSession = new GameSession(first, second, gameMap, this);
@@ -151,15 +151,14 @@ public class GameSessionService {
 
         try {
             remotePointService.sendMessageToUser(gameSession.getFirst().getUserId(), firstMessage);
-        } catch (IOException ignored) {
-            // for checkstyle
-            ignored.getMessage();
+        } catch (IOException ex) {
+            LOGGER.error("can't send message to user " + gameSession.getFirst().getUserId());
         }
         try {
             remotePointService.sendMessageToUser(gameSession.getSecond().getUserId(), secondMessage);
-        } catch (IOException ignored) {
-            // for checkstyle
-            ignored.getMessage();
+        } catch (IOException ex) {
+            LOGGER.error("can't send message to user " + gameSession.getSecond().getUserId());
+
         }
     }
 }

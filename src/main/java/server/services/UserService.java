@@ -1,6 +1,8 @@
 package server.services;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,6 +25,7 @@ import java.util.regex.Pattern;
 @Service
 @SuppressWarnings("unused")
 public class UserService implements UserDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final JdbcTemplate jdbcTemplate;
     private final PasswordEncoder passwordEncoder;
 
@@ -182,7 +185,7 @@ public class UserService implements UserDao {
         try {
             jdbcTemplate.update(sql, scoreIncrease, userId);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Can't update user result");
         }
     }
 }
