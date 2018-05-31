@@ -130,7 +130,6 @@ class GameInfoControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"levelNum\": \"%d\", \"time\": %d}", levelNum, time))).andExpect(status().isAccepted());
         MvcResult resultsRes = mockMvc.perform(get("/results").session(session)).andExpect(status().isOk()).andReturn();
-        System.out.println(resultsRes.getResponse().getContentAsString());
         JSONArray results = new JSONArray(resultsRes.getResponse().getContentAsString());
         if (!levelNum.equals(results.getJSONObject(0).getInt("levelNum"))) {
             throw new Exception();

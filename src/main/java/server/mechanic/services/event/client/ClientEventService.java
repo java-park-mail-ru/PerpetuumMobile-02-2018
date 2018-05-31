@@ -1,5 +1,7 @@
 package server.mechanic.services.event.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
@@ -15,6 +17,8 @@ import java.util.*;
  */
 @Service
 public class ClientEventService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientEventService.class);
 
     @NotNull
     private final RemotePointService remotePointService;
@@ -53,7 +57,7 @@ public class ClientEventService {
                         remotePointService.sendMessageToUser(messageToUser.getKey(), messageToUser.getValue());
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Can't send messages to user through websocket");
                 }
             }
         }

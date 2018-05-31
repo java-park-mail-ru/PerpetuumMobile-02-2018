@@ -1,5 +1,7 @@
 package server.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ public class AuthorizationController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailService mailService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationController.class);
 
     @Value("${EMAIL_NOREPLY}")
     private String emailNoreply;
@@ -104,7 +108,7 @@ public class AuthorizationController {
                 mailService.sendEmail(emailNoreply, oldUser.getEmail(), "E-mail changing.", msg);
                 mailService.sendEmail(emailNoreply, oldEmail, "E-mail changing.", msg);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error("Can't send e-mail about e-mail changing");
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
@@ -117,7 +121,7 @@ public class AuthorizationController {
             try {
                 mailService.sendEmail(emailNoreply, oldUser.getEmail(), "Login changing.", msg);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error("Can't send e-mail about login changing");
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
@@ -125,18 +129,17 @@ public class AuthorizationController {
         if (changePassword) {
             if (passwordEncoder.matches(changeUser.getOldPassword(), oldUser.getPassword())) {
                 oldUser.setPassword(changeUser.getNewPassword());
-                userService.updateUserPassword(oldUser);
+                boolean updateStatus = userService.updateUserPassword(oldUser);
+                if (!updateStatus) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(new Message(MessageStates.DATABASE_ERROR.getMessage()));
+                }
                 String msg = String.format("<h3>Your password in <a href='https://blendocu.com'>Blendocu</a> has been changed.</h3>"
                         + "Your new password: %s<br><br><i>Best regards,</i><br>Blendocu Team.", changeUser.getNewPassword());
                 try {
                     mailService.sendEmail(emailNoreply, oldUser.getEmail(), "Password changing.", msg);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                boolean updateStatus = userService.updateUserPassword(oldUser);
-                if (!updateStatus) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body(new Message(MessageStates.DATABASE_ERROR.getMessage()));
+                    LOGGER.error("Can't send e-mail about password changing");
                 }
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
@@ -208,7 +211,7 @@ public class AuthorizationController {
         try {
             mailService.sendEmail(emailNoreply, user.getEmail(), "Welcome to Blendocu, " + user.getLogin() + "!", msg);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Can't send e-mail after registration");
         }
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED.getMessage()));
     }
@@ -277,7 +280,7 @@ public class AuthorizationController {
         try {
             mailService.sendEmail(emailNoreply, user.getEmail(), "Password reset.", msg);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Can't send e-mail about password reset");
         }
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.PASSWORD_CHANGED.getMessage()));
