@@ -1,0 +1,61 @@
+{
+    "countX": 3,
+    "countY": 3,
+    "stars3": 20000,
+    "stars2": 35000,
+    "cells": [{
+        "x": 0,
+        "y": 0,
+        "fixed": true,
+        "colour": "#29564E"
+    },
+    {
+        "x": 0,
+        "y": 1,
+        "fixed": false,
+        "colour": "#4E6160"
+    },
+    {
+        "x": 0,
+        "y": 2,
+        "fixed": true,
+        "colour": "#6F6A77"
+    },
+    {
+        "x": 1,
+        "y": 0,
+        "fixed": false,
+        "colour": "#68559F"
+    },
+    {
+        "x": 1,
+        "y": 1,
+        "fixed": false,
+        "colour": "#9473AE"
+    },
+    {
+        "x": 1,
+        "y": 2,
+        "fixed": false,
+        "colour": "#BA94BA"
+    },
+    {
+        "x": 2,
+        "y": 0,
+        "fixed": false,
+        "colour": "#9F43E0"
+    },
+    {
+        "x": 2,
+        "y": 1,
+        "fixed": false,
+        "colour": "#CE81E6"
+    },
+	{
+        "x": 2,
+        "y": 2,
+        "fixed": false,
+        "colour": "#EFBBEB"
+    }
+	]
+}
