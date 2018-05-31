@@ -56,7 +56,7 @@ public class AliceService {
             return ResponseEntity.status(HttpStatus.OK).body(notAuthorized(aliceIn));
         }
 
-        final Pattern setCubicPattern = Pattern.compile("^поставь кубик (#[0-9a-f]+) на место ([0-9]+) ([0-9]+)$");
+        final Pattern setCubicPattern = Pattern.compile("^поставь кубик (#[0-9a-fA-F]+) на место ([0-9]+) ([0-9]+)$");
         final Matcher setCubicMatcher = setCubicPattern.matcher(aliceIn.getRequest().getCommand());
         if (setCubicMatcher.matches()) {
             final String colour = setCubicMatcher.group(1);
