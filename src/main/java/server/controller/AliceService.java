@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import server.mechanic.GameMechanics;
 import server.mechanic.game.GameSession;
 import server.mechanic.messages.inbox.AliceSetCubic;
-import server.mechanic.messages.inbox.SetCubic;
 import server.mechanic.services.GameSessionService;
 import server.model.alice.AliceIn;
 import server.model.alice.AliceOut;
