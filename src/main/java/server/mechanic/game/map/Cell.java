@@ -13,6 +13,7 @@ public class Cell {
     private Boolean fixed;
     private Integer whoSetUserId;
     private Integer cubicId;
+    private Integer place;
 
 
     public Boolean isFixed() {
@@ -76,6 +77,7 @@ public class Cell {
         }
         cell.coordX = null;
         cell.coordY = null;
+        cell.place = null;
         return cell;
     }
 
@@ -85,6 +87,14 @@ public class Cell {
 
     public void setWhoSetUserId(Integer whoSetUserId) {
         this.whoSetUserId = whoSetUserId;
+    }
+
+    public Integer getPlace() {
+        return place;
+    }
+
+    public void setPlace(Integer place) {
+        this.place = place;
     }
 
     public static class CellClient {
@@ -97,6 +107,7 @@ public class Cell {
         private String colour;
         private Boolean fixed;
         private Integer cubicId;
+        private Integer place;
 
         CellClient(Cell cell) {
             this.fixed = cell.isFixed();
@@ -104,6 +115,7 @@ public class Cell {
             this.coordY = cell.getCoordY();
             this.colour = cell.getColour();
             this.cubicId = cell.getCubicId();
+            this.place = cell.getPlace();
         }
 
         @JsonGetter(value = "x")
