@@ -5,49 +5,63 @@
         "x": 0,
         "y": 0,
         "fixed": false,
-        "colour": "#4E79DD"
+        "colour": "#4E79DD",
+        "cubicId": 1,
+        "place": 1
     },
     {
         "x": 1,
         "y": 0,
         "fixed": false,
-        "colour": "#518DE5"
+        "colour": "#518DE5",
+        "cubicId": 2,
+        "place": 4
     },
     {
         "x": 2,
         "y": 0,
         "fixed": false,
-        "colour": "#559EEE"
+        "colour": "#559EEE",
+        "cubicId": 3,
+        "place": 2
     },
     {
         "x": 3,
         "y": 0,
         "fixed": false,
-        "colour": "#57B0F6"
+        "colour": "#57B0F6",
+        "cubicId": 4,
+        "place": 3
     },
     {
         "x": 4,
         "y": 0,
         "fixed": true,
-        "colour": "#59BFFE"
+        "colour": "#59BFFE",
+        "place": 5
     },
     {
         "x": 1,
         "y": 1,
         "fixed": false,
-        "colour": "#4875D1"
+        "colour": "#4875D1",
+        "cubicId": 5,
+        "place": 6
     },
     {
         "x": 1,
         "y": 2,
         "fixed": false,
-        "colour": "#3F60B4"
+        "colour": "#3F60B4",
+        "cubicId": 6,
+        "place": 8
     },
     {
         "x": 1,
         "y": 3,
         "fixed": true,
-        "colour": "#364D93"
+        "colour": "#364D93",
+        "place": 7
     }
 	]
 }

@@ -5,85 +5,111 @@
         "x": 0,
         "y": 0,
         "fixed": true,
-        "colour": "#65ECB0"
+        "colour": "#65ECB0",
+        "place": 1
     },
     {
         "x": 1,
         "y": 0,
         "fixed": false,
-        "colour": "#8AC38B"
+        "colour": "#8AC38B",
+        "cubicId": 1,
+        "place": 2
     },
     {
         "x": 2,
         "y": 0,
         "fixed": false,
-        "colour": "#92946B"
+        "colour": "#92946B",
+        "cubicId": 2,
+        "place": 3
     },
     {
         "x": 3,
         "y": 0,
         "fixed": false,
-        "colour": "#906253"
+        "colour": "#906253",
+        "cubicId": 3,
+        "place": 4
     },
     {
         "x": 4,
         "y": 0,
         "fixed": true,
-        "colour": "#893340"
+        "colour": "#893340",
+        "place": 5
     },
     {
         "x": 1,
         "y": 1,
         "fixed": false,
-        "colour": "#82985E"
+        "colour": "#82985E",
+        "cubicId": 4,
+        "place": 6
     },
     {
         "x": 1,
         "y": 2,
         "fixed": false,
-        "colour": "#767141"
+        "colour": "#767141",
+        "cubicId": 5,
+        "place": 7
     },
     {
         "x": 3,
         "y": 1,
         "fixed": false,
-        "colour": "#A37A54"
+        "colour": "#A37A54",
+        "cubicId": 6,
+        "place": 8
     },
 	{
         "x": 3,
         "y": 2,
         "fixed": false,
-        "colour": "#B59454"
+        "colour": "#B59454",
+        "cubicId": 7,
+        "place": 9
     },
 	{
         "x": 0,
         "y": 3,
         "fixed": false,
-        "colour": "#483218"
+        "colour": "#483218",
+        "cubicId": 8,
+        "place": 10
     },
 	{
         "x": 1,
         "y": 3,
         "fixed": false,
-        "colour": "#6B522A"
+        "colour": "#6B522A",
+        "cubicId": 9,
+        "place": 11
     },
 	{
         "x": 2,
         "y": 3,
         "fixed": false,
-        "colour": "#977B3C"
+        "colour": "#977B3C",
+        "cubicId": 10,
+        "place": 12
     },
 	{
         "x": 3,
         "y": 3,
         "fixed": false,
-        "colour": "#C1AC53"
+        "colour": "#C1AC53",
+        "cubicId": 11,
+        "place": 13
     },
 	{
         "x": 4,
         "y": 3,
         "fixed": false,
-        "colour": "#E6D66F"
+        "colour": "#E6D66F",
+        "cubicId": 12,
+        "place": 14
     }
 	]
 }
