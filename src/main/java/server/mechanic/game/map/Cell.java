@@ -12,6 +12,8 @@ public class Cell {
     private String colour;
     private Boolean fixed;
     private Integer whoSetUserId;
+    private Integer cubicId;
+    private Integer place;
 
 
     public Boolean isFixed() {
@@ -50,11 +52,20 @@ public class Cell {
         this.colour = colour;
     }
 
+    public Integer getCubicId() {
+        return cubicId;
+    }
+
+    public void setCubicId(Integer cubicId) {
+        this.cubicId = cubicId;
+    }
+
 
     public CellClient safeGet() {
         final CellClient cell = new CellClient(this);
         if (!cell.fixed) {
             cell.colour = null;
+            cell.cubicId = null;
         }
         return cell;
     }
@@ -66,6 +77,7 @@ public class Cell {
         }
         cell.coordX = null;
         cell.coordY = null;
+        cell.place = null;
         return cell;
     }
 
@@ -77,6 +89,14 @@ public class Cell {
         this.whoSetUserId = whoSetUserId;
     }
 
+    public Integer getPlace() {
+        return place;
+    }
+
+    public void setPlace(Integer place) {
+        this.place = place;
+    }
+
     public static class CellClient {
         @JsonProperty(value = "x")
         private Integer coordX;
@@ -86,13 +106,16 @@ public class Cell {
 
         private String colour;
         private Boolean fixed;
+        private Integer cubicId;
+        private Integer place;
 
         CellClient(Cell cell) {
             this.fixed = cell.isFixed();
             this.coordX = cell.getCoordX();
             this.coordY = cell.getCoordY();
             this.colour = cell.getColour();
-
+            this.cubicId = cell.getCubicId();
+            this.place = cell.getPlace();
         }
 
         @JsonGetter(value = "x")
@@ -129,6 +152,22 @@ public class Cell {
 
         public void setFixed(Boolean fixed) {
             this.fixed = fixed;
+        }
+
+        public Integer getCubicId() {
+            return cubicId;
+        }
+
+        public void setCubicId(Integer cubicId) {
+            this.cubicId = cubicId;
+        }
+
+        public Integer getPlace() {
+            return place;
+        }
+
+        public void setPlace(Integer place) {
+            this.place = place;
         }
     }
 

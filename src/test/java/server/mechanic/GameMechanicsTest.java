@@ -66,7 +66,7 @@ class GameMechanicsTest {
     private GameSession startGame(@NotNull Integer player1, @NotNull Integer player2) {
         gameMechanics.addUser(player1);
         gameMechanics.addUser(player2);
-        gameMechanics.gmStep(1);
+        gameMechanics.gmStep(1, 1);
         final GameSession gameSession = gameSessionService.getSessionForUser(player1);
         assertNotNull(gameSession, "Game session should be started on closest tick, but it didn't");
         return gameSession;

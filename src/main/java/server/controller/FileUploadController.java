@@ -45,7 +45,10 @@ public class FileUploadController {
                                                                HttpSession httpSession) {
 
         final String fileType = file.getContentType();
-        if (!fileType.equals("image/jpeg") && !fileType.equals("image/jpg") && !fileType.equals("image/png")) {
+        if (!fileType.equals("image/jpeg")
+                && !fileType.equals("image/jpg")
+                && !fileType.equals("image/png")
+                && !fileType.equals("image/gif")) {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(BAD_DATA.getMessage());
         }
 

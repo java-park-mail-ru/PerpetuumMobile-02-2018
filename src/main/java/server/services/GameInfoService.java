@@ -1,5 +1,7 @@
 package server.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -20,6 +22,8 @@ import java.util.List;
 public class GameInfoService {
     @Value("${FILES_DIR}")
     private String filesDir;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameInfoService.class);
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -42,7 +46,7 @@ public class GameInfoService {
             }, userId);
             return result;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            LOGGER.error("Can't get user result for singleplayer from DB");
             return null;
         }
     }
@@ -61,7 +65,7 @@ public class GameInfoService {
         try {
             levelId = jdbcTemplate.queryForObject(sql, Integer.class, levelNum);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            LOGGER.error("Can't get level id from num from DB");
             return null;
         }
         return levelId;
@@ -72,7 +76,7 @@ public class GameInfoService {
         try {
             jdbcTemplate.update(sql, levelId, userId, time);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Can't save user result in DB");
             return false;
 
         }
@@ -85,7 +89,7 @@ public class GameInfoService {
         try {
             score = jdbcTemplate.queryForObject(sql, Integer.class, userId, levelId);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            LOGGER.error("Can't get user score for level from DB");
             return null;
         }
         return score;
@@ -96,7 +100,7 @@ public class GameInfoService {
         try {
             jdbcTemplate.update(sql, time, levelId, userId);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Can't update user result for singleplayer from DB");
             return false;
         }
         return true;
@@ -132,7 +136,6 @@ public class GameInfoService {
         } catch (NoSuchFileException e) {
             return null;
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
         if (lines == null) {

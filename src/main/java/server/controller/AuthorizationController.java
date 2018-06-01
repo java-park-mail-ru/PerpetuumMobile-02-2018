@@ -11,6 +11,7 @@ import server.messages.MessageStates;
 import server.model.ChangeUser;
 import server.model.User;
 import server.model.UserAuth;
+import server.services.MailService;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -20,12 +21,13 @@ public class AuthorizationController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
 
-
-    public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder, MailService mailService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     public UserService getUserService() {
@@ -61,12 +63,10 @@ public class AuthorizationController {
         final Boolean changePassword;
         final Boolean changeImage;
 
-        changeLogin = !(changeUser.getLogin() == null
-                        || StringUtils.isEmpty(changeUser.getLogin()));
-        changeEmail = !(changeUser.getEmail() == null
-                        || StringUtils.isEmpty(changeUser.getEmail()));
+        changeLogin = !(StringUtils.isEmpty(changeUser.getLogin()));
+        changeEmail = !(StringUtils.isEmpty(changeUser.getEmail()));
         //  changeImage = changeUser.getImage() != null;
-        changePassword = !(changeUser.getOldPassword() == null
+        changePassword = !(StringUtils.isEmpty(changeUser.getOldPassword())
                         || StringUtils.isEmpty(changeUser.getNewPassword()));
 
         // Login is already registered
@@ -91,14 +91,17 @@ public class AuthorizationController {
         }
 
         if (changeEmail) {
+            String oldEmail = oldUser.getEmail();
             oldUser.setEmail(changeUser.getEmail());
             userService.updateUser(oldUser);
+            mailService.sendChangeEmailMessage(oldUser.getEmail(), oldEmail);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
             userService.updateUser(oldUser);
+            mailService.sendChangeLoginMessage(oldUser.getEmail(), oldUser.getLogin());
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
@@ -110,10 +113,10 @@ public class AuthorizationController {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body(new Message(MessageStates.DATABASE_ERROR.getMessage()));
                 }
+                mailService.sendChangePasswordMessage(oldUser.getEmail(), changeUser.getNewPassword());
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
         }
-
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(MessageStates.NOT_ENOUGH_DATA.getMessage()));
     }
 
@@ -174,6 +177,7 @@ public class AuthorizationController {
         user.setScore(0);
         httpSession.setAttribute("blendocu", userService.addUser(user));
         httpSession.setMaxInactiveInterval(21600);
+        mailService.sendRegistrationMessage(user.getEmail(), user.getLogin(), user.getPassword());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED.getMessage()));
     }
 
@@ -185,6 +189,9 @@ public class AuthorizationController {
         }
 
         User userInDB = userService.getUserById(userId);
+        if (userInDB == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(MessageStates.UNAUTHORIZED.getMessage()));
+        }
         String userLogin = userInDB.getLogin();
 
         if (userLogin == null) {
@@ -193,13 +200,46 @@ public class AuthorizationController {
 
         String userImage = userInDB.getImage();
         String userEmail = userInDB.getEmail();
+        Integer userToken = userInDB.getId();
         User user = new User();
+        user.setToken(userToken);
         user.setLogin(userLogin);
         user.setImage(userImage);
         user.setEmail(userEmail);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(user);
 
+    }
+
+    /**
+     * Reset user password by email and send new password to user email.
+     *
+     * @param user email
+     * @return status
+     */
+    @PostMapping(value = "/reset", produces = "application/json")
+    public ResponseEntity<Message> resetPassword(@RequestBody User user) {
+        User resetUser = userService.getUserByEmail(user.getEmail());
+        if (resetUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(MessageStates.EMAIL_NOT_FOUND.getMessage()));
+        }
+
+        StringBuilder newPass = new StringBuilder();
+        String symbSet = "abcdefghijklmnopqrstuvwxyz"
+                + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789";
+        int iter;
+        int passLen = 9;
+        for (iter = 0; iter < passLen; iter++) {
+            Integer ind  = (int) (Math.random() * symbSet.length());
+            newPass.append(symbSet.charAt(ind));
+        }
+        String newPassword = newPass.toString();
+
+        resetUser.setPassword(newPassword);
+        userService.updateUserPassword(resetUser);
+        mailService.sendPassResetMessage(user.getEmail(), newPassword);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.PASSWORD_CHANGED.getMessage()));
     }
 }
 

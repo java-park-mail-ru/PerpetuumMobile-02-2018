@@ -12,6 +12,6 @@ public interface GameMechanics {
 
     void removeUser(@NotNull Integer userId);
 
-    void gmStep(long frameTime);
+    void gmStep(Integer threadNum, Integer threadCount);
 
 }

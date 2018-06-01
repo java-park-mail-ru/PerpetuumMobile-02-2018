@@ -1,0 +1,122 @@
+{
+    "countX": 7,
+    "countY": 5,
+    "cells": [{
+        "x": 2,
+        "y": 0,
+        "fixed": true,
+        "colour": "#EE9DB4",
+        "place": 1
+    },
+    {
+        "x": 3,
+        "y": 0,
+        "fixed": false,
+        "colour": "#AE5B92",
+        "cubicId": 1,
+        "place": 2
+    },
+    {
+        "x": 4,
+        "y": 0,
+        "fixed": false,
+        "colour": "#5F2D72",
+        "cubicId": 2,
+        "place": 3
+    },
+    {
+        "x": 1,
+        "y": 2,
+        "fixed": true,
+        "colour": "#46234A",
+        "place": 4
+    },
+    {
+        "x": 2,
+        "y": 2,
+        "fixed": false,
+        "colour": "#612953",
+        "cubicId": 3,
+        "place": 5
+    },
+    {
+        "x": 3,
+        "y": 2,
+        "fixed": false,
+        "colour": "#872E5E",
+        "cubicId": 4,
+        "place": 6
+    },
+    {
+        "x": 4,
+        "y": 2,
+        "fixed": false,
+        "colour": "#B0346D",
+        "cubicId": 5,
+        "place": 7
+    },
+    {
+        "x": 5,
+        "y": 2,
+        "fixed": false,
+        "colour": "#D53980",
+        "cubicId": 6,
+        "place": 9
+    },
+	{
+        "x": 0,
+        "y": 4,
+        "fixed": true,
+        "colour": "#3E4861",
+        "place": 8
+    },
+	{
+        "x": 1,
+        "y": 4,
+        "fixed": false,
+        "colour": "#444856",
+        "cubicId": 7,
+        "place": 10
+    },
+	{
+        "x": 2,
+        "y": 4,
+        "fixed": false,
+        "colour": "#4A474D",
+        "cubicId": 8,
+        "place": 11
+    },
+	{
+        "x": 3,
+        "y": 4,
+        "fixed": false,
+        "colour": "#4E4743",
+        "cubicId": 9,
+        "place": 12
+    },
+	{
+        "x": 4,
+        "y": 4,
+        "fixed": false,
+        "colour": "#514738",
+        "cubicId": 10,
+        "place": 13
+    },
+	{
+        "x": 5,
+        "y": 4,
+        "fixed": false,
+        "colour": "#54472E",
+        "cubicId": 11,
+        "place": 14
+    },
+	{
+        "x": 6,
+        "y": 4,
+        "fixed": false,
+        "colour": "#57471E",
+        "cubicId": 12,
+        "place": 15
+    }
+	]
+}

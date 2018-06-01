@@ -1,54 +1,66 @@
 {
-	"countX": 4,
-	"countY": 5,
-	"cells": [
-		{
-			"x": 0,
-			"y": 0,
-			"fixed": false,
-			"colour": "#414141"
-		},
-		{
-			"x": 1,
-			"y": 0,
-			"fixed": true,
-			"colour": "#6C554F"
-		},
-		{
-			"x": 2,
-			"y": 0,
-			"fixed": false,
-			"colour": "#AE6560"
-		},
-		{
-			"x": 3,
-			"y": 0,
-			"fixed": true,
-			"colour": "#FF827D"
-		},
-		{
-			"x": 2,
-			"y": 1,
-			"fixed": false,
-			"colour": "#B1755F"
-		},
-		{
-			"x": 2,
-			"y": 2,
-			"fixed": true,
-			"colour": "#BD8159"
-		},
-		{
-			"x": 2,
-			"y": 3,
-			"fixed": true,
-			"colour": "#C48A4B"
-		},
-		{
-			"x": 2,
-			"y": 4,
-			"fixed": false,
-			"colour": "#C69A43"
-		}
-	]
-}
+    "countX": 4,
+    "countY": 5,
+	"cells": [{
+            "x": 0,
+            "y": 0,
+            "fixed": true,
+            "colour": "#414141",
+            "place": 1
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "fixed": false,
+            "colour": "#6C554F",
+            "cubicId": 1,
+            "place": 2
+        },
+        {
+            "x": 2,
+            "y": 2,
+            "fixed": false,
+            "colour": "#BD8159",
+            "cubicId": 2,
+            "place": 3
+        },
+        {
+            "x": 2,
+            "y": 3,
+            "fixed": false,
+            "colour": "#C48A4B",
+            "cubicId": 3,
+            "place": 4
+        },
+        {
+            "x": 2,
+            "y": 1,
+            "fixed": false,
+            "colour": "#B1755F",
+            "cubicId": 4,
+            "place": 5
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "fixed": false,
+            "colour": "#AE6560",
+            "cubicId": 5,
+            "place": 6
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "fixed": false,
+            "colour": "#FF827D",
+            "cubicId": 6,
+            "place": 7
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "fixed": true,
+            "colour": "#C69A43",
+            "place": 8
+        }]
+    }

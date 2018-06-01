@@ -10,6 +10,15 @@ public class User {
     private String  password;
     private Integer score;
     private String  image;
+    private Integer token;
+
+    public Integer getToken() {
+        return token;
+    }
+
+    public void setToken(Integer token) {
+        this.token = token;
+    }
 
     @Override
     public boolean equals(Object obj) {

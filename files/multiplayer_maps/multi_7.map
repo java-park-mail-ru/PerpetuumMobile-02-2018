@@ -1,0 +1,74 @@
+{
+    "countX": 3,
+    "countY": 3,
+    "cells": [{
+        "x": 0,
+        "y": 0,
+        "fixed": true,
+        "colour": "#5B352A",
+        "place": 1
+    },
+    {
+        "x": 0,
+        "y": 1,
+        "fixed": false,
+        "colour": "#6D513F",
+        "cubicId": 1,
+        "place": 2
+    },
+    {
+        "x": 0,
+        "y": 2,
+        "fixed": false,
+        "colour": "#7F7256",
+        "cubicId": 2,
+        "place": 3
+    },
+    {
+        "x": 1,
+        "y": 0,
+        "fixed": false,
+        "colour": "#AC8145",
+        "cubicId": 3,
+        "place": 4
+    },
+    {
+        "x": 1,
+        "y": 1,
+        "fixed": false,
+        "colour": "#B19668",
+        "cubicId": 4,
+        "place": 5
+    },
+    {
+        "x": 1,
+        "y": 2,
+        "fixed": true,
+        "colour": "#B2AB8E",
+        "place": 6
+    },
+    {
+        "x": 2,
+        "y": 0,
+        "fixed": true,
+        "colour": "#E8CD63",
+        "place": 7
+    },
+    {
+        "x": 2,
+        "y": 1,
+        "fixed": false,
+        "colour": "#E1D29B",
+        "cubicId": 5,
+        "place": 8
+    },
+	{
+        "x": 2,
+        "y": 2,
+        "fixed": false,
+        "colour": "#D8D7C5",
+        "cubicId": 6,
+        "place": 9
+    }
+	]
+}

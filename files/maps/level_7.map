@@ -1,54 +1,66 @@
 {
-    "countX": 4,
+    "countX": 3,
     "countY": 5,
-    "3stars": 20,
-    "2stars": 40,
+    "stars3": 20000,
+    "stars2": 40000,
     "cells": [{
         "x": 0,
         "y": 0,
-        "fixed": false,
-        "colour": "#414141"
-    },
-    {
-        "x": 1,
-        "y": 0,
         "fixed": true,
-        "colour": "#6C554F"
-    },
-    {
-        "x": 2,
-        "y": 0,
-        "fixed": true,
-        "colour": "#AE6560"
+        "colour": "#E4F1A2"
     },
     {
         "x": 3,
         "y": 0,
         "fixed": true,
-        "colour": "#FF827D"
+        "colour": "#96FFBC"
     },
     {
-        "x": 2,
-        "y": 1,
-        "fixed": true,
-        "colour": "#B1755F"
-    },
-    {
-        "x": 2,
+        "x": 0,
         "y": 2,
-        "fixed": true,
-        "colour": "#BD8159"
+        "fixed": false,
+        "colour": "#939160"
     },
     {
-        "x": 2,
-        "y": 3,
-        "fixed": true,
-        "colour": "#C48A4B"
+        "x": 3,
+        "y": 2,
+        "fixed": false,
+        "colour": "#89FE89"
     },
     {
-        "x": 2,
+        "x": 0,
         "y": 4,
         "fixed": false,
-        "colour": "#C69A43"
+        "colour": "#4A3B26"
+    },
+    {
+        "x": 0,
+        "y": 1,
+        "fixed": false,
+        "colour": "#BBC080"
+    },
+    {
+        "x": 3,
+        "y": 1,
+        "fixed": false,
+        "colour": "#69F0AE"
+    },
+    {
+        "x": 0,
+        "y": 3,
+        "fixed": false,
+        "colour": "#6D6541"
+    },
+    {
+        "x": 3,
+        "y": 3,
+        "fixed": false,
+        "colour": "#7FFF6E"
+    },
+    {
+        "x": 3,
+        "y": 4,
+        "fixed": false,
+        "colour": "#74FF4E"
     }]
 }

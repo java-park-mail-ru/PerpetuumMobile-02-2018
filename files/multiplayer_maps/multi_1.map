@@ -6,49 +6,60 @@
 			"x": 2,
 			"y": 2,
 			"fixed": false,
-			"colour": "#256b73"
+			"colour": "#256b73",
+			"cubicId": 1,
+			"place": 1
 		},
 		{
 			"x": 2,
 			"y": 0,
 			"fixed": false,
-			"colour": "#78f0c3"
+			"colour": "#78f0c3",
+			"cubicId": 2,
+			"place": 2
 		},
 		{
 			"x": 0,
 			"y": 2,
 			"fixed": false,
-			"colour": "#4c394d"
+			"colour": "#4c394d",
+			"cubicId": 3,
+			"place": 3
 		},
 		{
 			"x": 2,
 			"y": 1,
 			"fixed": true,
-			"colour": "#4faa99"
+			"colour": "#4faa99",
+			"place": 4
 		},
 		{
 			"x": 0,
 			"y": 0,
 			"fixed": true,
-			"colour": "#a15088"
+			"colour": "#a15088",
+			"place": 5
 		},
 		{
 			"x": 1,
 			"y": 0,
 			"fixed": true,
-			"colour": "#9ba5a6"
+			"colour": "#9ba5a6",
+			"place": 6
 		},
 		{
 			"x": 1,
 			"y": 2,
 			"fixed": true,
-			"colour": "#425262"
+			"colour": "#425262",
+			"place": 7
 		},
 		{
 			"x": 0,
 			"y": 1,
 			"fixed": true,
-			"colour": "#75476c"
+			"colour": "#75476c",
+			"place": 8
 		}
 	]
 }

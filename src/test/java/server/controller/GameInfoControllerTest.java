@@ -7,10 +7,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,10 +21,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import server.services.JavaMailService;
 
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,23 +36,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc(print = MockMvcPrint.DEFAULT)
 @Transactional
-public class GameInfoControllerTest {
+class GameInfoControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private JdbcOperations jdbcTemplate;
 
 
-    final String login = "validLogin";
-    final String email = "validEmail@test.ru";
-    final String password = "validPassword@test.ru";
-    final Integer levelNum = 10042;
-    final Integer time = 1;
-    final String levelName = "level";
+    private final String login = "validLogin";
+    private final String email = "validEmail@test.ru";
+    private final String password = "validPassword@test.ru";
+    private final Integer levelNum = 10042;
+    private final Integer time = 1;
+    private final String levelName = "level";
 
+    @MockBean
+    private JavaMailService mailService;
 
     @BeforeEach
     void setup() throws Exception {
+        JavaMailService jms = Mockito.spy(mailService);
+        Mockito.doNothing().when(jms).sendEmail(any(), any(), any(), any());
         mockMvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"login\": \"%s\", \"email\": \"%s\", \"password\": \"%s\"}", login, email, password)))
@@ -75,17 +83,12 @@ public class GameInfoControllerTest {
         testGetMapNotFound(i);
     }
 
-    private MockHttpSession loginCookie() {
-        MvcResult result = null;
-        try {
-            result = mockMvc.perform(post("/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)))
-                    .andExpect(status().isAccepted()).andReturn();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assert result != null;
+    private MockHttpSession loginCookie() throws Exception {
+        MvcResult result;
+        result = mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)))
+                .andExpect(status().isAccepted()).andReturn();
         return (MockHttpSession) result.getRequest().getSession();
     }
 
@@ -122,7 +125,6 @@ public class GameInfoControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"levelNum\": \"%d\", \"time\": %d}", levelNum, time))).andExpect(status().isAccepted());
         MvcResult resultsRes = mockMvc.perform(get("/results").session(session)).andExpect(status().isOk()).andReturn();
-        System.out.println(resultsRes.getResponse().getContentAsString());
         JSONArray results = new JSONArray(resultsRes.getResponse().getContentAsString());
         if (!levelNum.equals(results.getJSONObject(0).getInt("levelNum"))) {
             throw new Exception();

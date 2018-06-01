@@ -1,0 +1,106 @@
+{
+    "countX": 7,
+    "countY": 3,
+    "cells": [{
+        "x": 0,
+        "y": 0,
+        "fixed": true,
+        "colour": "#5290A6",
+        "place": 1
+    },
+    {
+        "x": 1,
+        "y": 0,
+        "fixed": false,
+        "colour": "#57707F",
+        "cubicId": 1,
+        "place": 2
+    },
+    {
+        "x": 2,
+        "y": 0,
+        "fixed": false,
+        "colour": "#56565E",
+        "cubicId": 2,
+        "place": 3
+    },
+    {
+        "x": 3,
+        "y": 0,
+        "fixed": false,
+        "colour": "#524045",
+        "cubicId": 3,
+        "place": 4
+    },
+    {
+        "x": 4,
+        "y": 0,
+        "fixed": false,
+        "colour": "#4B2D2F",
+        "cubicId": 4,
+        "place": 5
+    },
+    {
+        "x": 4,
+        "y": 1,
+        "fixed": false,
+        "colour": "#423544",
+        "cubicId": 5,
+        "place": 6
+    },
+    {
+        "x": 5,
+        "y": 1,
+        "fixed": false,
+        "colour": "#514166",
+        "cubicId": 6,
+        "place": 7
+    },
+    {
+        "x": 6,
+        "y": 1,
+        "fixed": false,
+        "colour": "#634E93",
+        "cubicId": 7,
+        "place": 8
+    },
+	{
+        "x": 0,
+        "y": 2,
+        "fixed": true,
+        "colour": "#B0C55D",
+        "place": 9
+    },
+	{
+        "x": 1,
+        "y": 2,
+        "fixed": false,
+        "colour": "#889A61",
+        "cubicId": 8,
+        "place": 10
+    },
+	{
+        "x": 2,
+        "y": 2,
+        "fixed": false,
+        "colour": "#647260",
+        "cubicId": 9,
+        "place": 11
+    },
+	{
+        "x": 3,
+        "y": 2,
+        "fixed": false,
+        "colour": "#48535D",
+        "cubicId": 10,
+        "place": 12
+    },
+	{
+        "x": 4,
+        "y": 2,
+        "fixed": true,
+        "colour": "#303D58",
+        "place": 13
+    }
+	]
+}
