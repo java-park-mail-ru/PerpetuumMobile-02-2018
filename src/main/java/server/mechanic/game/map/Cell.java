@@ -161,6 +161,14 @@ public class Cell {
         public void setCubicId(Integer cubicId) {
             this.cubicId = cubicId;
         }
+
+        public Integer getPlace() {
+            return place;
+        }
+
+        public void setPlace(Integer place) {
+            this.place = place;
+        }
     }
 
 }
