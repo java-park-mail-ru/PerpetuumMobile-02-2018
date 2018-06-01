@@ -11,25 +11,29 @@
         "x": 0,
         "y": 1,
         "fixed": false,
-        "colour": "#6D513F"
+        "colour": "#6D513F",
+        "cubicId": 1
     },
     {
         "x": 0,
         "y": 2,
         "fixed": false,
-        "colour": "#7F7256"
+        "colour": "#7F7256",
+        "cubicId": 2
     },
     {
         "x": 1,
         "y": 0,
         "fixed": false,
-        "colour": "#AC8145"
+        "colour": "#AC8145",
+        "cubicId": 3
     },
     {
         "x": 1,
         "y": 1,
         "fixed": false,
-        "colour": "#B19668"
+        "colour": "#B19668",
+        "cubicId": 4
     },
     {
         "x": 1,
@@ -47,13 +51,15 @@
         "x": 2,
         "y": 1,
         "fixed": false,
-        "colour": "#E1D29B"
+        "colour": "#E1D29B",
+        "cubicId": 5
     },
 	{
         "x": 2,
         "y": 2,
         "fixed": false,
-        "colour": "#D8D7C5"
+        "colour": "#D8D7C5",
+        "cubicId": 6
     }
 	]
 }

@@ -6,19 +6,22 @@
 			"x": 2,
 			"y": 2,
 			"fixed": false,
-			"colour": "#256b73"
+			"colour": "#256b73",
+			"cubicId": 1
 		},
 		{
 			"x": 2,
 			"y": 0,
 			"fixed": false,
-			"colour": "#78f0c3"
+			"colour": "#78f0c3",
+			"cubicId": 2
 		},
 		{
 			"x": 0,
 			"y": 2,
 			"fixed": false,
-			"colour": "#4c394d"
+			"colour": "#4c394d",
+			"cubicId": 3
 		},
 		{
 			"x": 2,

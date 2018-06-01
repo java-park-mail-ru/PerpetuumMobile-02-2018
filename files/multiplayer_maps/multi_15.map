@@ -11,19 +11,22 @@
         "x": 3,
         "y": 0,
         "fixed": false,
-        "colour": "#C9BDD5"
+        "colour": "#C9BDD5",
+        "cubicId": 1
     },
     {
         "x": 4,
         "y": 0,
         "fixed": false,
-        "colour": "#C6C9E5"
+        "colour": "#C6C9E5",
+        "cubicId": 2
     },
     {
         "x": 5,
         "y": 0,
         "fixed": false,
-        "colour": "#C1D5F2"
+        "colour": "#C1D5F2",
+        "cubicId": 3
     },
     {
         "x": 6,
@@ -35,31 +38,36 @@
         "x": 3,
         "y": 1,
         "fixed": false,
-        "colour": "#C1B5D7"
+        "colour": "#C1B5D7",
+        "cubicId": 4
     },
     {
         "x": 5,
         "y": 1,
         "fixed": false,
-        "colour": "#C8D4EA"
+        "colour": "#C8D4EA",
+        "cubicId": 5
     },
     {
         "x": 0,
         "y": 2,
         "fixed": false,
-        "colour": "#7D42C6"
+        "colour": "#7D42C6",
+        "cubicId": 6
     },
 	{
         "x": 1,
         "y": 2,
         "fixed": false,
-        "colour": "#9563CF"
+        "colour": "#9563CF",
+        "cubicId": 7
     },
 	{
         "x": 2,
         "y": 2,
         "fixed": false,
-        "colour": "#A787D5"
+        "colour": "#A787D5",
+        "cubicId": 8
     },
 	{
         "x": 3,
@@ -71,13 +79,15 @@
         "x": 4,
         "y": 2,
         "fixed": false,
-        "colour": "#C4C3DE"
+        "colour": "#C4C3DE",
+        "cubicId": 9
     },
 	{
         "x": 5,
         "y": 2,
         "fixed": false,
-        "colour": "#CDD4E2"
+        "colour": "#CDD4E2",
+        "cubicId": 10
     },
 	{
         "x": 6,
@@ -89,19 +99,22 @@
         "x": 3,
         "y": 3,
         "fixed": false,
-        "colour": "#ABA1DB"
+        "colour": "#ABA1DB",
+        "cubicId": 11
     },
 	{
         "x": 3,
         "y": 4,
         "fixed": false,
-        "colour": "#9D96DD"
+        "colour": "#9D96DD",
+        "cubicId": 12
     },
 	{
         "x": 5,
         "y": 3,
         "fixed": false,
-        "colour": "#D1D4D7"
+        "colour": "#D1D4D7",
+        "cubicId": 13
     },
 	{
         "x": 5,

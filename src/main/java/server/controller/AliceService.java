@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import server.mechanic.GameMechanics;
 import server.mechanic.game.GameSession;
+import server.mechanic.messages.inbox.AliceSetCubic;
 import server.mechanic.messages.inbox.SetCubic;
 import server.mechanic.services.GameSessionService;
 import server.model.alice.AliceIn;
@@ -54,6 +55,22 @@ public class AliceService {
                 return ResponseEntity.status(HttpStatus.OK).body(authorized(aliceIn));
             }
             return ResponseEntity.status(HttpStatus.OK).body(notAuthorized(aliceIn));
+        }
+
+        final Pattern aliceSetCubicPattern = Pattern.compile("^поставь кубик ([0-9]+) на место ([0-9]+) ([0-9]+)$");
+        final Matcher aliceSetCubicMatcher = aliceSetCubicPattern.matcher(aliceIn.getRequest().getCommand());
+        if (aliceSetCubicMatcher.matches()) {
+            final Integer cubicId = Integer.parseInt(aliceSetCubicMatcher.group(1));
+            final Integer coordX = Integer.parseInt(aliceSetCubicMatcher.group(2));
+            final Integer coordY = Integer.parseInt(aliceSetCubicMatcher.group(3));
+
+            final AliceSetCubic aliceSetCubic = new AliceSetCubic();
+            aliceSetCubic.setCubicId(cubicId);
+            aliceSetCubic.setCoordX(coordX);
+            aliceSetCubic.setCoordY(coordY);
+
+            gameMechanics.addClientEvent(players.get(aliceIn.getSession().getSessionId()), aliceSetCubic);
+            return ResponseEntity.status(HttpStatus.OK).body(done(aliceIn));
         }
 
         final Pattern setCubicPattern = Pattern.compile("^поставь кубик (#[0-9a-fA-F]+) на место ([0-9]+) ([0-9]+)$");
