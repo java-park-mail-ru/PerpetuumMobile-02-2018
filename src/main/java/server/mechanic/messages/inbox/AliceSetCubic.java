@@ -28,7 +28,7 @@ public class AliceSetCubic extends Message implements ClientEvent {
     public Map<Integer, Message> operate(GameSession gameSession, GameUser player) {
 
         Optional<Cell> cellInMapOpt = gameSession.getGameMap().getCells().stream().filter(
-                cell -> cell.getCoordX().equals(this.place) && !cell.isFixed()
+                cell -> cell.getPlace().equals(this.place) && !cell.isFixed()
         ).findFirst();
 
         Map<Integer, Message> messages = new HashMap<>();
