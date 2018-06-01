@@ -57,35 +57,17 @@ public class AliceService {
             return ResponseEntity.status(HttpStatus.OK).body(notAuthorized(aliceIn));
         }
 
-        final Pattern aliceSetCubicPattern = Pattern.compile("^поставь кубик ([0-9]+) на место ([0-9]+) ([0-9]+)$");
+        final Pattern aliceSetCubicPattern = Pattern.compile("^поставь кубик ([0-9]+) на место ([0-9]+)$");
         final Matcher aliceSetCubicMatcher = aliceSetCubicPattern.matcher(aliceIn.getRequest().getCommand());
         if (aliceSetCubicMatcher.matches()) {
             final Integer cubicId = Integer.parseInt(aliceSetCubicMatcher.group(1));
-            final Integer coordX = Integer.parseInt(aliceSetCubicMatcher.group(2));
-            final Integer coordY = Integer.parseInt(aliceSetCubicMatcher.group(3));
+            final Integer place = Integer.parseInt(aliceSetCubicMatcher.group(2));
 
             final AliceSetCubic aliceSetCubic = new AliceSetCubic();
             aliceSetCubic.setCubicId(cubicId);
-            aliceSetCubic.setCoordX(coordX);
-            aliceSetCubic.setCoordY(coordY);
+            aliceSetCubic.setPlace(place);
 
             gameMechanics.addClientEvent(players.get(aliceIn.getSession().getSessionId()), aliceSetCubic);
-            return ResponseEntity.status(HttpStatus.OK).body(done(aliceIn));
-        }
-
-        final Pattern setCubicPattern = Pattern.compile("^поставь кубик (#[0-9a-fA-F]+) на место ([0-9]+) ([0-9]+)$");
-        final Matcher setCubicMatcher = setCubicPattern.matcher(aliceIn.getRequest().getCommand());
-        if (setCubicMatcher.matches()) {
-            final String colour = setCubicMatcher.group(1);
-            final Integer coordX = Integer.parseInt(setCubicMatcher.group(2));
-            final Integer coordY = Integer.parseInt(setCubicMatcher.group(3));
-
-            final SetCubic setCubic = new SetCubic();
-            setCubic.setColour(colour);
-            setCubic.setCoordX(coordX);
-            setCubic.setCoordY(coordY);
-
-            gameMechanics.addClientEvent(players.get(aliceIn.getSession().getSessionId()), setCubic);
             return ResponseEntity.status(HttpStatus.OK).body(done(aliceIn));
         }
 

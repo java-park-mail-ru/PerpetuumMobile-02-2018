@@ -100,14 +100,16 @@
         "y": 1,
         "fixed": false,
         "colour": "#BABFD4",
-        "cubicId": 11
+        "cubicId": 11,
+        "place": 13
     },
 	{
         "x": 3,
         "y": 2,
         "fixed": false,
         "colour": "#B8C4E7",
-        "cubicId": 12
+        "cubicId": 12,
+        "place": 14
     }
 	]
 }
