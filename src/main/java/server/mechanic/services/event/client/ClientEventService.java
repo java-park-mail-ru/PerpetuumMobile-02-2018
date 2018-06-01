@@ -13,9 +13,6 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * Not thread safe! Per game mechanic service.
- */
 @Service
 public class ClientEventService {
 

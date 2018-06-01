@@ -67,7 +67,7 @@
         "y": 2,
         "fixed": false,
         "colour": "#CEC1E3",
-        "cubicId": 7
+        "cubicId": 8
     },
 	{
         "x": 5,
@@ -80,21 +80,21 @@
         "y": 1,
         "fixed": false,
         "colour": "#D2B9D6",
-        "cubicId": 8
+        "cubicId": 9
     },
 	{
         "x": 6,
         "y": 2,
         "fixed": false,
         "colour": "#DDD4EF",
-        "cubicId": 9
+        "cubicId": 10
     },
 	{
         "x": 5,
         "y": 3,
         "fixed": false,
         "colour": "#C7C7ED",
-        "cubicId": 10
+        "cubicId": 11
     },
 	{
         "x": 5,
