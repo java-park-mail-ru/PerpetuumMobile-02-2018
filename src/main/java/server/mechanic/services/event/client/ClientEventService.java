@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import server.mechanic.game.GameSession;
 import server.mechanic.game.GameUser;
+import server.mechanic.services.GameSessionService;
 import server.websocket.Message;
 import server.websocket.RemotePointService;
 
@@ -67,7 +68,17 @@ public class ClientEventService {
         events.remove(userProfileId);
     }
 
-    public void reset() {
-        events.clear();
+    public void resetGarbage(GameSessionService gameSessionService) {
+        events.forEach((userId, event) -> {
+                    if (!gameSessionService.isPlaying(userId)) {
+                        events.remove(userId);
+                    }
+                }
+        );
+    }
+
+    public void resetForGameSession(GameSession gameSession) {
+        events.remove(gameSession.getFirst().getUserId());
+        events.remove(gameSession.getSecond().getUserId());
     }
 }

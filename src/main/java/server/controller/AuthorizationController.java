@@ -1,8 +1,5 @@
 package server.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +11,7 @@ import server.messages.MessageStates;
 import server.model.ChangeUser;
 import server.model.User;
 import server.model.UserAuth;
-import server.services.JavaMailService;
+import server.services.MailService;
 import server.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -24,15 +21,10 @@ public class AuthorizationController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailService mailService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationController.class);
-
-    @Value("${EMAIL_NOREPLY}")
-    private String emailNoreply;
+    private final MailService mailService;
 
 
-    public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder, JavaMailService mailService) {
+    public AuthorizationController(UserService userService, PasswordEncoder passwordEncoder, MailService mailService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
@@ -102,27 +94,14 @@ public class AuthorizationController {
             String oldEmail = oldUser.getEmail();
             oldUser.setEmail(changeUser.getEmail());
             userService.updateUser(oldUser);
-            String msg = String.format("<h3>Your e-mail in <a href='https://blendocu.com'>Blendocu</a> has been changed.</h3>"
-                    + "Your new e-mail: %s<br><br><i>Best regards,</i><br>Blendocu Team.", changeUser.getEmail());
-            try {
-                mailService.sendEmail(emailNoreply, oldUser.getEmail(), "E-mail changing.", msg);
-                mailService.sendEmail(emailNoreply, oldEmail, "E-mail changing.", msg);
-            } catch (Exception e) {
-                LOGGER.error("Can't send e-mail about e-mail changing");
-            }
+            mailService.sendChangeEmailMessage(oldUser.getEmail(), oldEmail);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
         if (changeLogin) {
             oldUser.setLogin(changeUser.getLogin());
             userService.updateUser(oldUser);
-            String msg = String.format("<h3>Your login in <a href='https://blendocu.com'>Blendocu</a> has been changed.</h3>"
-                    + "Your new login: %s<br><br><i>Best regards,</i><br>Blendocu Team.", changeUser.getLogin());
-            try {
-                mailService.sendEmail(emailNoreply, oldUser.getEmail(), "Login changing.", msg);
-            } catch (Exception e) {
-                LOGGER.error("Can't send e-mail about login changing");
-            }
+            mailService.sendChangeLoginMessage(oldUser.getEmail(), oldUser.getLogin());
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
         }
 
@@ -134,13 +113,7 @@ public class AuthorizationController {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body(new Message(MessageStates.DATABASE_ERROR.getMessage()));
                 }
-                String msg = String.format("<h3>Your password in <a href='https://blendocu.com'>Blendocu</a> has been changed.</h3>"
-                        + "Your new password: %s<br><br><i>Best regards,</i><br>Blendocu Team.", changeUser.getNewPassword());
-                try {
-                    mailService.sendEmail(emailNoreply, oldUser.getEmail(), "Password changing.", msg);
-                } catch (Exception e) {
-                    LOGGER.error("Can't send e-mail about password changing");
-                }
+                mailService.sendChangePasswordMessage(oldUser.getEmail(), changeUser.getNewPassword());
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.CHANGED_USER_DATA.getMessage()));
             }
         }
@@ -204,15 +177,7 @@ public class AuthorizationController {
         user.setScore(0);
         httpSession.setAttribute("blendocu", userService.addUser(user));
         httpSession.setMaxInactiveInterval(21600);
-        String msg = String.format("<h1>We are glad to see you in <a href='https://blendocu.com'>Blendocu</a>.</h1>"
-                    + "<h3>Registration is successfully completed.</h3>"
-                    + "Your credentials are:<br>Login: %s<br>Password: %s<br><br><i>Best regards,</i><br>Blendocu Team.",
-                    user.getLogin(), user.getPassword());
-        try {
-            mailService.sendEmail(emailNoreply, user.getEmail(), "Welcome to Blendocu, " + user.getLogin() + "!", msg);
-        } catch (Exception e) {
-            LOGGER.error("Can't send e-mail after registration");
-        }
+        mailService.sendRegistrationMessage(user.getEmail(), user.getLogin(), user.getPassword());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.REGISTERED.getMessage()));
     }
 
@@ -257,32 +222,21 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(MessageStates.EMAIL_NOT_FOUND.getMessage()));
         }
 
-        StringBuilder sb = new StringBuilder();
-        StringBuilder symbols = new StringBuilder();
-        symbols.append("abcdefghijklmnopqrstuvwxyz");
-        symbols.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        symbols.append("0123456789");
-        String set = symbols.toString();
-
+        StringBuilder newPass = new StringBuilder();
+        String symbSet = "abcdefghijklmnopqrstuvwxyz"
+                + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789";
         int iter;
         int passLen = 9;
         for (iter = 0; iter < passLen; iter++) {
-            Integer ind  = (int) (Math.random() * set.length());
-            sb.append(set.charAt(ind));
+            Integer ind  = (int) (Math.random() * symbSet.length());
+            newPass.append(symbSet.charAt(ind));
         }
-        String newPassword = sb.toString();
+        String newPassword = newPass.toString();
 
         resetUser.setPassword(newPassword);
         userService.updateUserPassword(resetUser);
-
-        String msg = String.format("<h3>Your password in <a href='https://blendocu.com'>Blendocu</a> has been changed.</h3>"
-                        + "Your password: %s<br><br><i>Best regards,</i><br>Blendocu Team.", newPassword);
-        try {
-            mailService.sendEmail(emailNoreply, user.getEmail(), "Password reset.", msg);
-        } catch (Exception e) {
-            LOGGER.error("Can't send e-mail about password reset");
-        }
-
+        mailService.sendPassResetMessage(user.getEmail(), newPassword);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Message(MessageStates.PASSWORD_CHANGED.getMessage()));
     }
 }
