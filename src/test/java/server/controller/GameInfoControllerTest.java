@@ -83,17 +83,12 @@ class GameInfoControllerTest {
         testGetMapNotFound(i);
     }
 
-    private MockHttpSession loginCookie() {
-        MvcResult result = null;
-        try {
-            result = mockMvc.perform(post("/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)))
-                    .andExpect(status().isAccepted()).andReturn();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assert result != null;
+    private MockHttpSession loginCookie() throws Exception {
+        MvcResult result;
+        result = mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password)))
+                .andExpect(status().isAccepted()).andReturn();
         return (MockHttpSession) result.getRequest().getSession();
     }
 

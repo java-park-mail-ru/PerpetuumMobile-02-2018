@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc(print = MockMvcPrint.DEFAULT)
 @Transactional
-public class AliceServiceTest {
+class AliceServiceTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -83,7 +83,6 @@ public class AliceServiceTest {
         }
 
         if (!(userId.equals(sessionObj.getString("user_id")))) {
-            System.out.println(sessionObj.getString("user_id"));
             throw new Exception("bad user_id");
         }
         if (!this.messageId.equals(sessionObj.getInt("message_id"))) {
