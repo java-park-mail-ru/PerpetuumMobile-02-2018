@@ -31,7 +31,6 @@ public class GameSessionService {
     @Value("${MULTIPLAYER_MAPS_COUNT}")
     private Integer mapsCount;
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(GameSessionService.class);
     @NotNull
     private final Map<Integer, GameSession> usersMap = new HashMap<>();
@@ -106,6 +105,7 @@ public class GameSessionService {
         String mapName = "multi_" + mapNum;
         String filePath = filesDir + mapName + ".map";
         GameMap gameMap = null;
+        LOGGER.info("Gamesession use map " + mapName);
         try {
             gameMap = mapper.readValue(new FileInputStream(filePath), GameMap.class);
         } catch (IOException e) {
