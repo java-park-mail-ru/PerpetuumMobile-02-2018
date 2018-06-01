@@ -1,67 +1,66 @@
 {
     "countX": 3,
-    "countY": 8,
+    "countY": 5,
     "stars3": 20000,
-    "stars2": 30000,
+    "stars2": 40000,
     "cells": [{
         "x": 0,
         "y": 0,
         "fixed": true,
-        "colour": "#8C007A"
+        "colour": "#E4F1A2"
     },
     {
-        "x": 0,
-        "y": 1,
-        "fixed": false,
-        "colour": "#A9697F"
+        "x": 3,
+        "y": 0,
+        "fixed": true,
+        "colour": "#96FFBC"
     },
     {
         "x": 0,
         "y": 2,
         "fixed": false,
-        "colour": "#BDAF7F"
+        "colour": "#939160"
+    },
+    {
+        "x": 3,
+        "y": 2,
+        "fixed": false,
+        "colour": "#89FE89"
+    },
+    {
+        "x": 0,
+        "y": 4,
+        "fixed": false,
+        "colour": "#4A3B26"
+    },
+    {
+        "x": 0,
+        "y": 1,
+        "fixed": false,
+        "colour": "#BBC080"
+    },
+    {
+        "x": 3,
+        "y": 1,
+        "fixed": false,
+        "colour": "#69F0AE"
     },
     {
         "x": 0,
         "y": 3,
-        "fixed": true,
-        "colour": "#CBE075"
+        "fixed": false,
+        "colour": "#6D6541"
     },
     {
-        "x": 1,
+        "x": 3,
         "y": 3,
         "fixed": false,
-        "colour": "#A6D0A9"
+        "colour": "#7FFF6E"
     },
     {
-        "x": 2,
-        "y": 3,
-        "fixed": false,
-        "colour": "#63BFCC"
-    },
-    {
-        "x": 2,
+        "x": 3,
         "y": 4,
         "fixed": false,
-        "colour": "#689CB0"
-    },
-    {
-        "x": 2,
-        "y": 5,
-        "fixed": false,
-        "colour": "#67738E"
-    },
-	{
-        "x": 2,
-        "y": 6,
-        "fixed": false,
-        "colour": "#614D6E"
-    },
-	{
-        "x": 2,
-        "y": 7,
-        "fixed": true,
-        "colour": "#562951"
-    }
-	]
+        "colour": "#74FF4E"
+    }]
 }

@@ -1,97 +1,61 @@
 {
-    "countX": 7,
-    "countY": 4,
-    "stars3": 30000,
-    "stars2": 50000,
+    "countX": 3,
+    "countY": 3,
+    "stars3": 20000,
+    "stars2": 35000,
     "cells": [{
         "x": 0,
-        "y": 1,
+        "y": 0,
         "fixed": true,
-        "colour": "#DFD9CF"
+        "colour": "#29564E"
+    },
+    {
+        "x": 0,
+        "y": 1,
+        "fixed": false,
+        "colour": "#4E6160"
     },
     {
         "x": 0,
         "y": 2,
-        "fixed": false,
-        "colour": "#D5CECF"
-    },
-    {
-        "x": 0,
-        "y": 3,
-        "fixed": false,
-        "colour": "#C8BFCF"
+        "fixed": true,
+        "colour": "#6F6A77"
     },
     {
         "x": 1,
-        "y": 3,
-        "fixed": false,
-        "colour": "#B6B1BB"
-    },
-    {
-        "x": 2,
-        "y": 3,
-        "fixed": false,
-        "colour": "#9AA1A5"
-    },
-    {
-        "x": 2,
-        "y": 1,
-        "fixed": true,
-        "colour": "#8552C6"
-    },
-    {
-        "x": 3,
-        "y": 1,
-        "fixed": false,
-        "colour": "#A666B6"
-    },
-    {
-        "x": 3,
-        "y": 3,
-        "fixed": false,
-        "colour": "#788E8A"
-    },
-	{
-        "x": 4,
         "y": 0,
         "fixed": false,
-        "colour": "#D372B7"
+        "colour": "#68559F"
     },
-	{
-        "x": 4,
+    {
+        "x": 1,
         "y": 1,
         "fixed": false,
-        "colour": "#BC7AA1"
+        "colour": "#9473AE"
     },
-	{
-        "x": 4,
+    {
+        "x": 1,
         "y": 2,
         "fixed": false,
-        "colour": "#927C88"
+        "colour": "#BA94BA"
     },
-	{
-        "x": 4,
-        "y": 3,
+    {
+        "x": 2,
+        "y": 0,
         "fixed": false,
-        "colour": "#5B7871"
+        "colour": "#9F43E0"
     },
-	{
-        "x": 5,
+    {
+        "x": 2,
         "y": 1,
         "fixed": false,
-        "colour": "#CA9387"
+        "colour": "#CE81E6"
     },
 	{
-        "x": 5,
-        "y": 3,
-        "fixed": true,
-        "colour": "#42655C"
-    },
-	{
-        "x": 6,
-        "y": 1,
-        "fixed": true,
-        "colour": "#D4A86A"
+        "x": 2,
+        "y": 2,
+        "fixed": false,
+        "colour": "#EFBBEB"
     }
 	]
 }

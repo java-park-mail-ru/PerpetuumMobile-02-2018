@@ -1,0 +1,83 @@
+{
+    "countX": 6,
+    "countY": 4,
+    "cells": [{
+        "x": 0,
+        "y": 0,
+        "fixed": true,
+        "colour": "#C2E9B6"
+    },
+    {
+        "x": 1,
+        "y": 0,
+        "fixed": false,
+        "colour": "#BCDA9F"
+    },
+    {
+        "x": 2,
+        "y": 0,
+        "fixed": false,
+        "colour": "#B6CA86"
+    },
+    {
+        "x": 3,
+        "y": 0,
+        "fixed": false,
+        "colour": "#ABBA6E"
+    },
+    {
+        "x": 4,
+        "y": 0,
+        "fixed": false,
+        "colour": "#A1A556"
+    },
+    {
+        "x": 5,
+        "y": 0,
+        "fixed": false,
+        "colour": "#968E43"
+    },
+    {
+        "x": 1,
+        "y": 1,
+        "fixed": false,
+        "colour": "#92BE8A"
+    },
+    {
+        "x": 1,
+        "y": 2,
+        "fixed": false,
+        "colour": "#609A75"
+    },
+	{
+        "x": 1,
+        "y": 3,
+        "fixed": false,
+        "colour": "#327361"
+    },
+	{
+        "x": 2,
+        "y": 3,
+        "fixed": false,
+        "colour": "#657560"
+    },
+	{
+        "x": 3,
+        "y": 3,
+        "fixed": false,
+        "colour": "#957362"
+    },
+	{
+        "x": 4,
+        "y": 3,
+        "fixed": false,
+        "colour": "#C06B64"
+    },
+	{
+        "x": 5,
+        "y": 3,
+        "fixed": true,
+        "colour": "#E55368"
+    }
+	]
+}

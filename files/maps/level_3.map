@@ -1,54 +1,36 @@
 {
-    "countX": 4,
-    "countY": 5,
-    "stars3": 20000,
+    "countX": 5,
+    "countY": 1,
+    "stars3": 15000,
     "stars2": 30000,
     "cells": [{
         "x": 0,
         "y": 0,
         "fixed": true,
-        "colour": "#414141"
+        "colour": "#5ba47a"
     },
     {
         "x": 1,
         "y": 0,
         "fixed": false,
-        "colour": "#6C554F"
-    },
-    {
-        "x": 2,
-        "y": 2,
-        "fixed": false,
-        "colour": "#BD8159"
-    },
-    {
-        "x": 2,
-        "y": 3,
-        "fixed": false,
-        "colour": "#C48A4B"
-    },
-    {
-        "x": 2,
-        "y": 1,
-        "fixed": false,
-        "colour": "#B1755F"
+        "colour": "#83b191"
     },
     {
         "x": 2,
         "y": 0,
         "fixed": false,
-        "colour": "#AE6560"
+        "colour": "#a8bea8"
     },
     {
-        "x": 3,
+         "x": 3,
+         "y": 0,
+         "fixed": false,
+         "colour": "#cccbc0"
+    },
+    {
+        "x": 4,
         "y": 0,
-        "fixed": false,
-        "colour": "#FF827D"
-    },
-    {
-        "x": 2,
-        "y": 4,
         "fixed": true,
-        "colour": "#C69A43"
+        "colour": "#efd7d9"
     }]
 }
